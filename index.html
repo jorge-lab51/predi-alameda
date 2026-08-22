@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#1d3b5c">
+<meta name="robots" content="noindex, nofollow">
+<title>Territorios Alameda</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="leaflet.css">
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --ink:#16202b; --muted:#6a7787;
+  --line:#e3e7ec; --accent:#1d3b5c; --accent2:#2f7d5b; --warn:#b4531f;
+  --chip:#eef1f5; --shadow:0 2px 10px rgba(16,32,48,.10);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#12161b; --panel:#1a2029; --ink:#e8edf3; --muted:#9aa7b6;
+  --line:#28313d; --accent:#7fb2e5; --accent2:#6fcf9f; --chip:#232c37;
+  --shadow:0 2px 12px rgba(0,0,0,.45); }
+}
+:root[data-theme="dark"]{ --bg:#12161b; --panel:#1a2029; --ink:#e8edf3; --muted:#9aa7b6;
+  --line:#28313d; --accent:#7fb2e5; --accent2:#6fcf9f; --chip:#232c37;
+  --shadow:0 2px 12px rgba(0,0,0,.45); }
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--ink);overflow:hidden}
+#app{display:flex;flex-direction:column;height:100dvh}
+
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 10px 6px;
+  padding-top:calc(8px + env(safe-area-inset-top,0px));box-shadow:var(--shadow);z-index:600}
+.hrow{display:flex;align-items:center;gap:8px}
+.brand{font-weight:700;font-size:15px;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.3px}
+.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
+  min-width:38px;height:34px;font-size:15px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 8px}
+.iconbtn:active{background:var(--chip)}
+.iconbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.datebar{display:flex;align-items:center;gap:6px;margin-top:6px}
+.datebar .fecha{flex:1;text-align:center;font-weight:600}
+.datebar .fecha span{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.week{display:flex;gap:4px;margin-top:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.week::-webkit-scrollbar{display:none}
+.wd{flex:0 0 auto;min-width:42px;text-align:center;border:1px solid var(--line);border-radius:10px;
+  padding:4px 6px;background:var(--panel);cursor:pointer}
+.wd b{display:block;font-size:15px;line-height:1.1}
+.wd i{font-style:normal;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.wd.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.wd.sel i{color:#dbe7f3}
+.wd.hoy{border-color:var(--accent2);border-width:2px}
+
+#map{flex:1 1 auto;min-height:120px;background:#dfe4ea;z-index:1}
+.leaflet-container{font:inherit;background:#e8ecf1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .leaflet-container{background:#1b222b}}
+:root[data-theme="dark"] .leaflet-container{background:#1b222b}
+
+.sheet{background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -3px 14px rgba(16,32,48,.10);
+  display:flex;flex-direction:column;z-index:500;max-height:62dvh;flex:0 0 auto}
+.grab{display:flex;align-items:center;gap:8px;padding:6px 12px 4px;cursor:pointer}
+.grab .bar{width:38px;height:4px;border-radius:3px;background:var(--line);margin:0 auto}
+.sheet .list{overflow-y:auto;padding:2px 10px calc(10px + var(--safe-b));-webkit-overflow-scrolling:touch}
+
+.act{display:flex;gap:9px;padding:9px 8px;border-radius:12px;border:1px solid transparent;align-items:flex-start}
+.act + .act{border-top:1px solid var(--line)}
+.act.sel{background:var(--chip);border-color:var(--line)}
+.hora{flex:0 0 62px;font-weight:700;font-size:13px;color:var(--accent);padding-top:1px}
+.hora small{display:block;font-weight:500;color:var(--muted);font-size:10px}
+.info{flex:1;min-width:0}
+.info .cap{font-weight:600;font-size:14px}
+.info .meta{color:var(--muted);font-size:12.5px;margin-top:1px}
+.info .dir{font-size:13px;margin-top:3px;display:inline-block;color:var(--ink);
+  text-decoration:none;border-bottom:1px dashed var(--line)}
+.info a.dir:active{color:var(--accent)}
+.terrchip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tnum{min-width:42px;text-align:center;border-radius:9px;padding:4px 6px;font-weight:700;font-size:14px;
+  background:var(--chip);border:1px solid var(--line)}
+.tnum.calles{font-size:11px;font-weight:600;letter-spacing:.4px}
+.go{font-size:11.5px;font-weight:600;color:#fff;text-decoration:none;border:1px solid var(--accent);
+  border-radius:8px;padding:4px 8px;background:var(--accent);white-space:nowrap}
+.tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;
+  border-radius:6px;padding:1px 6px;background:var(--chip);color:var(--muted);margin-left:6px}
+.tag.reunion{background:#e7efe9;color:#2f7d5b}
+.tag.cartas{background:#f2ecdf;color:#8a6521}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag.reunion{background:#1f3329;color:#8fdcb4}
+  :root:not([data-theme="light"]) .tag.cartas{background:#33291a;color:#e2c185}}
+:root[data-theme="dark"] .tag.reunion{background:#1f3329;color:#8fdcb4}
+:root[data-theme="dark"] .tag.cartas{background:#33291a;color:#e2c185}
+.nota{margin:6px 2px 2px;font-size:12px;color:var(--warn);font-weight:600}
+.vacio{padding:18px 6px;color:var(--muted);text-align:center}
+
+.fabs{position:absolute;right:10px;top:10px;display:flex;flex-direction:row;gap:8px;z-index:450}
+.fab{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer}
+.fab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.layerbar{position:absolute;left:10px;top:10px;z-index:450;display:flex;gap:4px;background:var(--panel);
+  border:1px solid var(--line);border-radius:11px;padding:3px;box-shadow:var(--shadow)}
+.layerbar button{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:600;
+  padding:5px 9px;border-radius:8px;cursor:pointer}
+.layerbar button.on{background:var(--accent);color:#fff}
+
+.tpanel{position:absolute;left:10px;right:10px;bottom:12px;z-index:460;background:var(--panel);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:10px 12px;display:none}
+.tpanel.show{display:block}
+.tpanel h3{margin:0 0 4px;font-size:16px;display:flex;align-items:center;gap:8px;line-height:1.2}
+.dot{width:14px;height:14px;border-radius:4px;border:1px solid rgba(0,0,0,.25);display:inline-block}
+.tpanel .sub{color:var(--muted);font-size:12.5px;line-height:1.5}
+.tpanel .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
+  padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.done{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.close{margin-left:auto;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.leaflet-popup-content{margin:8px 10px;font:inherit}
+.tlabel{background:#c62828;color:#fff;font-weight:700;font-size:12px;border-radius:9px;
+  padding:2px 0;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.hint{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:470;background:rgba(20,30,40,.86);
+  color:#fff;padding:7px 12px;border-radius:20px;font-size:12.5px;display:none}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="hrow">
+      <div class="brand">Territorios Alameda<small id="mestitulo">Programa de predicación</small></div>
+      <button class="iconbtn" id="btnHoy" title="Ir a hoy">Hoy</button>
+      <button class="iconbtn" id="btnMes" title="Ver el mes">Mes</button>
+    </div>
+    <div class="datebar">
+      <button class="iconbtn" id="prev" aria-label="Día anterior">‹</button>
+      <div class="fecha" id="fecha">—<span id="subfecha"></span></div>
+      <button class="iconbtn" id="next" aria-label="Día siguiente">›</button>
+    </div>
+    <div class="week" id="week"></div>
+  </header>
+
+  <div id="map">
+    <div class="layerbar">
+      <button data-layer="plano" class="on">Plano</button>
+      <button data-layer="mapa">Mapa</button>
+      <button data-layer="ambos">Ambos</button>
+    </div>
+    <div class="fabs">
+      <button class="fab" id="fabGps" title="Dónde estoy">◎</button>
+      <button class="fab" id="fabFit" title="Ver todo">⤢</button>
+    </div>
+    <div class="tpanel" id="tpanel"></div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="sheet" id="sheet">
+    <div class="grab" id="grab"><div class="bar"></div></div>
+    <div class="list" id="lista"></div>
+  </div>
+</div>
+<script src="leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
