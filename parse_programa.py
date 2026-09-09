@@ -1,14 +1,26 @@
 import pymupdf, json, sys, re, unicodedata
 
-PDF = sys.argv[1] if len(sys.argv) > 1 else '/root/.claude/uploads/b056f69e-de77-5f32-93a1-dabfa433fcaa/826c5884-Programa_Predicacio_n_Alameda__AGOSTO.pdf'
-OUT = sys.argv[2] if len(sys.argv) > 2 else '/home/claude/alameda/programa.json'
+PDF = sys.argv[1] if len(sys.argv) > 1 else 'programa.pdf'
+OUT = sys.argv[2] if len(sys.argv) > 2 else 'programa_base.json'
 
-COLS = [('nro', 0, 60), ('dia', 60, 150), ('hora', 150, 205),
-        ('capitan', 205, 382), ('grupo', 382, 472),
-        ('direccion', 472, 725), ('territorio', 725, 800)]
+# nombres de las 7 columnas de la tabla, de izquierda a derecha
+COLNAMES = ['nro', 'dia', 'hora', 'capitan', 'grupo', 'direccion', 'territorio']
+# posiciones de respaldo, por si el PDF no trae las líneas de la tabla
+COLS_FALLBACK = [('nro', 0, 60), ('dia', 60, 150), ('hora', 150, 205),
+                 ('capitan', 205, 382), ('grupo', 382, 472),
+                 ('direccion', 472, 725), ('territorio', 725, 800)]
 
-def col_of(x):
-    for name, a, b in COLS:
+def columnas(page):
+    """Deduce los límites de las columnas a partir de las líneas verticales."""
+    xs = sorted({round((dr['rect'].x0 + dr['rect'].x1) / 2, 1)
+                 for dr in page.get_drawings()
+                 if dr['rect'].height > 50 and dr['rect'].width < 3})
+    if len(xs) != len(COLNAMES) + 1:
+        return COLS_FALLBACK
+    return [(n, xs[i], xs[i + 1]) for i, n in enumerate(COLNAMES)]
+
+def col_of(cols, x):
+    for name, a, b in cols:
         if a <= x < b:
             return name
     return None
@@ -24,11 +36,15 @@ blocks = []          # day blocks: {page, y0, y1}
 lines_by_page = {}
 
 for page in doc:
+    cols = columnas(page)
+    nx0, nx1 = next((a, b) for n, a, b in cols if n == 'nro')
+
     # --- day cells in the "Nro." column ------------------------------
     cells = set()
     for dr in page.get_drawings():
         r = dr['rect']
-        if dr['type'] == 'f' and 18 <= r.x0 <= 24 and 48 <= r.x1 <= 56 and r.height > 8:
+        if (dr['type'] == 'f' and abs(r.x0 - nx0) < 4 and abs(r.x1 - nx1) < 4
+                and r.height > 8):
             cells.add((round(r.y0, 1), round(r.y1, 1)))
     merged = []
     for y0, y1 in sorted(cells):
@@ -51,9 +67,9 @@ for page in doc:
             lines.append({'y': w[1], 'words': [w]})
     out = []
     for ln in lines:
-        cellsr = {name: [] for name, _, _ in COLS}
+        cellsr = {name: [] for name, _, _ in cols}
         for w in sorted(ln['words'], key=lambda w: w[0]):
-            c = col_of(w[0])
+            c = col_of(cols, w[0])
             if c:
                 cellsr[c].append(w[4])
         out.append({'y': ln['y'], **{k: ' '.join(v).strip() for k, v in cellsr.items()}})
@@ -83,23 +99,28 @@ for b in day_blocks:
             nro = int(m.group())
         dtxt = r['dia'].strip()
         if dtxt:
+            # la columna "Día" a veces repite el número del día: "1 MARTES"
+            dtxt = re.sub(r'^\d{1,2}\s+', '', dtxt).strip()
             d = next((x for x in DIAS if x in norm(dtxt)), None)
             if d:
                 nombre = d
+                # se quita el nombre del día pero se conserva la tilde del resto
                 rest = re.sub(d, '', norm(dtxt)).strip(' ·-')
                 if rest:
-                    notas.append(rest)
-            else:
-                notas.append(norm(dtxt))
+                    notas.append(dtxt[len(dtxt) - len(rest):].strip(' ·-') or rest)
+            elif not re.fullmatch(r'\d{1,2}', dtxt):
+                notas.append(dtxt)
         hora = r['hora'].strip()
+        if hora == '-':          # celda vacía marcada con guión
+            hora = ''
         cap = r['capitan'].strip()
         if not hora and 'REUNION' not in norm(cap):
             continue
         tipo = 'predicacion'
-        ng, nc = norm(r['grupo']), norm(cap)
+        ng, nc, nt = norm(r['grupo']), norm(cap), norm(r['territorio'])
         if 'REUNION' in nc:
             tipo = 'reunion'
-        elif 'CARTAS' in ng or 'TELEFONICAS' in ng or 'ZOOM' in ng:
+        elif 'CARTAS' in ng or 'TELEFONICAS' in ng or 'ZOOM' in ng or nt == 'ZOOM':
             tipo = 'cartas'
         ent = {'hora': hora, 'capitan': cap, 'grupo': r['grupo'].strip(),
                'direccion': r['direccion'].strip(),
@@ -118,11 +139,23 @@ for b in day_blocks:
                  'actividades': acts})
 
 dias.sort(key=lambda d: d['dia'])
-out = {'mes': 8, 'anio': 2026, 'titulo': 'Programa Predicación Alameda',
-       'lema': '“Felices los que reconocen sus necesidades espirituales” (Mt 5:3)',
-       'dias': dias}
+
+# --- mes, año y lema desde el encabezado de la primera página -----------
+MESES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO',
+         'AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']
+cab = doc[0].get_text()
+mes = anio = None
+mm = re.search(r'(' + '|'.join(MESES) + r')\s+(\d{4})', norm(cab))
+if mm:
+    mes, anio = MESES.index(mm.group(1)) + 1, int(mm.group(2))
+lema = next((l.strip() for l in cab.splitlines() if l.strip().startswith('“')), '')
+
+out = {'mes': mes, 'anio': anio, 'titulo': 'Programa Predicación Alameda',
+       'lema': lema, 'dias': dias}
 json.dump(out, open(OUT, 'w'), ensure_ascii=False, indent=1)
-print('días:', len(dias), 'actividades:', sum(len(d['actividades']) for d in dias))
+print('mes:', mes, anio, '| días:', len(dias),
+      '| actividades:', sum(len(d['actividades']) for d in dias))
+print('lema:', lema)
 for d in dias:
     print(d['dia'], d['nombre'], '|', d['nota'][:45], '|', len(d['actividades']),
           '|', ','.join(a['territorio'] or '-' for a in d['actividades']))

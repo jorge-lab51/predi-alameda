@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# caché local de cruces de calles (OpenStreetMap)
+cruces_cache.json

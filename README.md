@@ -35,10 +35,30 @@ direcciones particulares.
 
 ## Actualizar el programa cada mes
 
-El único archivo que cambia es `programa.json`. Se genera a partir del PDF del mes con
-el script `parse_programa.py` (fuera de esta carpeta). Para reemplazarlo en GitHub:
-abre `programa.json` en el repositorio → ícono del lápiz → pega el contenido nuevo →
-**Commit changes**. La app se actualiza sola en unos minutos.
+El único archivo que cambia es `programa.json`. Se genera a partir del PDF del mes en
+dos pasos (hace falta Python con `pymupdf`: `pip install pymupdf`):
+
+```bash
+python parse_programa.py programa_del_mes.pdf base.json   # PDF -> datos
+python enriquecer_programa.py base.json programa.json     # + mapa y "cómo llegar"
+```
+
+El primer paso lee la tabla del PDF. Detecta solo el mes, el año, el lema y las
+posiciones de las columnas, así que aguanta cambios de diseño entre meses; si el PDF
+viniera muy distinto, avisa dejando días o actividades de menos (compara el total que
+imprime con el del PDF).
+
+El segundo paso agrega lo que necesita el mapa: el número de territorio, y la
+coordenada del punto de encuentro. Reutiliza las coordenadas del `programa.json`
+anterior y busca en OpenStreetMap solo los cruces de calles nuevos, dejando un registro
+en pantalla de cuáles buscó y cuáles no pudo ubicar. **Las direcciones particulares
+(las marcadas con `(FAMILIA ...)`) nunca se geolocalizan**: quedan solo con el texto
+para buscar en Google Maps. Si aparece una calle con un nombre que no reconoce, hay que
+agregarla al diccionario `CALLES_OSM` dentro de `enriquecer_programa.py`.
+
+Para publicar: reemplaza `programa.json` en el repositorio → ícono del lápiz → pega el
+contenido nuevo → **Commit changes**. La app se actualiza sola en unos minutos, incluso
+en los celulares que ya la tienen instalada.
 
 El plano (`plano.webp` y `territorios.geojson`) solo hay que rehacerlo si la
 congregación cambia los límites de los territorios.
@@ -54,6 +74,9 @@ congregación cambia los límites de los territorios.
 | `territorios.geojson` | Los 58 territorios como polígonos reales |
 | `manzanas.geojson` | Cada manzana por separado, con su letra (A, B, C…) |
 | `programa.json` | El programa del mes convertido a datos |
+| `parse_programa.py` | Convierte el PDF del mes en datos |
+| `enriquecer_programa.py` | Le agrega territorios y coordenadas al programa |
+| `cruce.py` | Busca cruces de calles en OpenStreetMap |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Para que funcione sin conexión e instalada |
 
 ## Cómo se usa
