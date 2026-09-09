@@ -364,4 +364,15 @@ $('#grab').onclick = () => { expandida = !expandida; ajustarHoja(); };
 ajustarHoja();
 
 cargar();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  // si llega una versión nueva de la app, recargar una vez para mostrarla
+  // enseguida en vez de esperar a la próxima apertura
+  const habiaSW = !!navigator.serviceWorker.controller;
+  let recargando = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!habiaSW || recargando) return;
+    recargando = true;
+    location.reload();
+  });
+}
