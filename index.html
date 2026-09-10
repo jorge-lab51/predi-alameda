@@ -62,8 +62,32 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 
 .sheet{background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -3px 14px rgba(16,32,48,.10);
   display:flex;flex-direction:column;z-index:500;max-height:62dvh;flex:0 0 auto}
-.grab{display:flex;align-items:center;gap:8px;padding:6px 12px 4px;cursor:pointer}
-.grab .bar{width:38px;height:4px;border-radius:3px;background:var(--line);margin:0 auto}
+.grab{display:flex;align-items:center;justify-content:center;min-height:30px;
+  padding:7px 12px 6px;cursor:pointer;position:relative}
+/* con el listado oculto la barra es lo único que queda: se agranda para
+   que sea cómoda de tocar */
+#sheet.oculto .grab{min-height:42px;padding-bottom:calc(8px + var(--safe-b))}
+/* la barra son dos mitades que se superponen: en reposo se leen como una
+   sola línea, y al apuntarla se inclinan hasta formar una flecha */
+.grab .bar{position:relative;width:40px;height:10px}
+.grab .bar::before,.grab .bar::after{content:'';position:absolute;top:3px;width:21px;height:4px;
+  border-radius:3px;background:var(--line);transition:transform .2s ease,background .2s ease}
+.grab .bar::before{left:0;transform-origin:left center}
+.grab .bar::after{right:0;transform-origin:right center}
+/* ▲ va a mostrar el listado */
+.grab.tocando .bar::before{transform:rotate(-17deg)}
+.grab.tocando .bar::after{transform:rotate(17deg)}
+/* ▼ va a ocultarlo */
+.grab.cerrar.tocando .bar::before{transform:rotate(17deg)}
+.grab.cerrar.tocando .bar::after{transform:rotate(-17deg)}
+.grab.tocando .bar::before,.grab.tocando .bar::after{background:var(--accent)}
+@media (hover:hover){
+  .grab:hover .bar::before{transform:rotate(-17deg)}
+  .grab:hover .bar::after{transform:rotate(17deg)}
+  .grab.cerrar:hover .bar::before{transform:rotate(17deg)}
+  .grab.cerrar:hover .bar::after{transform:rotate(-17deg)}
+  .grab:hover .bar::before,.grab:hover .bar::after{background:var(--accent)}
+}
 .sheet .list{overflow-y:auto;padding:2px 10px calc(10px + var(--safe-b));-webkit-overflow-scrolling:touch}
 
 .act{display:flex;gap:9px;padding:9px 8px;border-radius:12px;border:1px solid transparent;align-items:flex-start}
@@ -74,9 +98,7 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 .info{flex:1;min-width:0}
 .info .cap{font-weight:600;font-size:14px}
 .info .meta{color:var(--muted);font-size:12.5px;margin-top:1px}
-.info .dir{font-size:13px;margin-top:3px;display:inline-block;color:var(--ink);
-  text-decoration:none;border-bottom:1px dashed var(--line)}
-.info a.dir:active{color:var(--accent)}
+.info .dir{font-size:13px;margin-top:3px;color:var(--ink)}
 .terrchip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px}
 .tnum{min-width:42px;text-align:center;border-radius:9px;padding:4px 6px;font-weight:700;font-size:14px;
   background:var(--chip);border:1px solid var(--line)}
@@ -111,6 +133,16 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 .dot{width:14px;height:14px;border-radius:4px;border:1px solid rgba(0,0,0,.25);display:inline-block}
 .tpanel .sub{color:var(--muted);font-size:12.5px;line-height:1.5}
 .tpanel .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.tpanel .dato{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.tpanel .dato-nombre{font-weight:600;font-size:14.5px}
+.tpanel .dato-hora{font-weight:700;font-size:14px;color:var(--accent);margin-top:1px}
+.tpanel .dato-fila{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:3px}
+.tpanel .dato-fila .btn{flex:0 0 auto}
+.tpanel .dato-dir{min-width:0;overflow-wrap:anywhere;font-size:14px;color:var(--ink);
+  text-decoration:none;border-bottom:1px dashed var(--muted)}
+.tpanel .dato-dir:active{color:var(--accent)}
+/* oculto: queda solo la barra, para volver a desplegar el listado */
+#sheet.oculto .list{display:none}
 .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
   padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
 .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -129,7 +161,6 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
     <div class="hrow">
       <div class="brand">Territorios Alameda<small id="mestitulo">Programa de predicación</small></div>
       <button class="iconbtn" id="btnHoy" title="Ir a hoy">Hoy</button>
-      <button class="iconbtn" id="btnMes" title="Ver el mes">Mes</button>
     </div>
     <div class="datebar">
       <button class="iconbtn" id="prev" aria-label="Día anterior">‹</button>
@@ -154,7 +185,7 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
   </div>
 
   <div class="sheet" id="sheet">
-    <div class="grab" id="grab"><div class="bar"></div></div>
+    <div class="grab" id="grab" title="Mostrar u ocultar el listado"><div class="bar"></div></div>
     <div class="list" id="lista"></div>
   </div>
 </div>

@@ -45,6 +45,20 @@ PUNTOS_FIJOS = {
     'plaza manuel rodriguez': [-33.45139, -70.66518],
 }
 
+# el PDF viene sin tildes; se reponen para que se lean bien en la app
+TILDES = {
+    'Bascunan': 'Bascuñán', 'Bascuñan': 'Bascuñán', 'Hipico': 'Hípico',
+    'Jose': 'José', 'Longavi': 'Longaví', 'Ramon': 'Ramón',
+    'Reunion': 'Reunión', 'Rodriguez': 'Rodríguez', 'Salon': 'Salón',
+    'Sazie': 'Sazié', 'Telefonicas': 'Telefónicas', 'Union': 'Unión',
+    'Exposicion': 'Exposición', 'Republica': 'República',
+    'Cuartin': 'Cuartín', 'cousiño': 'Cousiño', 'Pena': 'Peña',
+}
+
+def con_tildes(texto):
+    return re.sub(r'[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+',
+                  lambda m: TILDES.get(m.group(), m.group()), texto or '')
+
 def norm(s):
     s = ''.join(c for c in unicodedata.normalize('NFD', s)
                 if unicodedata.category(c) != 'Mn')
@@ -86,6 +100,9 @@ def enriquecer(prog, buscar_cruce=None, log=print):
     cache = {}
     for d in prog['dias']:
         for a in d['actividades']:
+            for campo in ('direccion', 'grupo', 'nombre'):
+                if a.get(campo):
+                    a[campo] = con_tildes(a[campo])
             t = a.get('territorio', '')
             a['calles'] = norm(t) == 'calles'
             a['terr'] = lista_terr(t)

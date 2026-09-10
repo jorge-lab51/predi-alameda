@@ -30,14 +30,14 @@
      "hora": "17:00-19:00",
      "capitan": "JORGE MORALES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Vergara / Sazie",
+     "direccion": "Vergara / Sazié",
      "territorio": "10",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       10
      ],
-     "mapsq": "Vergara / Sazie, Santiago, Chile",
+     "mapsq": "Vergara / Sazié, Santiago, Chile",
      "coord": [
       -33.44975,
       -70.66207
@@ -54,14 +54,14 @@
      "hora": "10:00",
      "capitan": "JOSE TUAREZ",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Ramon Subercaseaux / Longavi",
+     "direccion": "Ramón Subercaseaux / Longaví",
      "territorio": "45",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       45
      ],
-     "mapsq": "Ramon Subercaseaux / Longavi, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
      "coord": [
       -33.47062,
       -70.67251
@@ -74,7 +74,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Vida y Ministerio",
+     "nombre": "Reunión de Vida y Ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -91,14 +91,14 @@
      "hora": "10:00",
      "capitan": "FRANCISCO CARRASCO",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Ramon Subercaseaux / Longavi",
+     "direccion": "Ramón Subercaseaux / Longaví",
      "territorio": "43",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       43
      ],
-     "mapsq": "Ramon Subercaseaux / Longavi, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
      "coord": [
       -33.47062,
       -70.67251
@@ -121,7 +121,7 @@
     {
      "hora": "19:00-21:00",
      "capitan": "KEVIN CARRERO",
-     "grupo": "Cartas y Telefonicas",
+     "grupo": "Cartas y Telefónicas",
      "direccion": "Las Fucsias 2119 (FAMILIA CARRERO)",
      "territorio": "",
      "tipo": "cartas",
@@ -182,12 +182,12 @@
      "hora": "08:00",
      "capitan": "CRISTIAN ROZAS",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Luis cousiño av. Rondizzoni",
+     "direccion": "Luis Cousiño av. Rondizzoni",
      "territorio": "CALLES",
      "tipo": "predicacion",
      "calles": true,
      "terr": [],
-     "mapsq": "Luis cousiño av. Rondizzoni, Santiago, Chile",
+     "mapsq": "Luis Cousiño av. Rondizzoni, Santiago, Chile",
      "coord": [
       -33.47024,
       -70.65967
@@ -240,7 +240,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Fin de Semana",
+     "nombre": "Reunión de Fin de Semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -250,14 +250,14 @@
      "hora": "12:00",
      "capitan": "MERVIN MARTINEZ",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Salon Salvador San Fuentes 2493",
+     "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "4",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       4
      ],
-     "mapsq": "Salon Salvador San Fuentes 2493, Santiago, Chile",
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
      "coord": [
       -33.45174,
       -70.67521
@@ -322,14 +322,14 @@
      "hora": "10:00",
      "capitan": "FRANCISCO CARRASCO",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Union Latinoamericana / Sazie",
+     "direccion": "Unión Latinoamericana / Sazié",
      "territorio": "7",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       7
      ],
-     "mapsq": "Union Latinoamericana / Sazie, Santiago, Chile",
+     "mapsq": "Unión Latinoamericana / Sazié, Santiago, Chile",
      "coord": [
       -33.45247,
       -70.67362
@@ -339,14 +339,14 @@
      "hora": "17:00-19:00",
      "capitan": "JORGE MORALES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Plaza Manuel Rodriguez",
+     "direccion": "Plaza Manuel Rodríguez",
      "territorio": "5",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       5
      ],
-     "mapsq": "Plaza Manuel Rodriguez, Santiago, Chile",
+     "mapsq": "Plaza Manuel Rodríguez, Santiago, Chile",
      "coord": [
       -33.45139,
       -70.66518
@@ -383,7 +383,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Vida y Ministerio",
+     "nombre": "Reunión de Vida y Ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -400,14 +400,14 @@
      "hora": "10:00",
      "capitan": "JORGE MORALES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Blanco / Union Latinoamericana",
+     "direccion": "Blanco / Unión Latinoamericana",
      "territorio": "32",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       32
      ],
-     "mapsq": "Blanco / Union Latinoamericana, Santiago, Chile",
+     "mapsq": "Blanco / Unión Latinoamericana, Santiago, Chile",
      "coord": [
       -33.45847,
       -70.67219
@@ -430,7 +430,7 @@
     {
      "hora": "19:00-21:00",
      "capitan": "JORGE MORALES",
-     "grupo": "Cartas y Telefonicas",
+     "grupo": "Cartas y Telefónicas",
      "direccion": "BLANCO ENCALADA 2527 DEPTO 408A (FAMILIA MORALES)",
      "territorio": "",
      "tipo": "cartas",
@@ -566,7 +566,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Fin de Semana",
+     "nombre": "Reunión de Fin de Semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -576,12 +576,12 @@
      "hora": "12:00",
      "capitan": "SIN CAPITAN",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Salon Salvador San Fuentes 2493",
+     "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
      "tipo": "predicacion",
      "calles": true,
      "terr": [],
-     "mapsq": "Salon Salvador San Fuentes 2493, Santiago, Chile",
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
      "coord": [
       -33.45174,
       -70.67521
@@ -675,14 +675,14 @@
      "hora": "10:00",
      "capitan": "JOSE TUAREZ",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Rondizzoni / Club Hipico",
+     "direccion": "Rondizzoni / Club Hípico",
      "territorio": "53",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       53
      ],
-     "mapsq": "Rondizzoni / Club Hipico, Santiago, Chile",
+     "mapsq": "Rondizzoni / Club Hípico, Santiago, Chile",
      "coord": [
       -33.47051,
       -70.66492
@@ -695,7 +695,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Vida y Ministerio",
+     "nombre": "Reunión de Vida y Ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -712,14 +712,14 @@
      "hora": "10:00",
      "capitan": "JORGE MORALES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Antofagasta / Bascuñan Guerrero",
+     "direccion": "Antofagasta / Bascuñán Guerrero",
      "territorio": "37",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       37
      ],
-     "mapsq": "Antofagasta / Bascuñan Guerrero, Santiago, Chile",
+     "mapsq": "Antofagasta / Bascuñán Guerrero, Santiago, Chile",
      "coord": [
       -33.46643,
       -70.67174
@@ -740,7 +740,7 @@
     {
      "hora": "18:00",
      "capitan": "CRISTIAN ROZAS",
-     "grupo": "Cartas y Telefonicas",
+     "grupo": "Cartas y Telefónicas",
      "direccion": "Av. España 613 Dpto. 724 (FAMILIA ROZAS)",
      "territorio": "",
      "tipo": "cartas",
@@ -876,7 +876,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Fin de Semana",
+     "nombre": "Reunión de Fin de Semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -886,12 +886,12 @@
      "hora": "12:00",
      "capitan": "SIN CAPITAN",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Salon Salvador San Fuentes 2493",
+     "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
      "tipo": "predicacion",
      "calles": true,
      "terr": [],
-     "mapsq": "Salon Salvador San Fuentes 2493, Santiago, Chile",
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
      "coord": [
       -33.45174,
       -70.67521
@@ -956,14 +956,14 @@
      "hora": "10:00",
      "capitan": "FRANCISCO CARRASCO",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Ramon Subercaseaux / Longavi",
+     "direccion": "Ramón Subercaseaux / Longaví",
      "territorio": "44",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       44
      ],
-     "mapsq": "Ramon Subercaseaux / Longavi, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
      "coord": [
       -33.47062,
       -70.67251
@@ -997,14 +997,14 @@
      "hora": "10:00",
      "capitan": "LUIS FLORES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Ramon Subercaseaux / Conferencia",
+     "direccion": "Ramón Subercaseaux / Conferencia",
      "territorio": "42",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       42
      ],
-     "mapsq": "Ramon Subercaseaux / Conferencia, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Conferencia, Santiago, Chile",
      "coord": [
       -33.47063,
       -70.67426
@@ -1017,7 +1017,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Vida y Ministerio",
+     "nombre": "Reunión de Vida y Ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -1064,7 +1064,7 @@
     {
      "hora": "19:00-21:00",
      "capitan": "SIN CAPITAN",
-     "grupo": "Cartas y Telefonicas",
+     "grupo": "Cartas y Telefónicas",
      "direccion": "DOMEIKO 2477 DEPTO 851 (FAMILIA VILCHES)",
      "territorio": "",
      "tipo": "cartas",
@@ -1205,7 +1205,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Fin de Semana",
+     "nombre": "Reunión de Fin de Semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -1215,12 +1215,12 @@
      "hora": "12:00",
      "capitan": "SIN CAPITAN",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Salon Salvador San Fuentes 2493",
+     "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
      "tipo": "predicacion",
      "calles": true,
      "terr": [],
-     "mapsq": "Salon Salvador San Fuentes 2493, Santiago, Chile",
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
      "coord": [
       -33.45174,
       -70.67521
@@ -1237,14 +1237,14 @@
      "hora": "10:00",
      "capitan": "JORGE MORALES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Toesca / Union Latinoamericana",
+     "direccion": "Toesca / Unión Latinoamericana",
      "territorio": "15",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       15
      ],
-     "mapsq": "Toesca / Union Latinoamericana, Santiago, Chile",
+     "mapsq": "Toesca / Unión Latinoamericana, Santiago, Chile",
      "coord": [
       -33.45566,
       -70.67287
@@ -1285,14 +1285,14 @@
      "hora": "10:00",
      "capitan": "JORGE MORALES",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Toesca / Union Latinoamericana",
+     "direccion": "Toesca / Unión Latinoamericana",
      "territorio": "19",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       19
      ],
-     "mapsq": "Toesca / Union Latinoamericana, Santiago, Chile",
+     "mapsq": "Toesca / Unión Latinoamericana, Santiago, Chile",
      "coord": [
       -33.45566,
       -70.67287
@@ -1326,14 +1326,14 @@
      "hora": "10:00",
      "capitan": "JOSE TUAREZ",
      "grupo": "GRUPO GENERAL",
-     "direccion": "Jose Miguel Carrera / Domeyko",
+     "direccion": "José Miguel Carrera / Domeyko",
      "territorio": "26",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       26
      ],
-     "mapsq": "Jose Miguel Carrera / Domeyko, Santiago, Chile",
+     "mapsq": "José Miguel Carrera / Domeyko, Santiago, Chile",
      "coord": [
       -33.45596,
       -70.66264
@@ -1346,7 +1346,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunion de Vida y Ministerio",
+     "nombre": "Reunión de Vida y Ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",

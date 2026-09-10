@@ -56,6 +56,10 @@ en pantalla de cuáles buscó y cuáles no pudo ubicar. **Las direcciones partic
 para buscar en Google Maps. Si aparece una calle con un nombre que no reconoce, hay que
 agregarla al diccionario `CALLES_OSM` dentro de `enriquecer_programa.py`.
 
+Ese paso también repone las tildes que el PDF no trae (Unión, Sazié, Ramón, Reunión…).
+Si aparece una palabra nueva sin tilde, se agrega al diccionario `TILDES` del mismo
+archivo.
+
 Para publicar: reemplaza `programa.json` en el repositorio → ícono del lápiz → pega el
 contenido nuevo → **Commit changes**. La app se actualiza sola en unos minutos, incluso
 en los celulares que ya la tienen instalada.
@@ -81,12 +85,16 @@ congregación cambia los límites de los territorios.
 
 ## Cómo se usa
 
-- **Flechas ‹ ›** o deslizar sobre la lista: cambiar de día. **Hoy** vuelve al día actual.
-- **Mes**: muestra los 31 días en la tira superior en vez de solo la semana.
-- Tocar una actividad: el mapa se acerca al territorio y aparece el punto de encuentro.
-  **Cómo llegar** abre Google Maps con la ruta.
-- Tocar un territorio en el mapa: muestra sus manzanas, en qué días del mes está
-  asignado, y permite **marcar trabajado** (queda guardado en ese celular).
+- La tira de arriba muestra **el mes completo** y se desliza. **Hoy** vuelve al día
+  actual y deja a la vista la semana en la que cae. Las **flechas ‹ ›**, o deslizar
+  sobre la lista, cambian de día.
+- Tocar una actividad: el mapa se acerca al territorio, aparece el punto de encuentro
+  y se abre una ficha con el capitán, la hora y la dirección. **Cómo llegar** abre
+  Google Maps con la ruta. La ficha se cierra con la **✕**.
+- Tocar un territorio en el mapa: muestra sus manzanas y cómo llegar a él.
+- La **barra** sobre el listado lo muestra y lo oculta, para dejar el mapa a pantalla
+  completa. Al apuntarla se dobla en forma de flecha, indicando qué hará. Con una
+  ficha abierta el listado se recoge solo, y vuelve al cerrarla.
 - **Plano / Mapa / Ambos**: cambia entre el plano original y el mapa de calles real.
 - **◎**: muestra dónde estás y en qué territorio te encuentras.
 

@@ -6,7 +6,9 @@ const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
 
 let PROG = null, TERR = null, BOUNDS = null;
 let map, capaPlano, capaMapa, capaTerr, marcadorGps, marcadorPunto, circuloGps;
-let diaSel = 1, actSel = null, terrSel = null, modoMes = false;
+let diaSel = 1, actSel = null, terrSel = null;
+let estadoLista = 'abierto';   // 'abierto' | 'oculto'
+let ocultoPorFicha = false;    // para devolverlo al cerrar la ficha
 const capasTerr = {};
 
 const $ = s => document.querySelector(s);
@@ -41,7 +43,7 @@ async function cargar() {
   const hoy = new Date();
   diaSel = (hoy.getFullYear() === PROG.anio && hoy.getMonth() + 1 === PROG.mes)
     ? hoy.getDate() : 1;
-  render();
+  render('semana');
 }
 
 /* ---------- mapa ---------- */
@@ -176,13 +178,13 @@ function esHoy(n) {
   return h.getDate() === n && h.getMonth() + 1 === PROG.mes && h.getFullYear() === PROG.anio;
 }
 
-function render() {
+function render(enfoque) {
   const f = fechaDe(diaSel);
   const d = diaDe(diaSel);
   const sub = d && d.nota ? d.nota.toLowerCase() : MESES[PROG.mes - 1] + ' ' + PROG.anio;
   $('#fecha').innerHTML = DIAS[f.getDay()].replace(/^./, c => c.toUpperCase()) + ' ' + diaSel +
     '<span>' + sub + '</span>';
-  pintarSemana();
+  pintarSemana(enfoque);
   pintarLista();
   pintarTerritorios();
   limpiarSeleccion(true);
@@ -201,22 +203,50 @@ function encuadrarDia() {
   }
 }
 
-function pintarSemana() {
+/* la tira muestra siempre el mes completo; `enfoque` decide dónde queda
+   posicionada: 'semana' deja a la vista la semana del día elegido, y
+   cualquier otra cosa simplemente centra el día */
+function pintarSemana(enfoque) {
   const cont = $('#week'); cont.innerHTML = '';
-  const f = fechaDe(diaSel);
-  const lunes = new Date(f); lunes.setDate(f.getDate() - ((f.getDay() + 6) % 7));
-  const dias = modoMes ? PROG.dias.map(d => d.dia)
-    : [...Array(7)].map((_, i) => { const x = new Date(lunes); x.setDate(lunes.getDate() + i); return x; })
-      .filter(x => x.getMonth() + 1 === PROG.mes).map(x => x.getDate());
-  dias.forEach(n => {
+  PROG.dias.map(d => d.dia).forEach(n => {
     const dd = fechaDe(n);
     const b = el('button', 'wd' + (n === diaSel ? ' sel' : '') + (esHoy(n) ? ' hoy' : ''),
       `<i>${DIAS_C[dd.getDay()]}</i><b>${n}</b>`);
+    b.dataset.dia = n;
     b.onclick = () => { diaSel = n; render(); };
     cont.appendChild(b);
   });
+  posicionarTira(enfoque);
+}
+
+function posicionarTira(enfoque) {
+  const cont = $('#week');
   const sel = cont.querySelector('.wd.sel');
-  if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'center' });
+  if (!sel) return;
+  let left;
+  if (enfoque === 'semana') {
+    // el lunes de la semana del día elegido, pegado al borde izquierdo
+    const f = fechaDe(diaSel);
+    const lunes = diaSel - ((f.getDay() + 6) % 7);
+    const btns = [...cont.querySelectorAll('.wd')];
+    const primero = btns.find(b => +b.dataset.dia >= lunes) || sel;
+    left = primero.offsetLeft - 2;
+  } else {
+    left = sel.offsetLeft - (cont.clientWidth - sel.offsetWidth) / 2;
+  }
+  cont.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+}
+
+function urlComoLlegar(a) {
+  return a.coord
+    ? `https://www.google.com/maps/dir/?api=1&destination=${a.coord[0]},${a.coord[1]}`
+    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(a.mapsq || (a.direccion + ', Santiago, Chile'))}`;
+}
+
+/* la hora tal como se muestra: "10:00" o "17:00 a 19:00" */
+function horaTexto(a) {
+  const h = (a.hora || '').split('-');
+  return h[0] ? h[0] + (h[1] ? ' a ' + h[1] : '') : '';
 }
 
 function pintarLista() {
@@ -239,15 +269,8 @@ function pintarLista() {
       : (a.capitan || 'Sin capitán');
     info.appendChild(el('div', 'cap', titulo + tipo));
     if (a.grupo) info.appendChild(el('div', 'meta', a.grupo.toLowerCase()));
-    if (a.direccion) {
-      const dirUrl = a.coord
-        ? `https://www.google.com/maps/dir/?api=1&destination=${a.coord[0]},${a.coord[1]}`
-        : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(a.mapsq || (a.direccion + ', Santiago, Chile'))}`;
-      const d2 = el('a', 'dir', a.direccion);
-      d2.href = dirUrl; d2.target = '_blank'; d2.rel = 'noopener';
-      d2.onclick = e => e.stopPropagation();
-      info.appendChild(d2);
-    }
+    // texto, no enlace: tocarlo abre la ficha, igual que el resto de la fila
+    if (a.direccion) info.appendChild(el('div', 'dir', a.direccion));
     fila.appendChild(info);
 
     const chip = el('div', 'terrchip');
@@ -257,11 +280,8 @@ function pintarLista() {
       chip.appendChild(el('div', 'tnum calles', 'CALLES'));
     }
     if (a.direccion) {
-      const url = a.coord
-        ? `https://www.google.com/maps/dir/?api=1&destination=${a.coord[0]},${a.coord[1]}`
-        : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(a.mapsq || (a.direccion + ', Santiago, Chile'))}`;
       const go = el('a', 'go', '➤ cómo llegar');
-      go.href = url; go.target = '_blank'; go.rel = 'noopener';
+      go.href = urlComoLlegar(a); go.target = '_blank'; go.rel = 'noopener';
       go.onclick = e => e.stopPropagation();
       chip.appendChild(go);
     }
@@ -275,7 +295,7 @@ function pintarLista() {
 function irAActividad(a) {
   if (marcadorPunto) { map.removeLayer(marcadorPunto); marcadorPunto = null; }
   if (a.terr && a.terr.length) {
-    seleccionarTerritorio(a.terr[0], true);
+    resaltarTerritorio(a.terr[0], true);
     if (a.terr.length > 1) {
       const g = L.featureGroup(a.terr.map(n => capasTerr[n]).filter(Boolean));
       if (g.getLayers().length) map.fitBounds(g.getBounds().pad(0.35));
@@ -289,36 +309,83 @@ function irAActividad(a) {
         html: '<div style="width:20px;height:20px;border-radius:50%;background:#c62828;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>' })
     }).addTo(map).bindPopup('<b>Punto de encuentro</b><br>' + a.direccion);
   }
+  panelActividad(a);
 }
 
-/* ---------- panel de territorio ---------- */
-function seleccionarTerritorio(n, zoom) {
+/* ficha de la actividad: territorio, horario y punto de encuentro */
+function panelActividad(a) {
+  const ns = a.terr || [];
+  let titulo, sub = '';
+  if (ns.length === 1) {
+    const f = TERR.features.find(x => x.properties.n === ns[0]);
+    titulo = `<span class="dot" style="background:${f ? f.properties.color : 'transparent'}"></span>Territorio ${ns[0]}`;
+    if (f) sub = `${f.properties.nmanzanas} manzana(s)${f.properties.letras ? ' · ' + f.properties.letras.split('').join(' ') : ''}`;
+  } else if (ns.length > 1) {
+    titulo = 'Territorios ' + ns.join(' · ');
+  } else if (a.calles) {
+    titulo = 'Calles';
+  } else {
+    titulo = a.tipo === 'reunion' ? (a.nombre || 'Reunión') : (a.capitan || 'Actividad');
+  }
+  const hora = horaTexto(a);
+  const url = a.direccion ? urlComoLlegar(a) : null;
+  const nombre = a.tipo === 'reunion' ? (a.nombre || 'Reunión') : (a.capitan || 'Sin capitán');
+  mostrarPanel(`
+    <h3>${titulo}<span class="close" id="cerrarT">✕</span></h3>
+    ${sub ? `<div class="sub">${sub}</div>` : ''}
+    <div class="dato">
+      ${nombre && nombre !== titulo ? `<div class="dato-nombre">${nombre}</div>` : ''}
+      ${hora ? `<div class="dato-hora">${hora}</div>` : ''}
+      ${url ? `<div class="dato-fila">
+        <a class="dato-dir" href="${url}" target="_blank" rel="noopener">${a.direccion}</a>
+        <a class="btn primary" target="_blank" rel="noopener" href="${url}">➤ Cómo llegar</a>
+      </div>` : ''}
+    </div>`);
+}
+
+/* ---------- ficha sobre el mapa ---------- */
+/* mientras la ficha está abierta se esconde el listado de abajo, para
+   dejar el mapa a la vista */
+function mostrarPanel(html) {
+  const p = $('#tpanel');
+  p.innerHTML = html;
+  p.classList.add('show');
+  // se recoge el listado para dejar el mapa a la vista; queda la barra
+  // para volver a desplegarlo sin cerrar la ficha
+  if (estadoLista === 'abierto') { estadoLista = 'oculto'; ocultoPorFicha = true; }
+  ajustarHoja();
+  const c = $('#cerrarT');
+  if (c) c.onclick = () => limpiarSeleccion();
+}
+
+/* solo resalta y encuadra el territorio en el mapa */
+function resaltarTerritorio(n, zoom) {
   terrSel = n;
   pintarTerritorios();
   const capa = capasTerr[n];
   if (capa && zoom !== false) map.fitBounds(capa.getBounds().pad(0.45));
+}
+
+/* al tocar un territorio directamente en el mapa */
+function seleccionarTerritorio(n, zoom) {
+  resaltarTerritorio(n, zoom);
   const f = TERR.features.find(x => x.properties.n === n);
-  const dias = diasDeTerritorio(n);
-  const hecho = estaTrabajado(n);
-  const p = $('#tpanel');
   const centro = f.properties.centro;
-  p.innerHTML = `
+  mostrarPanel(`
     <h3><span class="dot" style="background:${f.properties.color}"></span>Territorio ${n}
       <span class="close" id="cerrarT">✕</span></h3>
     <div class="sub">${f.properties.nmanzanas} manzana(s)${f.properties.letras ? ' · ' + f.properties.letras.split('').join(' ') : ''}</div>
-    <div class="sub">${dias.length ? 'Este mes: días ' + dias.join(', ') : 'Sin asignación este mes'}</div>
     <div class="row">
-      <button class="btn ${hecho ? 'done' : ''}" id="btnHecho">${hecho ? '✓ Trabajado' : 'Marcar trabajado'}</button>
       <a class="btn" target="_blank" rel="noopener"
-         href="https://www.google.com/maps/dir/?api=1&destination=${centro[1]},${centro[0]}">Cómo llegar</a>
-    </div>`;
-  p.classList.add('show');
-  $('#cerrarT').onclick = () => limpiarSeleccion();
-  $('#btnHecho').onclick = () => { alternarTrabajado(n); seleccionarTerritorio(n, false); };
+         href="https://www.google.com/maps/dir/?api=1&destination=${centro[1]},${centro[0]}">➤ Cómo llegar</a>
+    </div>`);
 }
+
 function limpiarSeleccion(soloPanel) {
   terrSel = null;
   $('#tpanel').classList.remove('show');
+  // se devuelve el listado, salvo que haya sido el usuario quien lo escondió
+  if (ocultoPorFicha) { ocultoPorFicha = false; estadoLista = 'abierto'; ajustarHoja(); }
   if (!soloPanel && marcadorPunto) { map.removeLayer(marcadorPunto); marcadorPunto = null; }
   if (!soloPanel) actSel = null;
   pintarTerritorios();
@@ -336,12 +403,7 @@ $('#next').onclick = () => cambiarDia(1);
 $('#btnHoy').onclick = () => {
   const h = new Date();
   diaSel = (h.getMonth() + 1 === PROG.mes && h.getFullYear() === PROG.anio) ? h.getDate() : 1;
-  actSel = null; render();
-};
-$('#btnMes').onclick = () => {
-  modoMes = !modoMes;
-  $('#btnMes').classList.toggle('on', modoMes);
-  pintarSemana();
+  actSel = null; render('semana');
 };
 
 /* deslizar para cambiar de día */
@@ -354,13 +416,23 @@ $('#lista').addEventListener('touchend', e => {
   tx = ty = null;
 }, { passive: true });
 
-/* alto de la hoja inferior: se ajusta al contenido, o se expande */
-let expandida = false;
+/* hoja inferior: 'abierto' (normal) u 'oculto' (solo el mapa).
+   La barra de arriba muestra y oculta. */
 function ajustarHoja() {
-  $('#sheet').style.height = expandida ? '62dvh' : 'auto';
+  const s = $('#sheet');
+  s.classList.toggle('oculto', estadoLista === 'oculto');
+  // la flecha apunta a lo que hará el próximo toque
+  $('#grab').classList.toggle('cerrar', estadoLista === 'abierto');
   setTimeout(() => map && map.invalidateSize(), 200);
 }
-$('#grab').onclick = () => { expandida = !expandida; ajustarHoja(); };
+$('#grab').onclick = () => {
+  estadoLista = estadoLista === 'abierto' ? 'oculto' : 'abierto';
+  ocultoPorFicha = false;      // lo que decide el usuario manda
+  ajustarHoja();
+};
+// en el celular no hay "mouse encima": la flecha aparece al tocar
+$('#grab').addEventListener('touchstart', () => $('#grab').classList.add('tocando'), { passive: true });
+$('#grab').addEventListener('touchend', () => setTimeout(() => $('#grab').classList.remove('tocando'), 250), { passive: true });
 ajustarHoja();
 
 cargar();
