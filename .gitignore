@@ -219,3 +219,9 @@ __marimo__/
 
 # caché local de cruces de calles (OpenStreetMap)
 cruces_cache.json
+
+# respuesta cruda de Overpass (se vuelve a bajar sola)
+calles_cache.json
+
+# polígonos de recorte bajados de OpenStreetMap
+recortes_cache.json

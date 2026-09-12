@@ -1,0 +1,304 @@
+[
+ {
+  "cara": 116,
+  "m2": 14022,
+  "de": 2,
+  "a": 3,
+  "motivo": "el color del plano es de otro territorio",
+  "aplicado": true
+ },
+ {
+  "cara": 115,
+  "m2": 31001,
+  "de": 8,
+  "a": 3,
+  "motivo": "el color del plano es de otro territorio",
+  "aplicado": true
+ },
+ {
+  "cara": 16,
+  "m2": 5529,
+  "de": 18,
+  "a": [
+   51,
+   55
+  ],
+  "motivo": "varios territorios comparten ese color",
+  "aplicado": false
+ },
+ {
+  "cara": 514,
+  "m2": 4574,
+  "de": 33,
+  "a": 36,
+  "motivo": "el color del plano es de otro territorio",
+  "aplicado": true
+ },
+ {
+  "cara": 429,
+  "m2": 10509,
+  "de": 57,
+  "a": [
+   51,
+   55
+  ],
+  "motivo": "varios territorios comparten ese color",
+  "aplicado": false
+ },
+ {
+  "cara": 33,
+  "m2": 2450,
+  "de": null,
+  "a": 25,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 39,
+  "m2": 9658,
+  "de": null,
+  "a": 7,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 46,
+  "m2": 185,
+  "de": null,
+  "a": 51,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 48,
+  "m2": 4924,
+  "de": null,
+  "a": 51,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 87,
+  "m2": 2633,
+  "de": null,
+  "a": 1,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 96,
+  "m2": 16762,
+  "de": null,
+  "a": 54,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 196,
+  "m2": 2725,
+  "de": null,
+  "a": 52,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 255,
+  "m2": 2621,
+  "de": null,
+  "a": 55,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 281,
+  "m2": 5809,
+  "de": null,
+  "a": 40,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 292,
+  "m2": 5468,
+  "de": null,
+  "a": 35,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 415,
+  "m2": 3888,
+  "de": null,
+  "a": 56,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 424,
+  "m2": 1263,
+  "de": null,
+  "a": 55,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 426,
+  "m2": 1235,
+  "de": null,
+  "a": 55,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 430,
+  "m2": 7212,
+  "de": null,
+  "a": 57,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 431,
+  "m2": 7241,
+  "de": null,
+  "a": 57,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 502,
+  "m2": 5136,
+  "de": null,
+  "a": 45,
+  "motivo": "cuadra vecina del mismo color que faltaba",
+  "aplicado": true
+ },
+ {
+  "cara": 303,
+  "m2": 10176,
+  "de": 23,
+  "a": 31,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 373,
+  "m2": 1658,
+  "de": null,
+  "a": 4,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 519,
+  "m2": 2650,
+  "de": 17,
+  "a": 21,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 398,
+  "m2": 9295,
+  "de": 18,
+  "a": 22,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 26,
+  "m2": 4815,
+  "de": 16,
+  "a": 20,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 114,
+  "m2": 3290,
+  "de": null,
+  "a": 24,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 560,
+  "m2": 14390,
+  "de": 29,
+  "a": 34,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 295,
+  "m2": 15742,
+  "de": 36,
+  "a": 34,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 293,
+  "m2": 18521,
+  "de": 36,
+  "a": 35,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 289,
+  "m2": 6318,
+  "de": 48,
+  "a": 37,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 514,
+  "m2": 4574,
+  "de": 36,
+  "a": 33,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 98,
+  "m2": 5153,
+  "de": null,
+  "a": 46,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 427,
+  "m2": 2980,
+  "de": 54,
+  "a": 55,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 441,
+  "m2": 5902,
+  "de": 57,
+  "a": 58,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 435,
+  "m2": 5834,
+  "de": 57,
+  "a": 58,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ },
+ {
+  "cara": 436,
+  "m2": 5381,
+  "de": 57,
+  "a": 58,
+  "motivo": "corrección confirmada por la congregación",
+  "aplicado": true
+ }
+]

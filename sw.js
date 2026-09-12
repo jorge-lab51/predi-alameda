@@ -1,7 +1,8 @@
-const CACHE = 'alameda-v4';
+const CACHE = 'alameda-v7';
 const ASSETS = [
   './', 'index.html', 'app.js', 'leaflet.js', 'leaflet.css',
-  'programa.json', 'territorios.geojson', 'plano.webp', 'plano_bounds.json',
+  'programa.json', 'territorios.geojson', 'envolventes.geojson',
+  'plano.webp', 'plano_bounds.json',
   'manifest.webmanifest', 'icon-192.png', 'icon-512.png'
 ];
 
@@ -21,7 +22,8 @@ self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET') return;
   // teselas del mapa real: red primero, con caché de respaldo
-  if (url.hostname.includes('basemaps.cartocdn.com')) {
+  const TESELAS = ['basemaps.cartocdn.com', 'tile.openstreetmap.org', 'server.arcgisonline.com'];
+  if (TESELAS.some(h => url.hostname.includes(h))) {
     e.respondWith(
       fetch(e.request).then(r => {
         const copy = r.clone();

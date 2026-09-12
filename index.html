@@ -125,6 +125,11 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 .layerbar button{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:600;
   padding:5px 9px;border-radius:8px;cursor:pointer}
 .layerbar button.on{background:var(--accent);color:#fff}
+/* barras apiladas bajo Plano/Mapa/Ambos */
+.terrbar{top:47px}
+.basebar{top:84px}
+.basebar.oculta{display:none}
+.basebar button{padding:5px 7px;font-size:11.5px}
 
 .tpanel{position:absolute;left:10px;right:10px;bottom:12px;z-index:460;background:var(--panel);
   border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:10px 12px;display:none}
@@ -175,6 +180,16 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
       <button data-layer="plano" class="on">Plano</button>
       <button data-layer="mapa">Mapa</button>
       <button data-layer="ambos">Ambos</button>
+    </div>
+    <div class="layerbar terrbar" title="Cómo se marca el territorio">
+      <button data-terr="borde" class="on">Borde</button>
+      <button data-terr="manzanas">Manzanas</button>
+    </div>
+    <div class="layerbar basebar oculta" title="Mapa de calles">
+      <button data-base="osm" class="on">OSM</button>
+      <button data-base="gris">Gris</button>
+      <button data-base="calles">Calles</button>
+      <button data-base="carto">CARTO</button>
     </div>
     <div class="fabs">
       <button class="fab" id="fabGps" title="Dónde estoy">◎</button>

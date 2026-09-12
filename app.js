@@ -4,10 +4,13 @@ const DIAS_C = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
   'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
-let PROG = null, TERR = null, BOUNDS = null;
+let PROG = null, TERR = null, ENV = null, BOUNDS = null;
 let map, capaPlano, capaMapa, capaTerr, marcadorGps, marcadorPunto, circuloGps;
 let diaSel = 1, actSel = null, terrSel = null;
 let estadoLista = 'abierto';   // 'abierto' | 'oculto'
+// cómo se marca el territorio: 'borde' lo envuelve entero, 'manzanas' pinta
+// cada cuadra por separado
+let modoTerr = 'borde';
 let ocultoPorFicha = false;    // para devolverlo al cerrar la ficha
 const capasTerr = {};
 
@@ -16,6 +19,26 @@ const el = (t, c, h) => { const n = document.createElement(t); if (c) n.classNam
 
 /* ---------- estado guardado (localStorage) ---------- */
 const KEY = 'alameda_trabajados';
+const KEY_TERR = 'alameda_modo_territorio';
+const KEY_BASE = 'alameda_mapa_base';
+
+/* mapas de calles disponibles. maxNativeZoom es hasta dónde tiene teselas
+   cada uno: más allá Leaflet amplía la última en vez de dejar hueco */
+const MAPAS = {
+  osm: { nombre: 'OSM', maxNativeZoom: 19,
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; OpenStreetMap' },
+  gris: { nombre: 'Gris', maxNativeZoom: 16,
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attribution: '&copy; Esri' },
+  calles: { nombre: 'Calles', maxNativeZoom: 19,
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: '&copy; Esri' },
+  carto: { nombre: 'CARTO', maxNativeZoom: 20,
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; OpenStreetMap, &copy; CARTO' }
+};
+let mapaBase = 'osm';
 function trabajados() {
   try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
 }
@@ -32,12 +55,15 @@ function alternarTrabajado(t) {
 
 /* ---------- carga ---------- */
 async function cargar() {
-  const [p, t, b] = await Promise.all([
+  const [p, t, e, b] = await Promise.all([
     fetch('programa.json').then(r => r.json()),
     fetch('territorios.geojson').then(r => r.json()),
+    fetch('envolventes.geojson').then(r => r.json()).catch(() => null),
     fetch('plano_bounds.json').then(r => r.json())
   ]);
-  PROG = p; TERR = t; BOUNDS = b;
+  PROG = p; TERR = t; ENV = e; BOUNDS = b;
+  try { modoTerr = localStorage.getItem(KEY_TERR) || 'borde'; } catch (err) {}
+  if (!ENV) modoTerr = 'manzanas';
   $('#mestitulo').textContent = 'Programa de ' + MESES[PROG.mes - 1] + ' ' + PROG.anio;
   iniciarMapa();
   const hoy = new Date();
@@ -56,22 +82,15 @@ function iniciarMapa() {
   });
   map.attributionControl.setPrefix('');
 
-  capaMapa = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 20, minZoom: 13,
-    attribution: '&copy; OpenStreetMap, &copy; CARTO'
-  });
+  try { mapaBase = localStorage.getItem(KEY_BASE) || 'osm'; } catch (e) {}
+  if (!MAPAS[mapaBase]) mapaBase = 'osm';
+  ponerMapaBase(mapaBase);
   capaPlano = L.imageOverlay('plano.webp', lim, { opacity: 1, className: 'plano' });
 
   capaPlano.addTo(map);
   map.fitBounds(lim, { padding: [6, 6] });
 
-  capaTerr = L.geoJSON(TERR, {
-    style: estiloTerr,
-    onEachFeature: (f, capa) => {
-      capasTerr[f.properties.n] = capa;
-      capa.on('click', () => seleccionarTerritorio(f.properties.n, false));
-    }
-  }).addTo(map);
+  construirTerritorios();
 
   document.querySelectorAll('.layerbar button').forEach(b => {
     b.onclick = () => {
@@ -80,12 +99,69 @@ function iniciarMapa() {
       if (m === 'plano') { anadir(capaPlano); quitar(capaMapa); capaPlano.setOpacity(1); }
       if (m === 'mapa') { quitar(capaPlano); anadir(capaMapa); }
       if (m === 'ambos') { anadir(capaMapa); anadir(capaPlano); capaPlano.setOpacity(0.55); }
+      actualizarBarraBase();
       pintarTerritorios();
     };
   });
+  document.querySelectorAll('.basebar button').forEach(b => {
+    b.classList.toggle('on', b.dataset.base === mapaBase);
+    b.onclick = () => {
+      mapaBase = b.dataset.base;
+      try { localStorage.setItem(KEY_BASE, mapaBase); } catch (e) {}
+      document.querySelectorAll('.basebar button')
+        .forEach(x => x.classList.toggle('on', x === b));
+      ponerMapaBase(mapaBase);
+    };
+  });
+  document.querySelectorAll('.terrbar button').forEach(b => {
+    b.classList.toggle('on', b.dataset.terr === modoTerr);
+    b.onclick = () => {
+      modoTerr = b.dataset.terr;
+      try { localStorage.setItem(KEY_TERR, modoTerr); } catch (e) {}
+      document.querySelectorAll('.terrbar button')
+        .forEach(x => x.classList.toggle('on', x === b));
+      construirTerritorios();
+    };
+  });
+  if (!ENV) { const tb = document.querySelector('.terrbar'); if (tb) tb.style.display = 'none'; }
   $('#fabGps').onclick = ubicar;
   $('#fabFit').onclick = () => { map.fitBounds(lim, { padding: [6, 6] }); limpiarSeleccion(); };
 }
+/* (re)dibuja la capa de territorios según el modo elegido */
+function construirTerritorios() {
+  if (capaTerr) map.removeLayer(capaTerr);
+  for (const k in capasTerr) delete capasTerr[k];
+  const datos = modoTerr === 'borde' && ENV ? ENV : TERR;
+  capaTerr = L.geoJSON(datos, {
+    style: estiloTerr,
+    onEachFeature: (f, capa) => {
+      capasTerr[f.properties.n] = capa;
+      capa.on('click', () => seleccionarTerritorio(f.properties.n, false));
+    }
+  }).addTo(map);
+  pintarTerritorios();
+}
+
+/* cambia el mapa de calles conservando si estaba visible o no */
+function ponerMapaBase(clave) {
+  const cfg = MAPAS[clave];
+  const visible = capaMapa ? map.hasLayer(capaMapa) : false;
+  if (capaMapa) map.removeLayer(capaMapa);
+  capaMapa = L.tileLayer(cfg.url, {
+    maxZoom: 20, minZoom: 13, maxNativeZoom: cfg.maxNativeZoom,
+    attribution: cfg.attribution
+  });
+  if (visible) { capaMapa.addTo(map); if (capaPlano) capaPlano.bringToFront(); }
+  if (capaTerr) capaTerr.bringToFront();
+  actualizarBarraBase();
+}
+
+/* la barra del mapa base solo tiene sentido con el mapa de calles a la vista */
+function actualizarBarraBase() {
+  const b = document.querySelector('.basebar');
+  if (b) b.classList.toggle('oculta', !(capaMapa && map.hasLayer(capaMapa)));
+}
+
 const anadir = c => { if (!map.hasLayer(c)) c.addTo(map); };
 const quitar = c => { if (map.hasLayer(c)) map.removeLayer(c); };
 

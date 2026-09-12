@@ -11,8 +11,7 @@ inicio, y funciona sin conexión.
 
 ## Lo único que cambia cada mes
 
-`programa.json`. Todo lo demás (plano, territorios, manzanas) solo se rehace si la
-congregación cambia los límites de los territorios.
+`programa.json`. Los territorios solo se rehacen si la congregación corrige algo.
 
 ---
 
@@ -61,6 +60,66 @@ curl -s "https://jorge-lab51.github.io/predi-alameda/programa.json?cb=$(date +%s
 ```
 
 ---
+
+# Los territorios
+
+`territorios.geojson` (las manzanas) y `envolventes.geojson` (el contorno de cada
+territorio, de una pieza) **se generan**:
+
+```bash
+python territorios_desde_osm.py
+```
+
+La fuente es `territorios_trazados.geojson`, el trazado original a mano, que no se
+edita nunca. El script lo rehace usando las cuadras reales de la ciudad: baja la red
+de calles de OpenStreetMap, la poligoniza, y adjudica cada cuadra a un territorio
+cruzando dos señales independientes: dónde caen las manzanas trazadas, y de qué color
+está pintada la cuadra en el plano. Ver el docstring del script para el detalle.
+
+Escribe además `dudosos.json`: los casos que el color no alcanzó a decidir porque dos
+territorios vecinos están pintados igual. Esos quedan como estaban, para revisión
+humana.
+
+## Las cuatro listas que ajustan el resultado
+
+Todas viven en `territorios_desde_osm.py`, salvo la última, y cada entrada lleva
+escrito por qué existe. **Son la forma correcta de corregir el mapa**: nunca editar
+los geojson a mano, porque se regeneran.
+
+| Lista | Para qué |
+|---|---|
+| `CORRECCIONES` | "la cuadra que contiene este punto es de tal territorio". Para cuando el color no desambigua y la congregación confirma |
+| `EXCLUIDAS` | cuadras que no son de nadie: plazas, bandejones |
+| `BLOQUE_UNICO` | un territorio que en la realidad es un bloque con pasajes, no manzanas sueltas. Hoy solo T58 al poniente de San Alfonso |
+| `CONEXIONES` (en `envolventes.py`) | tramos de calle que existen pero faltan en OSM, sin los cuales la manzana no cierra |
+
+Las coordenadas se escriben aproximadas: los tramos de `CONEXIONES` se enganchan
+solos a los vértices vecinos dentro de 2 m.
+
+## Trampas de este pipeline
+
+Cada una costó encontrarla y está resuelta; no re-descubrirlas.
+
+- **El plano no tiene manzanas, tiene construcciones.** El trazado original dibujaba
+  la planta de los edificios, no la cuadra. De ahí que salieran formas "puntudas".
+  Por eso se usan las cuadras de OSM.
+- **Los colores del plano no se comparan por igualdad.** T29 (`#780b3c`) y T46
+  (`#74163c`) son el mismo granate. Redondear a cubetas fijas los separaba e inventaba
+  correcciones. Se comparan por distancia (`DIST_COLOR`).
+- **Las avenidas partidas dejan bandejones.** Al poligonizar, entre las dos calzadas
+  queda una cara larga y angosta. Si se le adjudica a un territorio aparecen "cachos"
+  de color sobre el asfalto. Se descartan con `es_tira`, y un hueco solo se absorbe si
+  **todo su perímetro** da a un mismo territorio.
+- **Algunas cuadras arrastran una lengua de asfalto** pegada por un cuello estrecho,
+  donde la avenida no está mapeada pareja. `sin_cola` la separa con una apertura
+  morfológica y descarta el trozo que no contiene ninguna manzana dibujada.
+- **Varios pasajes están en OSM como `footway`.** Se suman los que tienen nombre y no
+  son vereda ni paso de cebra. Sin ellos, manzanas enteras salen de una pieza.
+- **El tamaño máximo de cuadra importa.** `CARA_MAXIMA_M2` está en 90.000 m² porque hay
+  cuadras reales de 88.000. Bajarlo hace que esos territorios caigan al plan B y salgan
+  deformados.
+- **Para el territorio 58, el plano tiene más información que el mapa.** Se midió: OSM
+  solo alcanza a estructurar el 37% de ese sector. Es el caso inverso al resto.
 
 # Trampas conocidas
 
@@ -199,11 +258,16 @@ se publica la nueva → qué ve al abrir).
 | `app.js` | Toda la lógica |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Offline e instalación |
 | `programa.json` | El programa del mes, generado |
-| `territorios.geojson` | Los 58 territorios (`n`, `centro`, `color`, `letras`, `nmanzanas`) |
-| `manzanas.geojson` | Cada manzana con su letra |
+| `territorios.geojson` | Generado: los 58 territorios, manzana por manzana (`n`, `centro`, `color`, `letras`, `nmanzanas`) |
+| `envolventes.geojson` | Generado: el contorno de cada territorio, de una pieza |
+| `territorios_trazados.geojson` | El trazado original a mano. Fuente, no se edita |
+| `dudosos.json` | Generado: lo que necesita confirmación humana |
+| `manzanas.geojson` | Del trazado antiguo. **Quedó obsoleto**, no lo carga nadie |
 | `plano.webp`, `plano_bounds.json` | El plano original georreferenciado |
 | `parse_programa.py` | PDF → datos crudos |
 | `enriquecer_programa.py` | Agrega territorios, coordenadas y tildes |
+| `territorios_desde_osm.py` | Rehace los territorios con las cuadras reales |
+| `envolventes.py` | Saca las cuadras de OSM y arma los contornos |
 | `cruce.py` | Busca cruces de calles en OpenStreetMap |
 
 ## Forma de `programa.json`

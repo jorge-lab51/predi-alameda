@@ -64,8 +64,20 @@ Para publicar: reemplaza `programa.json` en el repositorio → ícono del lápiz
 contenido nuevo → **Commit changes**. La app se actualiza sola en unos minutos, incluso
 en los celulares que ya la tienen instalada.
 
-El plano (`plano.webp` y `territorios.geojson`) solo hay que rehacerlo si la
-congregación cambia los límites de los territorios.
+## Si cambian los territorios
+
+`territorios.geojson` y `envolventes.geojson` **se generan**, no se editan a mano:
+
+```bash
+python territorios_desde_osm.py
+```
+
+Ese script parte del trazado original (`territorios_trazados.geojson`, que no se
+toca nunca) y lo rehace usando las cuadras reales de OpenStreetMap. Las
+correcciones que ha ido confirmando la congregación están escritas dentro del
+propio script, en la lista `CORRECCIONES`, con el motivo de cada una.
+
+El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 
 ## Qué hay en cada archivo
 
@@ -75,11 +87,15 @@ congregación cambia los límites de los territorios.
 | `leaflet.js`, `leaflet.css` | Librería del mapa (incluida, no depende de internet) |
 | `plano.webp` | El plano original rectificado y georreferenciado |
 | `plano_bounds.json` | Esquinas geográficas del plano |
-| `territorios.geojson` | Los 58 territorios como polígonos reales |
-| `manzanas.geojson` | Cada manzana por separado, con su letra (A, B, C…) |
+| `territorios.geojson` | Los 58 territorios, manzana por manzana |
+| `envolventes.geojson` | El contorno de cada territorio, de una pieza |
+| `territorios_trazados.geojson` | El trazado original a mano, que se conserva como fuente |
+| `manzanas.geojson` | Del trazado antiguo. Ya no lo usa nadie |
 | `programa.json` | El programa del mes convertido a datos |
 | `parse_programa.py` | Convierte el PDF del mes en datos |
 | `enriquecer_programa.py` | Le agrega territorios y coordenadas al programa |
+| `territorios_desde_osm.py` | Rehace los territorios con las cuadras reales de la ciudad |
+| `envolventes.py` | Saca las cuadras reales de OpenStreetMap |
 | `cruce.py` | Busca cruces de calles en OpenStreetMap |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Para que funcione sin conexión e instalada |
 
@@ -92,6 +108,9 @@ congregación cambia los límites de los territorios.
   y se abre una ficha con el capitán, la hora y la dirección. **Cómo llegar** abre
   Google Maps con la ruta. La ficha se cierra con la **✕**.
 - Tocar un territorio en el mapa: muestra sus manzanas y cómo llegar a él.
+- **Borde / Manzanas**: el territorio se marca envuelto entero, o cuadra por cuadra.
+- Con el mapa de calles a la vista aparece **OSM / Gris / Calles / CARTO**, para
+  elegir qué mapa de fondo se usa.
 - La **barra** sobre el listado lo muestra y lo oculta, para dejar el mapa a pantalla
   completa. Al apuntarla se dobla en forma de flecha, indicando qué hará. Con una
   ficha abierta el listado se recoge solo, y vuelve al cerrarla.
