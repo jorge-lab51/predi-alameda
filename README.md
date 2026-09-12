@@ -107,7 +107,8 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 - Tocar una actividad: el mapa se acerca al territorio, aparece el punto de encuentro
   y se abre una ficha con el capitán, la hora y la dirección. **Cómo llegar** abre
   Google Maps con la ruta. La ficha se cierra con la **✕**.
-- Tocar un territorio en el mapa: muestra sus manzanas y cómo llegar a él.
+- Tocar un territorio en el mapa: muestra sus manzanas, **en qué día del mes está
+  asignado** —o que no lo está— y cómo llegar a él.
 - **Borde / Manzanas**: el territorio se marca envuelto entero, o cuadra por cuadra.
 - Con el mapa de calles a la vista aparece **OSM / Gris / Calles / CARTO**, para
   elegir qué mapa de fondo se usa.

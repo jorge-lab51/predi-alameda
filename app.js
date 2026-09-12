@@ -248,6 +248,14 @@ function diasDeTerritorio(n) {
   return PROG.dias.filter(d => d.actividades.some(a => (a.terr || []).includes(n)))
     .map(d => d.dia);
 }
+/* en qué días del mes se predica este territorio, para la ficha del mapa */
+function textoDias(n) {
+  const dias = diasDeTerritorio(n);
+  if (!dias.length) return 'Sin asignación este mes';
+  const lista = dias.map(d => d === diaSel ? `<b>${d}</b>` : d).join(', ');
+  return (dias.length === 1 ? 'Este mes: día ' : 'Este mes: días ') + lista;
+}
+
 function fechaDe(n) { return new Date(PROG.anio, PROG.mes - 1, n); }
 function esHoy(n) {
   const h = new Date();
@@ -451,6 +459,7 @@ function seleccionarTerritorio(n, zoom) {
     <h3><span class="dot" style="background:${f.properties.color}"></span>Territorio ${n}
       <span class="close" id="cerrarT">✕</span></h3>
     <div class="sub">${f.properties.nmanzanas} manzana(s)${f.properties.letras ? ' · ' + f.properties.letras.split('').join(' ') : ''}</div>
+    <div class="sub dias">${textoDias(n)}</div>
     <div class="row">
       <a class="btn" target="_blank" rel="noopener"
          href="https://www.google.com/maps/dir/?api=1&destination=${centro[1]},${centro[0]}">➤ Cómo llegar</a>
