@@ -88,6 +88,7 @@ CORRECCIONES = [
     (-70.673873, -33.465616, 35),   # Conferencia / Espiñeira / San Alfonso / Antofagasta (estaba en T36)
     (-70.671759, -33.465612, 37),   # Bascuñán Guerrero / Espiñeira / Abate Molina (estaba en T48)
     (-70.670528, -33.467865, 41),   # el triángulo entre Mirador, El Boldo y Manuel de Amat
+    (-70.670818, -33.467905, 41),   # la manzana que forman los pasajes El Sol y El Boldo
     (-70.675917, -33.465986, 33),   # la tira entre Los Suspiros y Espiñeda, en Antofagasta
                                     # con San Vicente: el crema de T33 y el de T36 son casi
                                     # el mismo y se la llevaba T36, que está a 300 m
@@ -115,8 +116,9 @@ BLOQUE_UNICO = [
 # mapa sí trae los caminos interiores. El contorno del territorio no cambia:
 # solo se reemplaza lo que tiene por dentro.
 REMAPEAR = [
-    {'territorio': 51, 'minimo_m2': 10000,
-     'vias': ('footway', 'path', 'service', 'cycleway', 'steps')},
+    # El parque se recorre por sus caminos de verdad, no por las sendas
+    # peatonales: incluirlas lo partía en retazos que no corresponden a nada.
+    {'territorio': 51, 'minimo_m2': 5000, 'vias': ('service',)},
 ]
 CACHE_FINO = 'fino_cache.json'      # red detallada, ignorada por git
 

@@ -88,7 +88,7 @@ los geojson a mano, porque se regeneran.
 
 | Lista | Para qué |
 |---|---|
-| `REMAPEAR` | rehace las manzanas de un territorio con el detalle del mapa, conservando su contorno. Hoy solo T51, el Parque O'Higgins |
+| `REMAPEAR` | rehace las manzanas de un territorio con el detalle del mapa, conservando su contorno. Hoy solo T51, el Parque O'Higgins: se poligoniza con `service` y **sin** sendas peatonales, que lo partían en retazos que no corresponden a nada |
 | `CORRECCIONES` | "la cuadra que contiene este punto es de tal territorio". Para cuando el color no desambigua y la congregación confirma |
 | `EXCLUIDAS` | cuadras que no son de nadie: plazas, bandejones |
 | `BLOQUE_UNICO` | un territorio que en la realidad es un bloque con pasajes, no manzanas sueltas. Hoy solo T58 al poniente de San Alfonso |
@@ -126,6 +126,9 @@ Cada una costó encontrarla y está resuelta; no re-descubrirlas.
 - **Los bandejones absorbidos no son manzanas.** Se absorben para que el territorio no
   quede partido, pero entran solo en la envolvente: si se listan como manzanas,
   aparecen tiras de color sobre la calzada.
+- **En la vista Dibujo la etiqueta va al medio por distancia, no por vértice.** Tras
+  simplificar, muchas calles quedan con tres puntos y el vértice del medio cae en un
+  extremo: el nombre terminaba escrito sobre otra calle.
 - **Para el territorio 58, el plano tiene más información que el mapa.** Se midió: OSM
   solo alcanza a estructurar el 37% de ese sector. Es el caso inverso al resto.
 

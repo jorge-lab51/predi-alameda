@@ -177,11 +177,23 @@ function construirCalles() {
   for (const f of CALLES.features) {
     const pts = f.geometry.coordinates;
     if (pts.length < 2) continue;
-    const i = Math.floor((pts.length - 1) / 2);
+    // el punto medio por distancia, no por número de vértices: al simplificar,
+    // muchas calles quedan con tres puntos y la etiqueta caía en un extremo
+    const tramo = (a, b) => Math.hypot((b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), b[1] - a[1]);
+    let total = 0;
+    for (let k = 0; k < pts.length - 1; k++) total += tramo(pts[k], pts[k + 1]);
+    let anda = 0, i = 0;
+    for (; i < pts.length - 2; i++) {
+      const d = tramo(pts[i], pts[i + 1]);
+      if (anda + d >= total / 2) break;
+      anda += d;
+    }
     const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
     let ang = Math.atan2(y1 - y2, (x2 - x1) * Math.cos(y1 * Math.PI / 180)) * 180 / Math.PI;
     if (ang > 90) ang -= 180; else if (ang < -90) ang += 180;
-    const m = L.marker([(y1 + y2) / 2, (x1 + x2) / 2], {
+    const t = tramo(pts[i], pts[i + 1]);
+    const f2 = t > 0 ? Math.min(Math.max((total / 2 - anda) / t, 0), 1) : 0.5;
+    const m = L.marker([y1 + (y2 - y1) * f2, x1 + (x2 - x1) * f2], {
       interactive: false, keyboard: false,
       icon: L.divIcon({ className: '', iconSize: [0, 0],
         html: `<div class="rotulo" style="transform:translate(-50%,-50%) rotate(${ang}deg)">${f.properties.nombre}</div>` })

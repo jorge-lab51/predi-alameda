@@ -15,6 +15,8 @@ import envolventes as E
 
 SALIDA = 'calles.geojson'
 BOUNDS = 'plano_bounds.json'
+TERRITORIOS = 'envolventes.geojson'
+MARGEN_M = 45        # cuánto se sale del sector, para alcanzar las calles del borde
 # se dejan fuera los pasajes: en el dibujo no caben y estorban
 CALLES = {'motorway', 'trunk', 'primary', 'secondary', 'tertiary',
           'residential', 'unclassified'}
@@ -33,7 +35,13 @@ def normaliza(nombre):
 def main():
     b = json.load(open(BOUNDS))
     (la0, lo0), (la1, lo1) = b['bounds']
-    zona = box(lo0, la0, lo1, la1)
+    # solo las calles del sector: las de afuera no sirven y estorban. El margen
+    # alcanza para incluir las que hacen de límite exterior.
+    from shapely.geometry import shape
+    terr = unary_union([shape(f['geometry'])
+                        for f in json.load(open(TERRITORIOS, encoding='utf-8'))['features']])
+    zona = box(lo0, la0, lo1, la1).intersection(
+        E.a_grados(E.a_metrico(terr).buffer(MARGEN_M / E.M)))
     d = E.calles_osm()
     nodos = {e['id']: (e['lon'], e['lat']) for e in d['elements'] if e['type'] == 'node'}
     por_nombre = {}
