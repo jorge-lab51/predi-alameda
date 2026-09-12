@@ -127,9 +127,15 @@ Cada una costó encontrarla y está resuelta; no re-descubrirlas.
 - **Los bandejones absorbidos no son manzanas.** Se absorben para que el territorio no
   quede partido, pero entran solo en la envolvente: si se listan como manzanas,
   aparecen tiras de color sobre la calzada.
-- **En la vista Dibujo la etiqueta va al medio por distancia, no por vértice.** Tras
-  simplificar, muchas calles quedan con tres puntos y el vértice del medio cae en un
-  extremo: el nombre terminaba escrito sobre otra calle.
+- **En la vista Dibujo el nombre se coloca sobre el trozo de calle que se ve**, no
+  sobre la calle entera, y se recalcula con cada movimiento del mapa: si no, una calle
+  que cruza la pantalla de lado a lado se queda sin nombre porque su medio quedó fuera.
+  Desde el medio de lo visible el nombre se corre a lo largo de la calle hasta que cabe
+  entero, no pisa otro nombre y no queda bajo las barras de botones; si no hay dónde,
+  se prefiere escribirlo bajo una barra antes que no escribirlo. De cada calle partida
+  en varios tramos se rotula solo el que más se ve. Ojo con el punto medio: hay que
+  medirlo **por distancia, no por vértice** — tras simplificar, muchas calles quedan
+  con tres puntos y el vértice del medio cae en un extremo.
 - **Para el territorio 58, el plano tiene más información que el mapa.** Se midió: OSM
   solo alcanza a estructurar el 37% de ese sector. Es el caso inverso al resto.
 
@@ -211,6 +217,19 @@ se llega solo con el link.
 **Las direcciones de casas de familia (las marcadas `(FAMILIA ...)`) nunca se
 geolocalizan.** Quedan con `coord: null` y solo con el texto de búsqueda para Google
 Maps. Es deliberado, no un fallo del geocoder. No "arreglarlo".
+
+## La clave de CARTO
+
+Las teselas raster de CARTO exigen clave desde 2026: sin ella vienen con una
+filigrana *API KEY REQUIRED* encima. La clave va como parámetro `key` en la URL de
+`MAPAS.carto` (`app.js`), **a la vista en el código**, que es lo que permite un sitio
+estático en un repo público. La congregación lo aceptó así a sabiendas. Si alguna vez
+molesta, se restringe la clave a `jorge-lab51.github.io` desde el panel de CARTO
+(carto.com/basemaps/apikey), que es donde también se revoca.
+
+El plan gratis son 5.000.000 de teselas al mes, muy por encima de este uso. CARTO pide
+además mantener visible la atribución suya y la de OpenStreetMap: va en el
+`attribution` de la capa, no quitarla.
 
 ---
 

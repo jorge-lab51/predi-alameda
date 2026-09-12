@@ -35,9 +35,14 @@ const MAPAS = {
   calles: { nombre: 'Calles', maxNativeZoom: 19,
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; Esri' },
+  // CARTO exige clave en las teselas raster: sin ella las marca con una
+  // filigrana. Queda a la vista en el código, que es público; para limitarla
+  // hay que restringirla al dominio desde el panel de CARTO.
   carto: { nombre: 'CARTO', maxNativeZoom: 20,
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; OpenStreetMap, &copy; CARTO' }
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+       + '?key=cb1_3ipr_1_3c531422306febfa3ff2e9d3',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+               + ', &copy; <a href="https://carto.com/attributions">CARTO</a>' }
 };
 let mapaBase = 'osm';
 function trabajados() {
@@ -105,7 +110,7 @@ function iniciarMapa() {
       if (m === 'dibujo') { quitar(capaPlano); quitar(capaMapa); }
       dibujo = (m === 'dibujo');
       document.body.classList.toggle('dibujo', dibujo);
-      if (capaDibujo) { if (dibujo) anadir(capaDibujo); else quitar(capaDibujo); }
+      if (capaDibujo) { if (dibujo) { anadir(capaDibujo); colocarRotulos(); } else quitar(capaDibujo); }
       actualizarBarraBase();
       pintarTerritorios();
     };
@@ -177,44 +182,153 @@ function construirCalles() {
   for (const f of CALLES.features) {
     const pts = f.geometry.coordinates;
     if (pts.length < 2) continue;
-    // el punto medio por distancia, no por número de vértices: al simplificar,
-    // muchas calles quedan con tres puntos y la etiqueta caía en un extremo
-    const tramo = (a, b) => Math.hypot((b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), b[1] - a[1]);
-    let total = 0;
-    for (let k = 0; k < pts.length - 1; k++) total += tramo(pts[k], pts[k + 1]);
-    let anda = 0, i = 0;
-    for (; i < pts.length - 2; i++) {
-      const d = tramo(pts[i], pts[i + 1]);
-      if (anda + d >= total / 2) break;
-      anda += d;
-    }
-    const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
-    let ang = Math.atan2(y1 - y2, (x2 - x1) * Math.cos(y1 * Math.PI / 180)) * 180 / Math.PI;
-    if (ang > 90) ang -= 180; else if (ang < -90) ang += 180;
-    const t = tramo(pts[i], pts[i + 1]);
-    const f2 = t > 0 ? Math.min(Math.max((total / 2 - anda) / t, 0), 1) : 0.5;
-    const m = L.marker([y1 + (y2 - y1) * f2, x1 + (x2 - x1) * f2], {
+    const m = L.marker([pts[0][1], pts[0][0]], {
       interactive: false, keyboard: false,
       icon: L.divIcon({ className: '', iconSize: [0, 0],
-        html: `<div class="rotulo" style="transform:translate(-50%,-50%) rotate(${ang}deg)">${f.properties.nombre}</div>` })
+        html: `<div class="rotulo">${f.properties.nombre}</div>` })
     });
+    m.pts = pts;                       // la calle entera, para recortarla al vuelo
     m.largo = f.properties.m || 0;
     marcas.push(m);
   }
   capaDibujo = L.layerGroup(marcas);
   if (dibujo) capaDibujo.addTo(map);
-  map.off('zoomend', filtrarRotulos).on('zoomend', filtrarRotulos);
-  filtrarRotulos();
+  for (const ev of ['zoomend', 'moveend', 'resize'])
+    map.off(ev, colocarRotulos).on(ev, colocarRotulos);
+  colocarRotulos();
 }
 
-/* alejado solo se escriben las calles largas, o no se lee nada */
-function filtrarRotulos() {
-  if (!capaDibujo) return;
+/* Cada nombre se escribe sobre el trozo de calle que se está viendo, no al
+   medio de la calle entera: si no, una calle que cruza la pantalla de lado a
+   lado se queda sin nombre porque su medio quedó fuera de la vista. Se parte
+   del medio de lo visible y se corre a lo largo de la calle hasta que el
+   nombre cabe entero y no queda debajo de las barras de botones. Se recalcula
+   con cada movimiento del mapa. */
+const MARGEN_ROTULO = 4;    // px de aire contra el borde de la pantalla
+const TRAMO_MINIMO = 12;    // px de calle a la vista: menos que eso no se rotula
+const PASO_ROTULO = 8;      // cada cuántos px se prueba correr el nombre
+
+/* recorta un segmento contra el rectángulo visible (Liang-Barsky) */
+function recortarSegmento(a, b, c) {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const p = [-dx, dx, -dy, dy];
+  const q = [a.x - c.x0, c.x1 - a.x, a.y - c.y0, c.y1 - a.y];
+  let t0 = 0, t1 = 1;
+  for (let k = 0; k < 4; k++) {
+    if (p[k] === 0) { if (q[k] < 0) return null; continue; }
+    const r = q[k] / p[k];
+    if (p[k] < 0) { if (r > t1) return null; if (r > t0) t0 = r; }
+    else { if (r < t0) return null; if (r < t1) t1 = r; }
+  }
+  return [{ x: a.x + t0 * dx, y: a.y + t0 * dy },
+          { x: a.x + t1 * dx, y: a.y + t1 * dy }];
+}
+
+/* el trozo continuo más largo de la calle que cae dentro de la vista */
+function tramoVisible(px, c) {
+  let mejor = null, mejorL = 0, actual = null, largo = 0;
+  for (let i = 0; i < px.length - 1; i++) {
+    const r = recortarSegmento(px[i], px[i + 1], c);
+    if (!r) { actual = null; largo = 0; continue; }
+    const u = actual && actual[actual.length - 1];
+    if (u && Math.abs(u.x - r[0].x) < 0.5 && Math.abs(u.y - r[0].y) < 0.5) actual.push(r[1]);
+    else { actual = [r[0], r[1]]; largo = 0; }
+    largo += Math.hypot(r[1].x - r[0].x, r[1].y - r[0].y);
+    if (largo > mejorL) { mejorL = largo; mejor = actual; }
+  }
+  return mejor && mejorL >= TRAMO_MINIMO ? { pts: mejor, largo: mejorL } : null;
+}
+
+/* el punto que está a `d` píxeles del comienzo del tramo, y hacia dónde va */
+function puntoEn(v, d) {
+  let anda = 0, i = 0, l = 0;
+  for (; i < v.pts.length - 2; i++) {
+    l = Math.hypot(v.pts[i + 1].x - v.pts[i].x, v.pts[i + 1].y - v.pts[i].y);
+    if (anda + l >= d) break;
+    anda += l;
+  }
+  const a = v.pts[i], b = v.pts[i + 1];
+  l = Math.hypot(b.x - a.x, b.y - a.y);
+  const f = l > 0 ? Math.min(Math.max((d - anda) / l, 0), 1) : 0.5;
+  let ang = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+  if (ang > 90) ang -= 180; else if (ang < -90) ang += 180;
+  return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f, ang };
+}
+
+/* dónde escribir el nombre: lo más cerca posible del medio de lo visible, pero
+   sin salirse de la pantalla, sin pisar otro nombre y sin caer bajo las barras.
+   Se prueba en ese orden de prioridad: antes que dejar la calle sin nombre,
+   vale escribirlo debajo de una barra. */
+function puntoRotulo(v, w, h, c, puestos, barras) {
+  const n = Math.floor(v.largo / 2 / PASO_ROTULO);
+  const choca = (p, dx, dy, rs) => rs.some(r => p.x + dx > r.x0 && p.x - dx < r.x1 &&
+                                                p.y + dy > r.y0 && p.y - dy < r.y1);
+  for (const evitar of [puestos.concat(barras), puestos, []]) {
+    for (let k = 0; k <= n; k++) {
+      for (const lado of (k ? [-1, 1] : [0])) {
+        const p = puntoEn(v, v.largo / 2 + lado * k * PASO_ROTULO);
+        // la caja que ocupa el nombre ya girado
+        const rad = p.ang * Math.PI / 180;
+        const dx = (Math.abs(w * Math.cos(rad)) + Math.abs(h * Math.sin(rad))) / 2;
+        const dy = (Math.abs(w * Math.sin(rad)) + Math.abs(h * Math.cos(rad))) / 2;
+        if (p.x - dx < c.x0 || p.x + dx > c.x1 || p.y - dy < c.y0 || p.y + dy > c.y1) continue;
+        if (choca(p, dx, dy, evitar)) continue;
+        return { x: p.x, y: p.y, ang: p.ang,
+                 caja: { x0: p.x - dx, y0: p.y - dy, x1: p.x + dx, y1: p.y + dy } };
+      }
+    }
+  }
+  return null;
+}
+
+/* lo que tapa el mapa por encima: las barras y los botones redondos */
+function zonasTapadas() {
+  const c = map.getContainer().getBoundingClientRect();
+  return [...document.querySelectorAll('.layerbar, .fabs')]
+    .filter(e => e.offsetParent)
+    .map(e => { const r = e.getBoundingClientRect();
+      return { x0: r.left - c.left, y0: r.top - c.top,
+               x1: r.right - c.left, y1: r.bottom - c.top }; });
+}
+
+function colocarRotulos() {
+  if (!capaDibujo || !map.hasLayer(capaDibujo)) return;
+  // alejado solo se escriben las calles largas, o no se lee nada
   const z = map.getZoom();
   const minimo = z >= 17 ? 0 : z >= 16 ? 220 : z >= 15 ? 450 : 900;
+  const t = map.getSize(), m0 = MARGEN_ROTULO;
+  const caja = { x0: m0, y0: m0, x1: t.x - m0, y1: t.y - m0 };
+  const barras = zonasTapadas();
+  const pendientes = [];
   capaDibujo.eachLayer(m => {
-    if (m._icon) m._icon.style.display = m.largo >= minimo ? '' : 'none';
+    if (!m._icon) return;
+    const v = m.largo >= minimo &&
+      tramoVisible(m.pts.map(p => map.latLngToContainerPoint([p[1], p[0]])), caja);
+    if (!v) { m._icon.style.display = 'none'; return; }
+    m._icon.style.display = '';            // visible para poder medirlo
+    pendientes.push([m, v]);
   });
+  // una calle puede venir partida en varios tramos con el mismo nombre: se
+  // escribe una sola vez, sobre el trozo que más se ve
+  const mejor = new Map();
+  for (const p of pendientes) {
+    const n = p[0]._icon.firstElementChild.textContent;
+    if (!mejor.has(n) || p[1].largo > mejor.get(n)[1].largo) mejor.set(n, p);
+  }
+  for (const p of pendientes)
+    if (mejor.get(p[0]._icon.firstElementChild.textContent) !== p) p[0]._icon.style.display = 'none';
+  // las calles largas eligen primero: son las que más orientan
+  const orden = [...mejor.values()].sort((a, b) => b[0].largo - a[0].largo);
+  const puestos = [];
+  for (const [m, v] of orden) {
+    const rot = m._icon.firstElementChild;
+    if (!m.ancho) { m.ancho = rot.offsetWidth; m.alto = rot.offsetHeight; }
+    const p = puntoRotulo(v, m.ancho, m.alto, caja, puestos, barras);
+    if (!p) { m._icon.style.display = 'none'; continue; }
+    puestos.push(p.caja);
+    m.setLatLng(map.containerPointToLatLng(L.point(p.x, p.y)));
+    rot.style.transform = `translate(-50%,-50%) rotate(${p.ang}deg)`;
+  }
 }
 
 const anadir = c => { if (!map.hasLayer(c)) c.addTo(map); };

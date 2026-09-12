@@ -120,7 +120,8 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
   ficha abierta el listado se recoge solo, y vuelve al cerrarla.
 - **Plano / Mapa / Ambos / Dibujo**: el plano original, el mapa de calles real, los
   dos superpuestos, o un dibujo limpio de los territorios con los nombres de las
-  calles y sin nada de fondo.
+  calles y sin nada de fondo. Los nombres acompañan la vista: cada calle que se ve
+  lleva el suyo escrito encima, se mire donde se mire.
 - **◎**: muestra dónde estás y en qué territorio te encuentras.
 
 ## Precisión
