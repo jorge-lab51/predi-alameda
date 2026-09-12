@@ -231,6 +231,17 @@ El plan gratis son 5.000.000 de teselas al mes, muy por encima de este uso. CART
 además mantener visible la atribución suya y la de OpenStreetMap: va en el
 `attribution` de la capa, no quitarla.
 
+De CARTO se usan los tres estilos (Voyager, Positron y Dark Matter), y de cada uno las
+dos mitades que publica: `_nolabels` de fondo y `_only_labels` —transparente, solo los
+nombres— en el panel `rotulosMapa`, con `zIndex 450`, **por encima de los territorios
+(400) y por debajo de los rótulos de la vista Dibujo (600)**. Sin ese panel el color
+opaco de los territorios se traga los nombres de las calles. El panel lleva
+`pointerEvents: none`, o las teselas de nombres le robarían el clic al territorio.
+
+Esri también tiene su capa de rótulos aparte (`Canvas/World_Light_Gray_Reference`),
+pero solo llega a z16 y al acercar salen gigantes y borrosos: por eso el Gris va sin
+nombres.
+
 ---
 
 # Probar los cambios
@@ -330,6 +341,36 @@ auditar contra el PDF.
 ## Notas sobre el código
 
 - El idioma del código, los comentarios y los mensajes de commit es **español**.
+- **La interfaz se comprime a propósito.** El header es **una línea** con el nombre de
+  la app y el mes (29 px); la navegación por días vive **al pie de `#sheet`**, bajo el
+  listado, y se recoge con él; las tres barras que había sobre el mapa son **una sola
+  de iconos**, con el mapa de fondo en un desplegable que solo cierra su propio botón.
+  El mapa pasó de 152 a 595 px con el listado recogido en un iPhone SE. No volver a
+  apilar barras ni filas de header: el alto del mapa es el recurso escaso. El nombre de
+  cada icono se muestra con `aviso()` al tocarlo.
+- **El grosor de los bordes de territorio va con el zoom** (`grueso()`): a ancho fijo,
+  alejado el borde rojo del territorio marcado es más grueso que la manzana que rodea y
+  el territorio se ve como una mancha. Por eso `restilarTerr()` cuelga de `zoomend`, y
+  cuelga en `iniciarMapa()` y no en `construirCalles()`, que se salta si falta
+  `calles.geojson`.
+- **La vista Dibujo tiene su propio claro/oscuro**, aparte del del sistema: es un
+  dibujo, no una interfaz. Lo elige el mismo botón de capas, que cambia de contenido
+  según la vista (`actualizarBarraBase`). Se guarda en `KEY_DIB` **solo al elegirlo a
+  mano**: si se guardara el valor deducido del sistema, cambiar el celular a claro ya
+  no tendría efecto. Mismo criterio que `KEY_BASE`.
+- **Todo lo que va dentro de `#map` necesita `L.DomEvent.disableClickPropagation`.**
+  Si no, tocar un botón cuenta además como clic en el mapa, y el desplegable del fondo
+  se cierra en el mismo toque que lo abre.
+- **`.week` lleva `position:relative`**, porque `posicionarTira()` usa el `offsetLeft`
+  de los chips: sin eso se mide contra el header y la tira se corre el ancho de la
+  flecha. Si la semana no cabe entera, se corre lo justo para que el día elegido se vea
+  completo. Con el listado recogido la tira no tiene ancho y no se puede posicionar:
+  `ajustarHoja()` la recoloca al volver a mostrarla.
+- **Con qué abre la app**: vista `mapa`, territorios en `manzanas` y fondo `carto` —o
+  `oscuro` si `prefers-color-scheme` es oscuro, ver `baseInicial()`. La vista y el modo
+  de marcado se fijan en cada apertura y no se guardan; el fondo sí (`KEY_BASE`), y lo
+  guardado manda sobre el modo oscuro del sistema. El orden de los botones en cada
+  barra sigue ese mismo criterio: primero el que viene por defecto.
 - La marca de "territorio trabajado" (`localStorage`, `alternarTrabajado`,
   `estaTrabajado`) sigue en `app.js` pero **ya no tiene ningún botón que la active**;
   se quitó de la ficha a pedido. El coloreado verde de trabajado tampoco se activa. Se

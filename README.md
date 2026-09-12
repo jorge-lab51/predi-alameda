@@ -103,24 +103,42 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 
 ## Cómo se usa
 
-- La tira de arriba muestra **el mes completo** y se desliza. **Hoy** vuelve al día
-  actual y deja a la vista la semana en la que cae. Las **flechas ‹ ›**, o deslizar
-  sobre la lista, cambian de día.
+Al abrirla muestra el **mapa de calles**, con los territorios marcados **cuadra por
+cuadra** y el fondo de **CARTO**; si el celular está en modo oscuro, usa la versión
+oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que respeta el
+último que se haya elegido a mano.
+
+- Arriba solo va el nombre de la app y el mes. Los días están **al pie del listado**,
+  donde cae el pulgar: la tira con **el mes completo**, que se desliza, entre las
+  **flechas ‹ ›** y el botón **Hoy**. El día elegido es el que se ve marcado en la
+  tira; **Hoy** vuelve al día actual y deja a la vista la semana en la que cae.
+  Deslizar sobre el listado también cambia de día.
 - Tocar una actividad: el mapa se acerca al territorio, aparece el punto de encuentro
   y se abre una ficha con el capitán, la hora y la dirección. **Cómo llegar** abre
   Google Maps con la ruta. La ficha se cierra con la **✕**.
+- El territorio marcado se dibuja con un borde rojo que se afina al alejar el mapa,
+  para que los bordes de manzanas vecinas no se junten.
 - Tocar un territorio en el mapa: muestra sus manzanas, las **plazas** que tiene
   dentro (son parte del territorio, pero no llevan letra ni se cuentan como
   manzana), **en qué día del mes está asignado** —o que no lo está— y cómo llegar.
-- **Borde / Manzanas**: el territorio se marca envuelto entero, o cuadra por cuadra.
-- Con el mapa de calles a la vista aparece **OSM / Gris / Calles / CARTO**, para
-  elegir qué mapa de fondo se usa.
-- La **barra** sobre el listado lo muestra y lo oculta, para dejar el mapa a pantalla
-  completa. Al apuntarla se dobla en forma de flecha, indicando qué hará. Con una
-  ficha abierta el listado se recoge solo, y vuelve al cerrarla.
-- **Plano / Mapa / Ambos / Dibujo**: el plano original, el mapa de calles real, los
-  dos superpuestos, o un dibujo limpio de los territorios con los nombres de las
-  calles y sin nada de fondo. Los nombres acompañan la vista: cada calle que se ve
+- Sobre el mapa hay una sola barra de iconos. Los cuatro primeros eligen **qué se ve**
+  (ver abajo), los dos siguientes **cómo se marca el territorio** —las cuadras sueltas
+  o el contorno entero— y el último despliega **el fondo**, que queda abierto hasta que
+  se vuelva a tocar ese icono, para poder ir probando de corrido. Al tocar un icono su
+  nombre aparece un instante abajo, para no tener que adivinarlo.
+- En las vistas con mapa de calles los fondos son **CARTO / OSM / Gris / Calles /
+  Claro / Oscuro**; en la vista Dibujo, **Claro / Oscuro**, que cambia el papel sobre
+  el que está dibujado. La app recuerda las dos elecciones, y si no hay ninguna sigue
+  el modo oscuro del celular. En CARTO, Claro y Oscuro los nombres de las calles se dibujan **encima** del
+  color de los territorios, así que se leen igual. El **Gris** va sin nombres a
+  propósito: es el fondo neutro para mirar solo los territorios.
+- La **barra** sobre el listado lo muestra y lo oculta, dejando el mapa a pantalla
+  completa —ocupa el 90% de la pantalla—; la tira de días se recoge con él. Al
+  apuntarla se dobla en forma de flecha, indicando qué hará. Con una ficha abierta el
+  listado se recoge solo, y vuelve al cerrarla.
+- Las cuatro vistas son **Mapa / Plano / Ambos / Dibujo**: el mapa de calles real, el
+  plano original, los dos superpuestos, o un dibujo limpio de los territorios con los
+  nombres de las calles y sin nada de fondo, sobre papel claro o sobre negro. Los nombres acompañan la vista: cada calle que se ve
   lleva el suyo escrito encima, se mire donde se mire.
 - **◎**: muestra dónde estás y en qué territorio te encuentras.
 

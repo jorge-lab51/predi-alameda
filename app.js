@@ -5,13 +5,14 @@ const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
   'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
 let PROG = null, TERR = null, ENV = null, CALLES = null, BOUNDS = null;
-let map, capaPlano, capaMapa, capaTerr, capaDibujo, marcadorGps, marcadorPunto, circuloGps;
+let map, capaPlano, capaMapa, capaRotulos, capaTerr, capaDibujo, marcadorGps, marcadorPunto, circuloGps;
 let dibujo = false;   // la vista que imita el plano, sin fondo
+let dibujoOscuro = false;   // y si ese dibujo va sobre papel o sobre negro
 let diaSel = 1, actSel = null, terrSel = null;
 let estadoLista = 'abierto';   // 'abierto' | 'oculto'
 // cómo se marca el territorio: 'borde' lo envuelve entero, 'manzanas' pinta
 // cada cuadra por separado
-let modoTerr = 'borde';
+let modoTerr = 'manzanas';
 let ocultoPorFicha = false;    // para devolverlo al cerrar la ficha
 const capasTerr = {};
 
@@ -20,29 +21,49 @@ const el = (t, c, h) => { const n = document.createElement(t); if (c) n.classNam
 
 /* ---------- estado guardado (localStorage) ---------- */
 const KEY = 'alameda_trabajados';
-const KEY_TERR = 'alameda_modo_territorio';
 const KEY_BASE = 'alameda_mapa_base';
+const KEY_DIB = 'alameda_dibujo_fondo';
 
-/* mapas de calles disponibles. maxNativeZoom es hasta dónde tiene teselas
-   cada uno: más allá Leaflet amplía la última en vez de dejar hueco */
+/* Mapas de calles disponibles. `maxNativeZoom` es hasta dónde tiene teselas
+   cada uno: más allá Leaflet amplía la última en vez de dejar hueco.
+
+   `rotulos` es el mismo mapa pero solo con los nombres de las calles, sobre
+   fondo transparente. Va en una capa aparte, por encima de los territorios: el
+   color de los territorios es opaco y si no, se los traga. Los mapas que no
+   vienen partidos en dos así no lo llevan, y se dibujan enteros por debajo.
+
+   La clave de CARTO va a la vista; ver CLAUDE.md. */
+const CARTO = 'https://{s}.basemaps.cartocdn.com/';
+const CLAVE_CARTO = '?key=cb1_3ipr_1_3c531422306febfa3ff2e9d3';
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+const ATRIB_CARTO = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  + ', &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
 const MAPAS = {
   osm: { nombre: 'OSM', maxNativeZoom: 19,
     url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap' },
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' },
+  // el Gris va sin nombres a propósito: es el fondo neutro para mirar solo los
+  // territorios. Esri tiene una capa de rótulos aparte, pero como solo llega a
+  // z16 salen enormes y borrosos al acercar, que es donde se usa la app
   gris: { nombre: 'Gris', maxNativeZoom: 16,
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    url: ESRI + 'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; Esri' },
   calles: { nombre: 'Calles', maxNativeZoom: 19,
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    url: ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; Esri' },
-  // CARTO exige clave en las teselas raster: sin ella las marca con una
-  // filigrana. Queda a la vista en el código, que es público; para limitarla
-  // hay que restringirla al dominio desde el panel de CARTO.
   carto: { nombre: 'CARTO', maxNativeZoom: 20,
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
-       + '?key=cb1_3ipr_1_3c531422306febfa3ff2e9d3',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-               + ', &copy; <a href="https://carto.com/attributions">CARTO</a>' }
+    url: CARTO + 'rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png' + CLAVE_CARTO,
+    rotulos: CARTO + 'rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png' + CLAVE_CARTO,
+    attribution: ATRIB_CARTO },
+  claro: { nombre: 'Claro', maxNativeZoom: 20,
+    url: CARTO + 'light_nolabels/{z}/{x}/{y}{r}.png' + CLAVE_CARTO,
+    rotulos: CARTO + 'light_only_labels/{z}/{x}/{y}{r}.png' + CLAVE_CARTO,
+    attribution: ATRIB_CARTO },
+  oscuro: { nombre: 'Oscuro', maxNativeZoom: 20,
+    url: CARTO + 'dark_nolabels/{z}/{x}/{y}{r}.png' + CLAVE_CARTO,
+    rotulos: CARTO + 'dark_only_labels/{z}/{x}/{y}{r}.png' + CLAVE_CARTO,
+    attribution: ATRIB_CARTO }
 };
 let mapaBase = 'osm';
 function trabajados() {
@@ -69,14 +90,46 @@ async function cargar() {
     fetch('plano_bounds.json').then(r => r.json())
   ]);
   PROG = p; TERR = t; ENV = e; CALLES = c; BOUNDS = b;
-  try { modoTerr = localStorage.getItem(KEY_TERR) || 'borde'; } catch (err) {}
-  if (!ENV) modoTerr = 'manzanas';
-  $('#mestitulo').textContent = 'Programa de ' + MESES[PROG.mes - 1] + ' ' + PROG.anio;
+  // la app abre siempre en Manzanas: lo que se elija a mano vale mientras dure
+  // la sesión, pero no se guarda
+  modoTerr = 'manzanas';
+  $('#mestitulo').textContent = MESES[PROG.mes - 1] + ' ' + PROG.anio;   // en el header
   iniciarMapa();
   const hoy = new Date();
   diaSel = (hoy.getFullYear() === PROG.anio && hoy.getMonth() + 1 === PROG.mes)
     ? hoy.getDate() : 1;
   render('semana');
+}
+
+const sistemaOscuro = () =>
+  !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+/* Qué mapa de fondo mostrar al abrir: CARTO, o su versión oscura si el celular
+   está en modo oscuro. Lo que el usuario haya elegido a mano manda sobre ambos. */
+function baseInicial() {
+  let guardado = null;
+  try { guardado = localStorage.getItem(KEY_BASE); } catch (e) {}
+  if (guardado && MAPAS[guardado]) return guardado;
+  return sistemaOscuro() ? 'oscuro' : 'carto';
+}
+
+/* y con el mismo criterio, si el Dibujo va sobre papel o sobre negro */
+function dibujoInicial() {
+  let guardado = null;
+  try { guardado = localStorage.getItem(KEY_DIB); } catch (e) {}
+  if (guardado === 'claro' || guardado === 'oscuro') return guardado === 'oscuro';
+  return sistemaOscuro();
+}
+
+/* `guardar` solo al elegirlo a mano: si se guardara también el valor deducido
+   del sistema, cambiar el celular a claro ya no tendría efecto */
+function ponerDibujoOscuro(oscuro, guardar) {
+  dibujoOscuro = oscuro;
+  document.body.classList.toggle('dibujo-oscuro', oscuro);
+  document.querySelectorAll('#fondosDibujo button').forEach(b =>
+    b.classList.toggle('on', (b.dataset.dib === 'oscuro') === oscuro));
+  if (guardar) { try { localStorage.setItem(KEY_DIB, oscuro ? 'oscuro' : 'claro'); } catch (e) {} }
+  restilarTerr();
 }
 
 /* ---------- mapa ---------- */
@@ -88,26 +141,43 @@ function iniciarMapa() {
     maxBounds: lim.pad(0.35), maxBoundsViscosity: 0.7
   });
   map.attributionControl.setPrefix('');
+  // las barras y los botones viven dentro del mapa: sin esto, tocarlos cuenta
+  // además como un clic en el mapa, y el desplegable se cerraría en el mismo
+  // toque que lo abre
+  ['.mapbar', '.popfondo', '.fabs'].forEach(q =>
+    L.DomEvent.disableClickPropagation(document.querySelector(q)));
+  // los nombres de las calles del mapa de fondo, por encima de los territorios
+  // (400) pero por debajo de los rótulos de la vista Dibujo (600)
+  map.createPane('rotulosMapa');
+  map.getPane('rotulosMapa').style.zIndex = 450;
+  map.getPane('rotulosMapa').style.pointerEvents = 'none';
 
-  try { mapaBase = localStorage.getItem(KEY_BASE) || 'osm'; } catch (e) {}
-  if (!MAPAS[mapaBase]) mapaBase = 'osm';
+  mapaBase = baseInicial();
   ponerMapaBase(mapaBase);
+  ponerDibujoOscuro(dibujoInicial());
   capaPlano = L.imageOverlay('plano.webp', lim, { opacity: 1, className: 'plano' });
 
-  capaPlano.addTo(map);
+  anadirMapa();                 // la app abre en la vista Mapa, no en el plano
+  actualizarBarraBase();
   map.fitBounds(lim, { padding: [6, 6] });
+
+  // el grosor de los bordes depende del zoom, así que hay que rehacerlos al
+  // cambiarlo. Va aquí y no en construirCalles(), que se salta si falta el
+  // archivo de calles
+  map.on('zoomend', restilarTerr);
 
   construirTerritorios();
   construirCalles();
 
-  document.querySelectorAll('.layerbar button').forEach(b => {
+  document.querySelectorAll('#barVista button').forEach(b => {
     b.onclick = () => {
-      document.querySelectorAll('.layerbar button').forEach(x => x.classList.toggle('on', x === b));
+      document.querySelectorAll('#barVista button').forEach(x => x.classList.toggle('on', x === b));
+      aviso(b.getAttribute('aria-label'), 1400);
       const m = b.dataset.layer;
-      if (m === 'plano') { anadir(capaPlano); quitar(capaMapa); capaPlano.setOpacity(1); }
-      if (m === 'mapa') { quitar(capaPlano); anadir(capaMapa); }
-      if (m === 'ambos') { anadir(capaMapa); anadir(capaPlano); capaPlano.setOpacity(0.55); }
-      if (m === 'dibujo') { quitar(capaPlano); quitar(capaMapa); }
+      if (m === 'plano') { anadir(capaPlano); quitarMapa(); capaPlano.setOpacity(1); }
+      if (m === 'mapa') { quitar(capaPlano); anadirMapa(); }
+      if (m === 'ambos') { anadirMapa(); anadir(capaPlano); capaPlano.setOpacity(0.55); }
+      if (m === 'dibujo') { quitar(capaPlano); quitarMapa(); }
       dibujo = (m === 'dibujo');
       document.body.classList.toggle('dibujo', dibujo);
       if (capaDibujo) { if (dibujo) { anadir(capaDibujo); colocarRotulos(); } else quitar(capaDibujo); }
@@ -115,27 +185,31 @@ function iniciarMapa() {
       pintarTerritorios();
     };
   });
-  document.querySelectorAll('.basebar button').forEach(b => {
+  document.querySelectorAll('#popFondo button').forEach(b => {
     b.classList.toggle('on', b.dataset.base === mapaBase);
     b.onclick = () => {
       mapaBase = b.dataset.base;
       try { localStorage.setItem(KEY_BASE, mapaBase); } catch (e) {}
-      document.querySelectorAll('.basebar button')
+      document.querySelectorAll('#popFondo button')
         .forEach(x => x.classList.toggle('on', x === b));
-      ponerMapaBase(mapaBase);
+      ponerMapaBase(mapaBase);   // queda abierto: así se comparan fondos de corrido
     };
   });
-  document.querySelectorAll('.terrbar button').forEach(b => {
+  document.querySelectorAll('#fondosDibujo button').forEach(b => {
+    b.onclick = () => ponerDibujoOscuro(b.dataset.dib === 'oscuro', true);
+  });
+  $('#btnFondo').onclick = () => desplegarFondo($('#popFondo').classList.contains('oculta'));
+  document.querySelectorAll('#barTerr button').forEach(b => {
     b.classList.toggle('on', b.dataset.terr === modoTerr);
     b.onclick = () => {
       modoTerr = b.dataset.terr;
-      try { localStorage.setItem(KEY_TERR, modoTerr); } catch (e) {}
-      document.querySelectorAll('.terrbar button')
+      document.querySelectorAll('#barTerr button')
         .forEach(x => x.classList.toggle('on', x === b));
+      aviso(b.getAttribute('aria-label'), 1400);
       construirTerritorios();
     };
   });
-  if (!ENV) { const tb = document.querySelector('.terrbar'); if (tb) tb.style.display = 'none'; }
+  if (!ENV) ['#barTerr', '#sepTerr'].forEach(q => $(q).classList.add('oculta'));
   $('#fabGps').onclick = ubicar;
   $('#fabFit').onclick = () => { map.fitBounds(lim, { padding: [6, 6] }); limpiarSeleccion(); };
 }
@@ -159,19 +233,33 @@ function ponerMapaBase(clave) {
   const cfg = MAPAS[clave];
   const visible = capaMapa ? map.hasLayer(capaMapa) : false;
   if (capaMapa) map.removeLayer(capaMapa);
-  capaMapa = L.tileLayer(cfg.url, {
-    maxZoom: 20, minZoom: 13, maxNativeZoom: cfg.maxNativeZoom,
-    attribution: cfg.attribution
-  });
-  if (visible) { capaMapa.addTo(map); if (capaPlano) capaPlano.bringToFront(); }
+  if (capaRotulos) { map.removeLayer(capaRotulos); capaRotulos = null; }
+  const opc = { maxZoom: 20, minZoom: 13, maxNativeZoom: cfg.maxNativeZoom };
+  capaMapa = L.tileLayer(cfg.url, Object.assign({ attribution: cfg.attribution }, opc));
+  // la atribución la pone el mapa de abajo; aquí sobraría repetida
+  if (cfg.rotulos) capaRotulos = L.tileLayer(cfg.rotulos,
+    Object.assign({ pane: 'rotulosMapa' }, opc));
+  if (visible) { anadirMapa(); if (capaPlano) capaPlano.bringToFront(); }
   if (capaTerr) capaTerr.bringToFront();
   actualizarBarraBase();
 }
 
-/* la barra del mapa base solo tiene sentido con el mapa de calles a la vista */
+/* El botón de capas ofrece el mapa de fondo cuando hay mapa de calles a la
+   vista, y el claro/oscuro del dibujo cuando se está dibujando. En el Plano no
+   hay nada que elegir, así que desaparece. */
 function actualizarBarraBase() {
-  const b = document.querySelector('.basebar');
-  if (b) b.classList.toggle('oculta', !(capaMapa && map.hasLayer(capaMapa)));
+  const hay = dibujo || !!(capaMapa && map.hasLayer(capaMapa));
+  ['#btnFondo', '#sepFondo'].forEach(q => $(q).classList.toggle('oculta', !hay));
+  $('#fondosMapa').classList.toggle('oculta', dibujo);
+  $('#fondosDibujo').classList.toggle('oculta', !dibujo);
+  if (!hay) desplegarFondo(false);
+}
+
+/* Abre o cierra la lista de mapas de fondo. Solo la cierra su propio botón:
+   quedándose abierta se pueden ir probando los fondos uno tras otro. */
+function desplegarFondo(abrir) {
+  $('#popFondo').classList.toggle('oculta', !abrir);
+  $('#btnFondo').classList.toggle('on', abrir);
 }
 
 /* los nombres de las calles, escritos a lo largo de cada tramo */
@@ -284,7 +372,7 @@ function puntoRotulo(v, w, h, c, puestos, barras) {
 /* lo que tapa el mapa por encima: las barras y los botones redondos */
 function zonasTapadas() {
   const c = map.getContainer().getBoundingClientRect();
-  return [...document.querySelectorAll('.layerbar, .fabs')]
+  return [...document.querySelectorAll('.mapbar, .popfondo, .fabs')]
     .filter(e => e.offsetParent)
     .map(e => { const r = e.getBoundingClientRect();
       return { x0: r.left - c.left, y0: r.top - c.top,
@@ -333,6 +421,18 @@ function colocarRotulos() {
 
 const anadir = c => { if (!map.hasLayer(c)) c.addTo(map); };
 const quitar = c => { if (map.hasLayer(c)) map.removeLayer(c); };
+/* el mapa de calles y sus nombres se ponen y se quitan juntos */
+const anadirMapa = () => { anadir(capaMapa); if (capaRotulos) anadir(capaRotulos); };
+const quitarMapa = () => { quitar(capaMapa); if (capaRotulos) quitar(capaRotulos); };
+
+/* El grosor de los bordes acompaña al zoom. A ancho fijo, alejado el borde rojo
+   del territorio marcado es más grueso que la manzana que rodea: los bordes de
+   manzanas vecinas se tocan y el territorio se ve como una mancha. */
+function grueso(base) {
+  const z = map ? map.getZoom() : 16;
+  const f = Math.min(Math.max((z - 13) / 5, 0), 1);   // z13 -> 0 ... z18 -> 1
+  return Math.max(base * (0.35 + 0.65 * f), 0.4);
+}
 
 function estiloTerr(f) {
   const n = f.properties.n;
@@ -342,12 +442,13 @@ function estiloTerr(f) {
   const hecho = estaTrabajado(n);
   if (dibujo) {
     // imita el plano: cada territorio con su color, sin fondo debajo
-    return { color: sel ? '#c62828' : '#ffffff', weight: sel ? 3 : 1, opacity: 1,
+    return { color: sel ? '#c62828' : (dibujoOscuro ? '#0e1218' : '#ffffff'),
+             weight: grueso(sel ? 3 : 1), opacity: 1,
              fillColor: f.properties.color, fillOpacity: 1 };
   }
   return {
     color: sel ? '#c62828' : (hoy ? '#1d3b5c' : (hecho ? '#2f7d5b' : '#33414f')),
-    weight: sel ? 3 : (hoy ? 2 : 0.8),
+    weight: grueso(sel ? 3 : (hoy ? 2 : 0.8)),
     opacity: sel || hoy ? 0.95 : 0.5,
     fillColor: hecho ? '#2f7d5b' : f.properties.color,
     fillOpacity: soloPlano ? (sel ? 0.35 : (hoy ? 0.22 : 0.02)) : (sel ? 0.62 : (hoy ? 0.55 : 0.42)),
@@ -355,6 +456,9 @@ function estiloTerr(f) {
   };
 }
 let capaEtiquetas = null;
+/* solo el color y el grosor: sin rehacer las etiquetas, que no cambian */
+function restilarTerr() { if (capaTerr) capaTerr.setStyle(estiloTerr); }
+
 function pintarTerritorios() {
   if (!capaTerr) return;
   capaTerr.setStyle(estiloTerr);
@@ -407,9 +511,9 @@ function enPoligono(p, ring) {
   return dentro;
 }
 let avisoT;
-function aviso(txt) {
+function aviso(txt, ms) {
   const h = $('#hint'); h.textContent = txt; h.style.display = 'block';
-  clearTimeout(avisoT); avisoT = setTimeout(() => h.style.display = 'none', 3200);
+  clearTimeout(avisoT); avisoT = setTimeout(() => h.style.display = 'none', ms || 3200);
 }
 
 /* ---------- programa ---------- */
@@ -445,11 +549,6 @@ function esHoy(n) {
 }
 
 function render(enfoque) {
-  const f = fechaDe(diaSel);
-  const d = diaDe(diaSel);
-  const sub = d && d.nota ? d.nota.toLowerCase() : MESES[PROG.mes - 1] + ' ' + PROG.anio;
-  $('#fecha').innerHTML = DIAS[f.getDay()].replace(/^./, c => c.toUpperCase()) + ' ' + diaSel +
-    '<span>' + sub + '</span>';
   pintarSemana(enfoque);
   pintarLista();
   pintarTerritorios();
@@ -500,6 +599,10 @@ function posicionarTira(enfoque) {
   } else {
     left = sel.offsetLeft - (cont.clientWidth - sel.offsetWidth) / 2;
   }
+  // en pantallas angostas la semana entera no cabe: se corre lo justo para que
+  // el día elegido se vea completo, que es lo que no puede faltar
+  left = Math.min(Math.max(left, sel.offsetLeft + sel.offsetWidth - cont.clientWidth),
+                  sel.offsetLeft);
   cont.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
 }
 
@@ -690,6 +793,9 @@ function ajustarHoja() {
   s.classList.toggle('oculto', estadoLista === 'oculto');
   // la flecha apunta a lo que hará el próximo toque
   $('#grab').classList.toggle('cerrar', estadoLista === 'abierto');
+  // con el listado recogido la tira no tiene ancho y no se puede posicionar:
+  // se recoloca al volver a mostrarla
+  if (estadoLista === 'abierto' && PROG) posicionarTira('semana');
   setTimeout(() => map && map.invalidateSize(), 200);
 }
 $('#grab').onclick = () => {

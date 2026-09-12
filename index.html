@@ -32,25 +32,32 @@ body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
   background:var(--bg);color:var(--ink);overflow:hidden}
 #app{display:flex;flex-direction:column;height:100dvh}
 
-header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 10px 6px;
-  padding-top:calc(8px + env(safe-area-inset-top,0px));box-shadow:var(--shadow);z-index:600}
-.hrow{display:flex;align-items:center;gap:8px}
-.brand{font-weight:700;font-size:15px;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand small{display:block;font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.3px}
+/* El header quedó en una línea: el nombre de la app y el mes, nada más. La
+   navegación por días se mudó al pie del listado, que es donde se usa. */
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:5px 10px 6px;
+  padding-top:calc(5px + env(safe-area-inset-top,0px));box-shadow:var(--shadow);z-index:600}
+.titulo{font-size:12px;font-weight:700;letter-spacing:.2px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;text-align:center}
+.titulo span{font-weight:500;color:var(--muted)}
+.titulo span::before{content:' · '}
 .iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
   min-width:38px;height:34px;font-size:15px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 8px}
 .iconbtn:active{background:var(--chip)}
 .iconbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-.datebar{display:flex;align-items:center;gap:6px;margin-top:6px}
-.datebar .fecha{flex:1;text-align:center;font-weight:600}
-.datebar .fecha span{display:block;font-size:12px;color:var(--muted);font-weight:500}
-.week{display:flex;gap:4px;margin-top:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+/* la tira de días vive al pie de la hoja, bajo el listado */
+.datebar{display:flex;align-items:center;gap:4px;border-top:1px solid var(--line);
+  padding:5px 8px calc(5px + var(--safe-b))}
+.datebar .flecha{min-width:26px;height:40px;padding:0 2px;font-size:18px;border-color:transparent;background:transparent}
+.datebar #btnHoy{height:40px;font-size:13px;font-weight:600;padding:0 9px}
+/* `position` para que el `offsetLeft` de los chips se mida contra la tira y no
+   contra el header: si no, posicionarTira() se pasa el ancho de la flecha */
+.week{position:relative;flex:1;min-width:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .week::-webkit-scrollbar{display:none}
-.wd{flex:0 0 auto;min-width:42px;text-align:center;border:1px solid var(--line);border-radius:10px;
-  padding:4px 6px;background:var(--panel);cursor:pointer}
+.wd{flex:0 0 auto;min-width:40px;text-align:center;border:1px solid var(--line);border-radius:9px;
+  padding:3px 6px;background:var(--panel);cursor:pointer}
 .wd b{display:block;font-size:15px;line-height:1.1}
-.wd i{font-style:normal;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.wd i{font-style:normal;font-size:9.5px;line-height:1.2;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
 .wd.sel{background:var(--accent);border-color:var(--accent);color:#fff}
 .wd.sel i{color:#dbe7f3}
 .wd.hoy{border-color:var(--accent2);border-width:2px}
@@ -88,7 +95,7 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
   .grab.cerrar:hover .bar::after{transform:rotate(-17deg)}
   .grab:hover .bar::before,.grab:hover .bar::after{background:var(--accent)}
 }
-.sheet .list{overflow-y:auto;padding:2px 10px calc(10px + var(--safe-b));-webkit-overflow-scrolling:touch}
+.sheet .list{overflow-y:auto;padding:2px 10px 8px;-webkit-overflow-scrolling:touch}
 
 .act{display:flex;gap:9px;padding:9px 8px;border-radius:12px;border:1px solid transparent;align-items:flex-start}
 .act + .act{border-top:1px solid var(--line)}
@@ -120,16 +127,27 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 .fab{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);
   color:var(--ink);font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer}
 .fab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.layerbar{position:absolute;left:10px;top:10px;z-index:450;display:flex;gap:4px;background:var(--panel);
-  border:1px solid var(--line);border-radius:11px;padding:3px;box-shadow:var(--shadow)}
-.layerbar button{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:600;
-  padding:5px 9px;border-radius:8px;cursor:pointer}
-.layerbar button.on{background:var(--accent);color:#fff}
-/* barras apiladas bajo Plano/Mapa/Ambos */
-.terrbar{top:47px}
-.basebar{top:84px}
-.basebar.oculta{display:none}
-.basebar button{padding:5px 7px;font-size:11.5px}
+/* Las tres barras que había —vista, marcado y fondo— en una sola fila de
+   iconos. El fondo del mapa, que es lo que menos se toca y lo que más opciones
+   tiene, se despliega debajo al pedirlo. */
+.mapbar{position:absolute;left:10px;top:10px;z-index:450;display:flex;align-items:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:3px;box-shadow:var(--shadow)}
+.mapbar .grupo{display:flex;gap:2px}
+.mapbar button{border:0;background:transparent;color:var(--muted);width:34px;height:34px;
+  border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.mapbar button svg{width:20px;height:20px;display:block}
+.mapbar button.on{background:var(--accent);color:#fff}
+.mapbar .sep{width:1px;align-self:stretch;background:var(--line);margin:3px}
+.mapbar .oculta{display:none}
+
+.popfondo{position:absolute;left:10px;top:56px;z-index:450;display:flex;gap:4px;flex-wrap:wrap;
+  max-width:calc(100% - 20px);background:var(--panel);border:1px solid var(--line);
+  border-radius:11px;padding:4px;box-shadow:var(--shadow)}
+.popfondo.oculta,.popfondo .grupofondo.oculta{display:none}
+.popfondo .grupofondo{display:flex;gap:4px;flex-wrap:wrap}
+.popfondo button{border:0;background:transparent;color:var(--muted);font-size:11.5px;font-weight:600;
+  padding:5px 8px;border-radius:8px;cursor:pointer}
+.popfondo button.on{background:var(--accent);color:#fff}
 
 .tpanel{position:absolute;left:10px;right:10px;bottom:12px;z-index:460;background:var(--panel);
   border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:10px 12px;display:none}
@@ -149,7 +167,7 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
   text-decoration:none;border-bottom:1px dashed var(--muted)}
 .tpanel .dato-dir:active{color:var(--accent)}
 /* oculto: queda solo la barra, para volver a desplegar el listado */
-#sheet.oculto .list{display:none}
+#sheet.oculto .list,#sheet.oculto .datebar{display:none}
 .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
   padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
 .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -157,10 +175,15 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 .close{margin-left:auto;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
 .leaflet-popup-content{margin:8px 10px;font:inherit}
 /* vista Dibujo: fondo liso, sin foto ni mapa, con los nombres de las calles */
+/* la vista Dibujo tiene su propio claro/oscuro, aparte del del sistema: es un
+   dibujo, no una interfaz, y hay quien lo prefiere sobre papel y quien sobre
+   negro. Lo elige el mismo botón de capas. */
 body.dibujo #map,
 body.dibujo .leaflet-container{background:#fdfdfb}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.dibujo #map,
-  :root:not([data-theme="light"]) body.dibujo .leaflet-container{background:#f4f3ef}}
+body.dibujo.dibujo-oscuro #map,
+body.dibujo.dibujo-oscuro .leaflet-container{background:#141a21}
+body.dibujo.dibujo-oscuro .rotulo{color:#a7b4c2;
+  text-shadow:0 0 3px #141a21,0 0 3px #141a21,0 0 3px #141a21}
 .rotulo{position:absolute;white-space:nowrap;font-size:9px;font-weight:600;
   letter-spacing:.4px;color:#4a5560;text-transform:uppercase;pointer-events:none;
   text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
@@ -173,34 +196,38 @@ body.dibujo .leaflet-container{background:#fdfdfb}
 <body>
 <div id="app">
   <header>
-    <div class="hrow">
-      <div class="brand">Territorios Alameda<small id="mestitulo">Programa de predicación</small></div>
-      <button class="iconbtn" id="btnHoy" title="Ir a hoy">Hoy</button>
-    </div>
-    <div class="datebar">
-      <button class="iconbtn" id="prev" aria-label="Día anterior">‹</button>
-      <div class="fecha" id="fecha">—<span id="subfecha"></span></div>
-      <button class="iconbtn" id="next" aria-label="Día siguiente">›</button>
-    </div>
-    <div class="week" id="week"></div>
+    <div class="titulo">Territorios Alameda<span id="mestitulo"></span></div>
   </header>
 
   <div id="map">
-    <div class="layerbar">
-      <button data-layer="plano" class="on">Plano</button>
-      <button data-layer="mapa">Mapa</button>
-      <button data-layer="ambos">Ambos</button>
-      <button data-layer="dibujo">Dibujo</button>
+    <div class="mapbar">
+      <div class="grupo" id="barVista">
+        <button data-layer="mapa" class="on" title="Mapa de calles" aria-label="Mapa de calles"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 5.6 7.4 3.6l5.2 2 4.8-2v11.8l-4.8 2-5.2-2-4.8 2z"/><path d="M7.4 3.6v11.8M12.6 5.6v11.8"/></g></svg></button>
+        <button data-layer="plano" title="Plano" aria-label="Plano"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 2.8h7.2l3.6 3.6v10.8H4.6z"/><path d="M11.8 2.8v3.6h3.6"/><path d="M7 9.4h5.4M7 12.6h5.4"/></g></svg></button>
+        <button data-layer="ambos" title="Plano sobre el mapa" aria-label="Plano sobre el mapa"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 7.4h9.8v9.8H2.8z"/><path d="M7.4 7.4V2.8h9.8v9.8h-4.6"/></g></svg></button>
+        <button data-layer="dibujo" title="Dibujo" aria-label="Dibujo"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 16.6l.9-3.4 8.4-8.4 2.5 2.5-8.4 8.4z"/><path d="M11.6 3.9l2.5 2.5"/></g></svg></button>
+      </div>
+      <span class="sep" id="sepTerr"></span>
+      <div class="grupo" id="barTerr">
+        <button data-terr="manzanas" class="on" title="Marcar las manzanas" aria-label="Marcar las manzanas"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.9 2.9h5.4v5.4H2.9zM11.7 2.9h5.4v5.4h-5.4zM2.9 11.7h5.4v5.4H2.9zM11.7 11.7h5.4v5.4h-5.4z"/></g></svg></button>
+        <button data-terr="borde" title="Marcar solo el borde" aria-label="Marcar solo el borde"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 2.9h10.8a1.7 1.7 0 0 1 1.7 1.7v10.8a1.7 1.7 0 0 1-1.7 1.7H4.6a1.7 1.7 0 0 1-1.7-1.7V4.6a1.7 1.7 0 0 1 1.7-1.7z"/></g></svg></button>
+      </div>
+      <span class="sep oculta" id="sepFondo"></span>
+      <button class="suelto oculta" id="btnFondo" title="Mapa de fondo" aria-label="Mapa de fondo"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.6 17.4 6.8 10 11 2.6 6.8z"/><path d="M2.6 10.6 10 14.8l7.4-4.2"/><path d="M2.6 14.2 10 18.4l7.4-4.2"/></g></svg></button>
     </div>
-    <div class="layerbar terrbar" title="Cómo se marca el territorio">
-      <button data-terr="borde" class="on">Borde</button>
-      <button data-terr="manzanas">Manzanas</button>
-    </div>
-    <div class="layerbar basebar oculta" title="Mapa de calles">
-      <button data-base="osm" class="on">OSM</button>
-      <button data-base="gris">Gris</button>
-      <button data-base="calles">Calles</button>
-      <button data-base="carto">CARTO</button>
+    <div class="popfondo oculta" id="popFondo">
+      <div class="grupofondo" id="fondosMapa">
+        <button data-base="carto" class="on">CARTO</button>
+        <button data-base="osm">OSM</button>
+        <button data-base="gris">Gris</button>
+        <button data-base="calles">Calles</button>
+        <button data-base="claro">Claro</button>
+        <button data-base="oscuro">Oscuro</button>
+      </div>
+      <div class="grupofondo oculta" id="fondosDibujo">
+        <button data-dib="claro" class="on">Claro</button>
+        <button data-dib="oscuro">Oscuro</button>
+      </div>
     </div>
     <div class="fabs">
       <button class="fab" id="fabGps" title="Dónde estoy">◎</button>
@@ -213,6 +240,12 @@ body.dibujo .leaflet-container{background:#fdfdfb}
   <div class="sheet" id="sheet">
     <div class="grab" id="grab" title="Mostrar u ocultar el listado"><div class="bar"></div></div>
     <div class="list" id="lista"></div>
+    <div class="datebar" id="datebar">
+      <button class="iconbtn flecha" id="prev" aria-label="Día anterior">‹</button>
+      <div class="week" id="week"></div>
+      <button class="iconbtn flecha" id="next" aria-label="Día siguiente">›</button>
+      <button class="iconbtn" id="btnHoy" title="Ir a hoy">Hoy</button>
+    </div>
   </div>
 </div>
 <script src="leaflet.js"></script>
