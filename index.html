@@ -156,6 +156,14 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
 .btn.done{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 .close{margin-left:auto;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
 .leaflet-popup-content{margin:8px 10px;font:inherit}
+/* vista Dibujo: fondo liso, sin foto ni mapa, con los nombres de las calles */
+body.dibujo #map,
+body.dibujo .leaflet-container{background:#fdfdfb}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.dibujo #map,
+  :root:not([data-theme="light"]) body.dibujo .leaflet-container{background:#f4f3ef}}
+.rotulo{position:absolute;white-space:nowrap;font-size:9px;font-weight:600;
+  letter-spacing:.4px;color:#4a5560;text-transform:uppercase;pointer-events:none;
+  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
 .tlabel{background:#c62828;color:#fff;font-weight:700;font-size:12px;border-radius:9px;
   padding:2px 0;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 .hint{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:470;background:rgba(20,30,40,.86);
@@ -182,6 +190,7 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 1
       <button data-layer="plano" class="on">Plano</button>
       <button data-layer="mapa">Mapa</button>
       <button data-layer="ambos">Ambos</button>
+      <button data-layer="dibujo">Dibujo</button>
     </div>
     <div class="layerbar terrbar" title="Cómo se marca el territorio">
       <button data-terr="borde" class="on">Borde</button>

@@ -4,8 +4,9 @@ const DIAS_C = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
   'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
-let PROG = null, TERR = null, ENV = null, BOUNDS = null;
-let map, capaPlano, capaMapa, capaTerr, marcadorGps, marcadorPunto, circuloGps;
+let PROG = null, TERR = null, ENV = null, CALLES = null, BOUNDS = null;
+let map, capaPlano, capaMapa, capaTerr, capaDibujo, marcadorGps, marcadorPunto, circuloGps;
+let dibujo = false;   // la vista que imita el plano, sin fondo
 let diaSel = 1, actSel = null, terrSel = null;
 let estadoLista = 'abierto';   // 'abierto' | 'oculto'
 // cómo se marca el territorio: 'borde' lo envuelve entero, 'manzanas' pinta
@@ -55,13 +56,14 @@ function alternarTrabajado(t) {
 
 /* ---------- carga ---------- */
 async function cargar() {
-  const [p, t, e, b] = await Promise.all([
+  const [p, t, e, c, b] = await Promise.all([
     fetch('programa.json').then(r => r.json()),
     fetch('territorios.geojson').then(r => r.json()),
     fetch('envolventes.geojson').then(r => r.json()).catch(() => null),
+    fetch('calles.geojson').then(r => r.json()).catch(() => null),
     fetch('plano_bounds.json').then(r => r.json())
   ]);
-  PROG = p; TERR = t; ENV = e; BOUNDS = b;
+  PROG = p; TERR = t; ENV = e; CALLES = c; BOUNDS = b;
   try { modoTerr = localStorage.getItem(KEY_TERR) || 'borde'; } catch (err) {}
   if (!ENV) modoTerr = 'manzanas';
   $('#mestitulo').textContent = 'Programa de ' + MESES[PROG.mes - 1] + ' ' + PROG.anio;
@@ -91,6 +93,7 @@ function iniciarMapa() {
   map.fitBounds(lim, { padding: [6, 6] });
 
   construirTerritorios();
+  construirCalles();
 
   document.querySelectorAll('.layerbar button').forEach(b => {
     b.onclick = () => {
@@ -99,6 +102,10 @@ function iniciarMapa() {
       if (m === 'plano') { anadir(capaPlano); quitar(capaMapa); capaPlano.setOpacity(1); }
       if (m === 'mapa') { quitar(capaPlano); anadir(capaMapa); }
       if (m === 'ambos') { anadir(capaMapa); anadir(capaPlano); capaPlano.setOpacity(0.55); }
+      if (m === 'dibujo') { quitar(capaPlano); quitar(capaMapa); }
+      dibujo = (m === 'dibujo');
+      document.body.classList.toggle('dibujo', dibujo);
+      if (capaDibujo) { if (dibujo) anadir(capaDibujo); else quitar(capaDibujo); }
       actualizarBarraBase();
       pintarTerritorios();
     };
@@ -162,6 +169,42 @@ function actualizarBarraBase() {
   if (b) b.classList.toggle('oculta', !(capaMapa && map.hasLayer(capaMapa)));
 }
 
+/* los nombres de las calles, escritos a lo largo de cada tramo */
+function construirCalles() {
+  if (capaDibujo) { map.removeLayer(capaDibujo); capaDibujo = null; }
+  if (!CALLES) return;
+  const marcas = [];
+  for (const f of CALLES.features) {
+    const pts = f.geometry.coordinates;
+    if (pts.length < 2) continue;
+    const i = Math.floor((pts.length - 1) / 2);
+    const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
+    let ang = Math.atan2(y1 - y2, (x2 - x1) * Math.cos(y1 * Math.PI / 180)) * 180 / Math.PI;
+    if (ang > 90) ang -= 180; else if (ang < -90) ang += 180;
+    const m = L.marker([(y1 + y2) / 2, (x1 + x2) / 2], {
+      interactive: false, keyboard: false,
+      icon: L.divIcon({ className: '', iconSize: [0, 0],
+        html: `<div class="rotulo" style="transform:translate(-50%,-50%) rotate(${ang}deg)">${f.properties.nombre}</div>` })
+    });
+    m.largo = f.properties.m || 0;
+    marcas.push(m);
+  }
+  capaDibujo = L.layerGroup(marcas);
+  if (dibujo) capaDibujo.addTo(map);
+  map.off('zoomend', filtrarRotulos).on('zoomend', filtrarRotulos);
+  filtrarRotulos();
+}
+
+/* alejado solo se escriben las calles largas, o no se lee nada */
+function filtrarRotulos() {
+  if (!capaDibujo) return;
+  const z = map.getZoom();
+  const minimo = z >= 17 ? 0 : z >= 16 ? 220 : z >= 15 ? 450 : 900;
+  capaDibujo.eachLayer(m => {
+    if (m._icon) m._icon.style.display = m.largo >= minimo ? '' : 'none';
+  });
+}
+
 const anadir = c => { if (!map.hasLayer(c)) c.addTo(map); };
 const quitar = c => { if (map.hasLayer(c)) map.removeLayer(c); };
 
@@ -171,6 +214,11 @@ function estiloTerr(f) {
   const sel = terrSel === n;
   const hoy = territoriosDelDia().includes(n);
   const hecho = estaTrabajado(n);
+  if (dibujo) {
+    // imita el plano: cada territorio con su color, sin fondo debajo
+    return { color: sel ? '#c62828' : '#ffffff', weight: sel ? 3 : 1, opacity: 1,
+             fillColor: f.properties.color, fillOpacity: 1 };
+  }
   return {
     color: sel ? '#c62828' : (hoy ? '#1d3b5c' : (hecho ? '#2f7d5b' : '#33414f')),
     weight: sel ? 3 : (hoy ? 2 : 0.8),

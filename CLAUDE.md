@@ -88,6 +88,7 @@ los geojson a mano, porque se regeneran.
 
 | Lista | Para qué |
 |---|---|
+| `REMAPEAR` | rehace las manzanas de un territorio con el detalle del mapa, conservando su contorno. Hoy solo T51, el Parque O'Higgins |
 | `CORRECCIONES` | "la cuadra que contiene este punto es de tal territorio". Para cuando el color no desambigua y la congregación confirma |
 | `EXCLUIDAS` | cuadras que no son de nadie: plazas, bandejones |
 | `BLOQUE_UNICO` | un territorio que en la realidad es un bloque con pasajes, no manzanas sueltas. Hoy solo T58 al poniente de San Alfonso |
@@ -118,6 +119,13 @@ Cada una costó encontrarla y está resuelta; no re-descubrirlas.
 - **El tamaño máximo de cuadra importa.** `CARA_MAXIMA_M2` está en 90.000 m² porque hay
   cuadras reales de 88.000. Bajarlo hace que esos territorios caigan al plan B y salgan
   deformados.
+- **Las manzanas se recortan media calle por lado** (`SEPARACION_M`) para que en el
+  modo "Manzanas" se vea el espacio de la calle, como en el plano. Nunca más del 35%
+  del lado corto, o las manzanas angostas desaparecen. La envolvente se calcula sin
+  recortar, así los territorios vecinos siguen calzando.
+- **Los bandejones absorbidos no son manzanas.** Se absorben para que el territorio no
+  quede partido, pero entran solo en la envolvente: si se listan como manzanas,
+  aparecen tiras de color sobre la calzada.
 - **Para el territorio 58, el plano tiene más información que el mapa.** Se midió: OSM
   solo alcanza a estructurar el 37% de ese sector. Es el caso inverso al resto.
 
@@ -260,6 +268,7 @@ se publica la nueva → qué ve al abrir).
 | `programa.json` | El programa del mes, generado |
 | `territorios.geojson` | Generado: los 58 territorios, manzana por manzana (`n`, `centro`, `color`, `letras`, `nmanzanas`) |
 | `envolventes.geojson` | Generado: el contorno de cada territorio, de una pieza |
+| `calles.geojson` | Generado por `calles_geojson.py`: calles con nombre, para la vista Dibujo |
 | `territorios_trazados.geojson` | El trazado original a mano. Fuente, no se edita |
 | `dudosos.json` | Generado: lo que necesita confirmación humana |
 | `manzanas.geojson` | Del trazado antiguo. **Quedó obsoleto**, no lo carga nadie |
@@ -268,6 +277,7 @@ se publica la nueva → qué ve al abrir).
 | `enriquecer_programa.py` | Agrega territorios, coordenadas y tildes |
 | `territorios_desde_osm.py` | Rehace los territorios con las cuadras reales |
 | `envolventes.py` | Saca las cuadras de OSM y arma los contornos |
+| `calles_geojson.py` | Saca de OSM las calles con nombre |
 | `cruce.py` | Busca cruces de calles en OpenStreetMap |
 
 ## Forma de `programa.json`

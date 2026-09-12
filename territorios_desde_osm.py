@@ -33,7 +33,7 @@ import numpy as np
 from PIL import Image
 from shapely.affinity import scale
 from shapely.geometry import LineString, Point, Polygon, mapping, shape
-from shapely.ops import unary_union
+from shapely.ops import polygonize, unary_union
 from shapely.strtree import STRtree
 from shapely.validation import make_valid
 
@@ -55,8 +55,19 @@ MUESTRAS = 26          # rejilla de muestreo de color dentro de cada cuadra
 # granate y caían en cubetas distintas, lo que inventaba correcciones.
 DIST_COLOR = 34
 MIN_SOLAPE = 0.10      # cuánto de una cuadra debe cubrir lo trazado para contar
-SEPARACION_M = 1.5     # holgura entre manzanas vecinas del mismo territorio
-LETRAS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+SEPARACION_M = 14      # ancho de calle que se deja entre manzanas vecinas
+SEPARACION_MAX = 0.35  # pero nunca más de esta fracción del lado corto
+ABECEDARIO = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+
+def letras_posibles(cuantas):
+    """A, B, ... Z, AA, AB, … para los territorios de más de 26 manzanas."""
+    salida = list(ABECEDARIO)
+    i = 0
+    while len(salida) < cuantas + 26:
+        salida += [ABECEDARIO[i] + b for b in ABECEDARIO]
+        i += 1
+    return salida
 
 # Correcciones confirmadas por la congregación, para los casos en que el plano
 # pinta del mismo color a dos territorios vecinos y el color no puede decidir.
@@ -76,6 +87,7 @@ CORRECCIONES = [
     (-70.675090, -33.465913, 34),   # San Vicente / Espiñeira / Conferencia / Antofagasta (estaba en T36)
     (-70.673873, -33.465616, 35),   # Conferencia / Espiñeira / San Alfonso / Antofagasta (estaba en T36)
     (-70.671759, -33.465612, 37),   # Bascuñán Guerrero / Espiñeira / Abate Molina (estaba en T48)
+    (-70.670528, -33.467865, 41),   # el triángulo entre Mirador, El Boldo y Manuel de Amat
     (-70.675917, -33.465986, 33),   # la tira entre Los Suspiros y Espiñeda, en Antofagasta
                                     # con San Vicente: el crema de T33 y el de T36 son casi
                                     # el mismo y se la llevaba T36, que está a 300 m
@@ -98,6 +110,16 @@ BLOQUE_UNICO = [
      'limite_este': -70.67293, 'margen_vias_m': 18},
 ]
 
+# Territorios cuyas manzanas se rehacen con el detalle del mapa. En un parque
+# las "manzanas" del plano no corresponden a nada que se pueda recorrer, pero el
+# mapa sí trae los caminos interiores. El contorno del territorio no cambia:
+# solo se reemplaza lo que tiene por dentro.
+REMAPEAR = [
+    {'territorio': 51, 'minimo_m2': 10000,
+     'vias': ('footway', 'path', 'service', 'cycleway', 'steps')},
+]
+CACHE_FINO = 'fino_cache.json'      # red detallada, ignorada por git
+
 # Cuadras que no son de ningún territorio: plazas y bandejones que el plano no
 # cuenta como manzana. Cada punto nombra la cuadra que hay que dejar fuera.
 EXCLUIDAS = [
@@ -116,6 +138,7 @@ EXCLUIDAS = [
 # calzada no es de nadie.
 RECORTES = []
 CACHE_RECORTES = 'recortes_cache.json'
+CACHE_VIAS = 'vias_cache.json'      # vías férreas, ignorado por git
 
 RADIOS_COLA_M = (5, 6, 8, 10)  # radios con que se intenta separar una cola
 MIN_TRAZADO_M2 = 150           # trazado propio mínimo para que un trozo cuente
@@ -182,8 +205,12 @@ def lados(g):
 
 def faja_vias(bbox):
     """La superficie que ocupan las vías férreas, para usarla como borde."""
-    q = (f'[out:json][timeout:150];way["railway"]({bbox});(._;>;);out body;')
-    d = cruce.consulta(q)
+    if os.path.exists(CACHE_VIAS):
+        d = json.load(open(CACHE_VIAS))
+    else:
+        q = (f'[out:json][timeout:150];way["railway"]({bbox});(._;>;);out body;')
+        d = cruce.consulta(q)
+        json.dump(d, open(CACHE_VIAS, 'w'))
     nodos = {e['id']: (e['lon'], e['lat']) for e in d['elements'] if e['type'] == 'node'}
     lineas = []
     for w in d['elements']:
@@ -214,18 +241,40 @@ def bloque_unico(caras, cfg):
         g = E.a_grados(parte)
         if not g.contains(p):
             continue
-        # las cuadras que el bloque rodea son parte de él: por dentro todo son
-        # pasajes, no manzanas aparte
+        # las cuadras que el bloque rodea se anexan para que el contorno quede
+        # entero, pero se devuelven aparte: siguen siendo manzanas propias
+        dentro = []
         for otra in caras:
             if otra.equals(cara) or not otra.intersects(g.buffer(2 / E.M)):
                 continue
             compartido = otra.exterior.intersection(g.buffer(2 / E.M)).length
             if compartido / otra.exterior.length >= 0.7:
+                dentro.append(otra)
                 g = make_valid(unary_union([g, otra])).buffer(0)
         g = max((q for q in (g.geoms if g.geom_type != 'Polygon' else [g])
                  if q.geom_type == 'Polygon'), key=lambda q: q.area)
-        return Polygon(g.exterior)      # y se rellenan los huecos
-    return None
+        return Polygon(g.exterior), dentro      # con los huecos rellenos
+    return None, []
+
+
+def malla_fina(bbox, extra):
+    """Poligoniza un sector sumando caminos que no son calles."""
+    guardado = json.load(open(CACHE_FINO)) if os.path.exists(CACHE_FINO) else {}
+    if bbox not in guardado:
+        guardado[bbox] = cruce.consulta(
+            f'[out:json][timeout:180];way["highway"]({bbox});(._;>;);out body;')
+        json.dump(guardado, open(CACHE_FINO, 'w'))
+    d = guardado[bbox]
+    nodos = {e['id']: (e['lon'], e['lat']) for e in d['elements'] if e['type'] == 'node'}
+    tipos = set(E.CALLES) | set(extra)
+    lineas = []
+    for w in d['elements']:
+        if w['type'] != 'way' or w.get('tags', {}).get('highway') not in tipos:
+            continue
+        pts = [nodos[n] for n in w['nodes'] if n in nodos]
+        if len(pts) > 1:
+            lineas.append(LineString(pts))
+    return list(polygonize(unary_union(lineas)))
 
 
 def mismo_color(a, b):
@@ -461,6 +510,9 @@ def main():
         porTerr[n].append(caras[j])
     envTmp = {n: unary_union(v) for n, v in porTerr.items()}
     astillas = 0
+    # los bandejones absorbidos sirven para que el territorio no quede partido,
+    # pero no son manzanas: entran en la envolvente y no en el listado
+    solo_borde = set()
     candidatas = [j for j, c in enumerate(caras)
                   if E.m2(c.area) <= E.CARA_MAXIMA_M2 and j not in fuera]
     for j in candidatas:
@@ -481,6 +533,7 @@ def main():
         # da a territorios: un bandejón tiene la otra mitad contra la calzada
         if compartido[mejor] / borde.length >= ASTILLA_RODEADA:
             dueno[j] = mejor
+            solo_borde.add(j)
             astillas += 1
     print(f'huecos interiores absorbidos: {astillas}')
 
@@ -495,18 +548,21 @@ def main():
 
     bloques = {}
     for cfg in BLOQUE_UNICO:
-        g = bloque_unico(caras, cfg)
+        g, dentro = bloque_unico(caras, cfg)
         if g is None:
             print(f"  !! no se pudo armar el bloque de T{cfg['territorio']}")
             continue
-        bloques[cfg['territorio']] = (g, cfg['limite_este'])
-        print(f"bloque único de T{cfg['territorio']}: {E.m2(g.area):.0f} m2")
+        bloques[cfg['territorio']] = (g, cfg['limite_este'], dentro)
+        print(f"bloque único de T{cfg['territorio']}: {E.m2(g.area):.0f} m2"
+              + (f", con {len(dentro)} manzana(s) aparte por dentro" if dentro else ''))
 
     feats_mz, feats_env = [], []
     for n in sorted(trazadas):
-        propias = sorted(por_terr.get(n, []))
+        propias = sorted(j for j in por_terr.get(n, []) if j not in solo_borde)
         piezas = [sin_cola(caras[j], propio[n]) for j in propias]
         letras = [letra_de.get((n, j), '') for j in propias]
+        # los bandejones solo rellenan la envolvente
+        relleno = [caras[j] for j in por_terr.get(n, []) if j in solo_borde]
         # se quita de las cuadras lo que pertenece a otro territorio por recorte
         for nombre, g, destino in recortes:
             if destino == n:
@@ -535,16 +591,41 @@ def main():
                     continue
                 # si el recorte la partió en varias, cada trozo es una manzana
                 for parte in (g.geoms if g.geom_type == 'MultiPolygon' else [g]):
+                    if es_tira(parte):      # una tira sobre la calzada, no una manzana
+                        continue
                     piezas.append(parte)
                     letras.append('')
                 ocupado = unary_union([ocupado, g])
         if n in bloques:
-            # el bloque reemplaza a todo lo que el plano ponía al poniente
-            g, limite = bloques[n]
+            # el bloque reemplaza a todo lo que el plano ponía al poniente; las
+            # cuadras reales que encierra se mantienen como manzanas aparte
+            g, limite, dentro = bloques[n]
             juntos = [(p, l) for p, l in zip(piezas, letras)
                       if p.representative_point().x >= limite]
-            piezas = [p for p, _ in juntos] + [g]
-            letras = [l for _, l in juntos] + ['']
+            if dentro:
+                g = E.limpiar(make_valid(g.difference(unary_union(dentro))).buffer(0))
+            piezas = [p for p, _ in juntos] + [g] + list(dentro)
+            letras = [l for _, l in juntos] + [''] * (1 + len(dentro))
+        # remapeo desde el mapa: se conserva el contorno y se rehace lo de dentro
+        cfg = next((c for c in REMAPEAR if c['territorio'] == n), None)
+        if cfg is not None and piezas:
+            contorno = E.limpiar(make_valid(unary_union(piezas + relleno)).buffer(0))
+            b = contorno.bounds
+            bbox = f'{b[1]-0.001},{b[0]-0.001},{b[3]+0.001},{b[2]+0.001}'
+            finas = []
+            for c in malla_fina(bbox, cfg['vias']):
+                if not c.representative_point().within(contorno):
+                    continue
+                t = make_valid(c.intersection(contorno)).buffer(0)
+                for q in (t.geoms if t.geom_type == 'MultiPolygon' else [t]):
+                    if q.geom_type == 'Polygon' and E.m2(q.area) >= cfg['minimo_m2']:
+                        finas.append(q)
+            if finas:
+                print(f'  T{n} remapeado desde el mapa: {len(piezas)} -> {len(finas)} manzanas')
+                # el contorno se mantiene: las piezas nuevas van dentro de él
+                relleno = relleno + [contorno.difference(unary_union(finas))]
+                piezas, letras = finas, [''] * len(finas)
+
         if not piezas:
             print(f'  !! T{n} se quedó sin geometría')
             continue
@@ -555,7 +636,7 @@ def main():
             limpias.append(l if l and l not in vistas else '')
             if l:
                 vistas.add(l)
-        libres = [l for l in LETRAS if l not in vistas]
+        libres = [l for l in letras_posibles(len(piezas)) if l not in vistas]
         letras = [l if l else (libres.pop(0) if libres else '?') for l in limpias]
         orden = sorted(range(len(piezas)), key=lambda i: letras[i])
         piezas = [piezas[i] for i in orden]; letras = [letras[i] for i in orden]
@@ -564,18 +645,20 @@ def main():
         # cada territorio por separado desalinea los bordes que comparten.
         # buffer(0) deja la geometría utilizable por otras herramientas, y
         # `limpiar` descarta las astillas que dejan los recortes.
-        env = E.limpiar(make_valid(unary_union(piezas)).buffer(0))
+        env = E.limpiar(make_valid(unary_union(piezas + relleno)).buffer(0))
         p = dict(props[n])
         p['nmanzanas'] = len(piezas)
         p['letras'] = ''.join(letras)
         rp = env.representative_point()
         p['centro'] = [round(rp.x, 6), round(rp.y, 6)]
-        # las cuadras vecinas de un mismo territorio comparten borde: se les da
-        # una holgura mínima para que se distingan en el modo "Manzanas" (y para
-        # que el MultiPolygon sea válido). La envolvente se calcula sin holgura.
+        # las cuadras llegan hasta el eje de la calle, así que vecinas se tocan.
+        # Para el modo "Manzanas" se les recorta media calle a cada lado y así
+        # queda el espacio de la calle a la vista, como en el plano. La
+        # envolvente se calcula sin recortar, para que el borde siga completo.
         sueltas = []
         for g in piezas:
-            h = g.buffer(-SEPARACION_M / E.M / 2, join_style=2)
+            r = min(SEPARACION_M / 2, SEPARACION_MAX * lados(g)[0])
+            h = g.buffer(-r / E.M, join_style=2)
             sueltas.append(g if h.is_empty or h.geom_type != 'Polygon' else h)
         feats_mz.append({'type': 'Feature', 'properties': p, 'geometry': {
             'type': 'MultiPolygon',

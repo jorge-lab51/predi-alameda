@@ -89,6 +89,7 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 | `plano_bounds.json` | Esquinas geográficas del plano |
 | `territorios.geojson` | Los 58 territorios, manzana por manzana |
 | `envolventes.geojson` | El contorno de cada territorio, de una pieza |
+| `calles.geojson` | Las calles con nombre, para la vista Dibujo |
 | `territorios_trazados.geojson` | El trazado original a mano, que se conserva como fuente |
 | `manzanas.geojson` | Del trazado antiguo. Ya no lo usa nadie |
 | `programa.json` | El programa del mes convertido a datos |
@@ -96,6 +97,7 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 | `enriquecer_programa.py` | Le agrega territorios y coordenadas al programa |
 | `territorios_desde_osm.py` | Rehace los territorios con las cuadras reales de la ciudad |
 | `envolventes.py` | Saca las cuadras reales de OpenStreetMap |
+| `calles_geojson.py` | Saca de OpenStreetMap las calles con nombre |
 | `cruce.py` | Busca cruces de calles en OpenStreetMap |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Para que funcione sin conexión e instalada |
 
@@ -115,7 +117,9 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 - La **barra** sobre el listado lo muestra y lo oculta, para dejar el mapa a pantalla
   completa. Al apuntarla se dobla en forma de flecha, indicando qué hará. Con una
   ficha abierta el listado se recoge solo, y vuelve al cerrarla.
-- **Plano / Mapa / Ambos**: cambia entre el plano original y el mapa de calles real.
+- **Plano / Mapa / Ambos / Dibujo**: el plano original, el mapa de calles real, los
+  dos superpuestos, o un dibujo limpio de los territorios con los nombres de las
+  calles y sin nada de fondo.
 - **◎**: muestra dónde estás y en qué territorio te encuentras.
 
 ## Precisión

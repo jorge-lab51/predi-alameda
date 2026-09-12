@@ -225,3 +225,9 @@ calles_cache.json
 
 # polígonos de recorte bajados de OpenStreetMap
 recortes_cache.json
+
+# vías férreas bajadas de OpenStreetMap
+vias_cache.json
+
+# red detallada del parque, bajada de OpenStreetMap
+fino_cache.json

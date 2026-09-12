@@ -1,7 +1,7 @@
-const CACHE = 'alameda-v8';
+const CACHE = 'alameda-v9';
 const ASSETS = [
   './', 'index.html', 'app.js', 'leaflet.js', 'leaflet.css',
-  'programa.json', 'territorios.geojson', 'envolventes.geojson',
+  'programa.json', 'territorios.geojson', 'envolventes.geojson', 'calles.geojson',
   'plano.webp', 'plano_bounds.json',
   'manifest.webmanifest', 'icon-192.png', 'icon-512.png'
 ];
