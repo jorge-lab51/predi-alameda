@@ -80,7 +80,7 @@ Escribe además `dudosos.json`: los casos que el color no alcanzó a decidir por
 territorios vecinos están pintados igual. Esos quedan como estaban, para revisión
 humana.
 
-## Las cuatro listas que ajustan el resultado
+## Las listas que ajustan el resultado
 
 Todas viven en `territorios_desde_osm.py`, salvo la última, y cada entrada lleva
 escrito por qué existe. **Son la forma correcta de corregir el mapa**: nunca editar
@@ -91,6 +91,7 @@ los geojson a mano, porque se regeneran.
 | `REMAPEAR` | rehace las manzanas de un territorio con el detalle del mapa, conservando su contorno. Hoy solo T51, el Parque O'Higgins: se poligoniza con `service` y **sin** sendas peatonales, que lo partían en retazos que no corresponden a nada |
 | `CORRECCIONES` | "la cuadra que contiene este punto es de tal territorio". Para cuando el color no desambigua y la congregación confirma |
 | `EXCLUIDAS` | cuadras que no son de nadie: plazas, bandejones |
+| `PLAZAS` | cuadras que **sí** son del territorio pero no son manzana: se dibujan y se nombran, pero no reciben letra ni se cuentan, porque no hay casas que visitar. Hoy T9, T18 y T22 |
 | `BLOQUE_UNICO` | un territorio que en la realidad es un bloque con pasajes, no manzanas sueltas. Hoy solo T58 al poniente de San Alfonso |
 | `CONEXIONES` (en `envolventes.py`) | tramos de calle que existen pero faltan en OSM, sin los cuales la manzana no cierra |
 

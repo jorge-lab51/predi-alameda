@@ -308,6 +308,14 @@ function diasDeTerritorio(n) {
   return PROG.dias.filter(d => d.actividades.some(a => (a.terr || []).includes(n)))
     .map(d => d.dia);
 }
+/* "4 manzana(s) · A B C D · Plaza Manuel Rodríguez" */
+function textoManzanas(p) {
+  let t = `${p.nmanzanas} manzana(s)`;
+  if (p.letras) t += ' · ' + p.letras.split('').join(' ');
+  if (p.plazas && p.plazas.length) t += ' · ' + p.plazas.join(' · ');
+  return t;
+}
+
 /* en qué días del mes se predica este territorio, para la ficha del mapa */
 function textoDias(n) {
   const dias = diasDeTerritorio(n);
@@ -463,7 +471,7 @@ function panelActividad(a) {
   if (ns.length === 1) {
     const f = TERR.features.find(x => x.properties.n === ns[0]);
     titulo = `<span class="dot" style="background:${f ? f.properties.color : 'transparent'}"></span>Territorio ${ns[0]}`;
-    if (f) sub = `${f.properties.nmanzanas} manzana(s)${f.properties.letras ? ' · ' + f.properties.letras.split('').join(' ') : ''}`;
+    if (f) sub = textoManzanas(f.properties);
   } else if (ns.length > 1) {
     titulo = 'Territorios ' + ns.join(' · ');
   } else if (a.calles) {
@@ -518,7 +526,7 @@ function seleccionarTerritorio(n, zoom) {
   mostrarPanel(`
     <h3><span class="dot" style="background:${f.properties.color}"></span>Territorio ${n}
       <span class="close" id="cerrarT">✕</span></h3>
-    <div class="sub">${f.properties.nmanzanas} manzana(s)${f.properties.letras ? ' · ' + f.properties.letras.split('').join(' ') : ''}</div>
+    <div class="sub">${textoManzanas(f.properties)}</div>
     <div class="sub dias">${textoDias(n)}</div>
     <div class="row">
       <a class="btn" target="_blank" rel="noopener"

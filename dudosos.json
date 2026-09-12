@@ -16,6 +16,17 @@
   "aplicado": true
  },
  {
+  "cara": 237,
+  "m2": 6371,
+  "de": 9,
+  "a": [
+   51,
+   55
+  ],
+  "motivo": "varios territorios comparten ese color",
+  "aplicado": false
+ },
+ {
   "cara": 16,
   "m2": 5529,
   "de": 18,
@@ -27,7 +38,7 @@
   "aplicado": false
  },
  {
-  "cara": 514,
+  "cara": 515,
   "m2": 4574,
   "de": 33,
   "a": 36,
@@ -35,7 +46,7 @@
   "aplicado": true
  },
  {
-  "cara": 429,
+  "cara": 430,
   "m2": 10509,
   "de": 57,
   "a": [
@@ -102,7 +113,7 @@
   "aplicado": true
  },
  {
-  "cara": 255,
+  "cara": 256,
   "m2": 2621,
   "de": null,
   "a": 55,
@@ -110,7 +121,7 @@
   "aplicado": true
  },
  {
-  "cara": 281,
+  "cara": 282,
   "m2": 5809,
   "de": null,
   "a": 40,
@@ -118,7 +129,7 @@
   "aplicado": true
  },
  {
-  "cara": 292,
+  "cara": 293,
   "m2": 5468,
   "de": null,
   "a": 35,
@@ -126,7 +137,7 @@
   "aplicado": true
  },
  {
-  "cara": 415,
+  "cara": 416,
   "m2": 3888,
   "de": null,
   "a": 56,
@@ -134,7 +145,7 @@
   "aplicado": true
  },
  {
-  "cara": 424,
+  "cara": 425,
   "m2": 1263,
   "de": null,
   "a": 55,
@@ -142,7 +153,7 @@
   "aplicado": true
  },
  {
-  "cara": 426,
+  "cara": 427,
   "m2": 1235,
   "de": null,
   "a": 55,
@@ -150,7 +161,7 @@
   "aplicado": true
  },
  {
-  "cara": 430,
+  "cara": 431,
   "m2": 7212,
   "de": null,
   "a": 57,
@@ -158,7 +169,7 @@
   "aplicado": true
  },
  {
-  "cara": 431,
+  "cara": 432,
   "m2": 7241,
   "de": null,
   "a": 57,
@@ -166,7 +177,7 @@
   "aplicado": true
  },
  {
-  "cara": 502,
+  "cara": 503,
   "m2": 5136,
   "de": null,
   "a": 45,
@@ -174,7 +185,7 @@
   "aplicado": true
  },
  {
-  "cara": 303,
+  "cara": 304,
   "m2": 10176,
   "de": 23,
   "a": 31,
@@ -182,7 +193,7 @@
   "aplicado": true
  },
  {
-  "cara": 373,
+  "cara": 374,
   "m2": 1658,
   "de": null,
   "a": 4,
@@ -190,7 +201,7 @@
   "aplicado": true
  },
  {
-  "cara": 519,
+  "cara": 520,
   "m2": 2650,
   "de": 17,
   "a": 21,
@@ -198,8 +209,8 @@
   "aplicado": true
  },
  {
-  "cara": 398,
-  "m2": 9295,
+  "cara": 399,
+  "m2": 4955,
   "de": 18,
   "a": 22,
   "motivo": "corrección confirmada por la congregación",
@@ -222,7 +233,7 @@
   "aplicado": true
  },
  {
-  "cara": 560,
+  "cara": 561,
   "m2": 14390,
   "de": 29,
   "a": 34,
@@ -230,7 +241,7 @@
   "aplicado": true
  },
  {
-  "cara": 295,
+  "cara": 296,
   "m2": 15742,
   "de": 36,
   "a": 34,
@@ -238,7 +249,7 @@
   "aplicado": true
  },
  {
-  "cara": 293,
+  "cara": 294,
   "m2": 18521,
   "de": 36,
   "a": 35,
@@ -246,7 +257,7 @@
   "aplicado": true
  },
  {
-  "cara": 289,
+  "cara": 290,
   "m2": 6318,
   "de": 48,
   "a": 37,
@@ -254,7 +265,7 @@
   "aplicado": true
  },
  {
-  "cara": 681,
+  "cara": 684,
   "m2": 3224,
   "de": 46,
   "a": 41,
@@ -262,7 +273,7 @@
   "aplicado": true
  },
  {
-  "cara": 683,
+  "cara": 686,
   "m2": 1969,
   "de": null,
   "a": 41,
@@ -270,7 +281,7 @@
   "aplicado": true
  },
  {
-  "cara": 514,
+  "cara": 515,
   "m2": 4574,
   "de": 36,
   "a": 33,
@@ -286,7 +297,7 @@
   "aplicado": true
  },
  {
-  "cara": 427,
+  "cara": 428,
   "m2": 2980,
   "de": 54,
   "a": 55,
@@ -294,7 +305,7 @@
   "aplicado": true
  },
  {
-  "cara": 441,
+  "cara": 442,
   "m2": 5902,
   "de": 57,
   "a": 58,
@@ -302,7 +313,7 @@
   "aplicado": true
  },
  {
-  "cara": 435,
+  "cara": 436,
   "m2": 5834,
   "de": 57,
   "a": 58,
@@ -310,7 +321,7 @@
   "aplicado": true
  },
  {
-  "cara": 436,
+  "cara": 437,
   "m2": 5381,
   "de": 57,
   "a": 58,

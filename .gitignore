@@ -231,3 +231,6 @@ vias_cache.json
 
 # red detallada del parque, bajada de OpenStreetMap
 fino_cache.json
+
+# polígonos de parques bajados de OpenStreetMap
+zonas_cache.json

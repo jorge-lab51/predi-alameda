@@ -56,7 +56,8 @@ MUESTRAS = 26          # rejilla de muestreo de color dentro de cada cuadra
 DIST_COLOR = 34
 MIN_SOLAPE = 0.10      # cuánto de una cuadra debe cubrir lo trazado para contar
 SEPARACION_M = 14      # ancho de calle que se deja entre manzanas vecinas
-SEPARACION_MAX = 0.35  # pero nunca más de esta fracción del lado corto
+SEPARACION_MAX = 0.18  # pero el recorte nunca se lleva más de este tanto por
+                       # lado: con 0,35 una pieza angosta quedaba en el 30%
 ABECEDARIO = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
@@ -116,11 +117,23 @@ BLOQUE_UNICO = [
 # mapa sí trae los caminos interiores. El contorno del territorio no cambia:
 # solo se reemplaza lo que tiene por dentro.
 REMAPEAR = [
-    # El parque se recorre por sus caminos de verdad, no por las sendas
-    # peatonales: incluirlas lo partía en retazos que no corresponden a nada.
-    {'territorio': 51, 'minimo_m2': 5000, 'vias': ('service',)},
+    # El parque es una sola manzana. Por dentro no hay calles que recorrer, solo
+    # senderos, y cualquier intento de dividirlo daba retazos que no
+    # corresponden a nada. Se toma su polígono tal como lo tiene OpenStreetMap;
+    # lo que queda del territorio —la franja entre Blanco Encalada y Tupper— se
+    # parte por sus calles, que ahí sí son calles.
+    {'territorio': 51, 'zona': "Parque O'Higgins", 'minimo_m2': 2500},
 ]
+CACHE_ZONAS = 'zonas_cache.json'      # polígonos de parques, ignorado por git
 CACHE_FINO = 'fino_cache.json'      # red detallada, ignorada por git
+
+# Plazas: son parte del territorio y se dibujan, pero no son manzanas. No
+# reciben letra ni se cuentan, porque no hay casas que visitar en ellas.
+PLAZAS = [
+    (-70.665197, -33.451361, 9, 'Plaza Manuel Rodríguez'),
+    (-70.659497, -33.452077, 18, 'Plaza Toesca'),
+    (-70.659257, -33.453108, 22, 'Plaza'),
+]
 
 # Cuadras que no son de ningún territorio: plazas y bandejones que el plano no
 # cuenta como manzana. Cada punto nombra la cuadra que hay que dejar fuera.
@@ -257,6 +270,49 @@ def bloque_unico(caras, cfg):
                  if q.geom_type == 'Polygon'), key=lambda q: q.area)
         return Polygon(g.exterior), dentro      # con los huecos rellenos
     return None, []
+
+
+def zona_osm(nombre, bbox):
+    """El polígono de un parque, tal como lo tiene OpenStreetMap."""
+    guardado = json.load(open(CACHE_ZONAS)) if os.path.exists(CACHE_ZONAS) else {}
+    if nombre not in guardado:
+        q = (f'[out:json][timeout:120];way["leisure"="park"]["name"="{nombre}"]'
+             f'({bbox});(._;>;);out body;')
+        d = cruce.consulta(q)
+        nodos = {e['id']: (e['lon'], e['lat']) for e in d['elements'] if e['type'] == 'node'}
+        mejor = None
+        for w in d['elements']:
+            if w['type'] != 'way':
+                continue
+            pts = [nodos[n] for n in w['nodes'] if n in nodos]
+            if len(pts) > 3 and (mejor is None or len(pts) > len(mejor)):
+                mejor = pts
+        guardado[nombre] = mejor or []
+        json.dump(guardado, open(CACHE_ZONAS, 'w'))
+    pts = guardado.get(nombre)
+    if not pts:
+        return None
+    return make_valid(Polygon(pts)).buffer(0)
+
+
+def lineas_vehiculares(bbox):
+    """Las calles por las que se circula: no las peatonales ni los senderos."""
+    guardado = json.load(open(CACHE_FINO)) if os.path.exists(CACHE_FINO) else {}
+    if bbox not in guardado:
+        guardado[bbox] = cruce.consulta(
+            f'[out:json][timeout:180];way["highway"]({bbox});(._;>;);out body;')
+        json.dump(guardado, open(CACHE_FINO, 'w'))
+    d = guardado[bbox]
+    nodos = {e['id']: (e['lon'], e['lat']) for e in d['elements'] if e['type'] == 'node'}
+    tipos = set(E.CALLES) - {'pedestrian'}
+    out = []
+    for w in d['elements']:
+        if w['type'] != 'way' or w.get('tags', {}).get('highway') not in tipos:
+            continue
+        pts = [nodos[n] for n in w['nodes'] if n in nodos]
+        if len(pts) > 1:
+            out.append(LineString(pts))
+    return out
 
 
 def malla_fina(bbox, extra):
@@ -539,6 +595,20 @@ def main():
             astillas += 1
     print(f'huecos interiores absorbidos: {astillas}')
 
+    # --- plazas: se adjudican como una corrección, para que no las descarte
+    # el filtro de tiras, y se anotan para apartarlas al final ---------------
+    caras_plaza = {}
+    for lon, lat, n, nombre in PLAZAS:
+        p = Point(lon, lat)
+        for j, c in enumerate(caras):
+            if E.m2(c.area) <= E.CARA_MAXIMA_M2 and j not in fuera and c.contains(p):
+                dueno[j] = n
+                solo_borde.discard(j)
+                caras_plaza[j] = nombre
+                break
+        else:
+            print(f'  !! plaza sin cuadra: ({lon}, {lat}) -> T{n}')
+
     # --- armar cada territorio --------------------------------------------
     por_terr = collections.defaultdict(list)
     for j, n in dueno.items():
@@ -560,9 +630,13 @@ def main():
 
     feats_mz, feats_env = [], []
     for n in sorted(trazadas):
-        propias = sorted(j for j in por_terr.get(n, []) if j not in solo_borde)
+        propias = sorted(j for j in por_terr.get(n, [])
+                         if j not in solo_borde and j not in caras_plaza)
         piezas = [sin_cola(caras[j], propio[n]) for j in propias]
         letras = [letra_de.get((n, j), '') for j in propias]
+        # las plazas van aparte: se dibujan, pero no son manzanas
+        plazas = [caras[j] for j in sorted(por_terr.get(n, [])) if j in caras_plaza]
+        nombres = [caras_plaza[j] for j in sorted(por_terr.get(n, [])) if j in caras_plaza]
         # los bandejones solo rellenan la envolvente
         relleno = [caras[j] for j in por_terr.get(n, []) if j in solo_borde]
         # se quita de las cuadras lo que pertenece a otro territorio por recorte
@@ -611,22 +685,48 @@ def main():
         # remapeo desde el mapa: se conserva el contorno y se rehace lo de dentro
         cfg = next((c for c in REMAPEAR if c['territorio'] == n), None)
         if cfg is not None and piezas:
-            contorno = E.limpiar(make_valid(unary_union(piezas + relleno)).buffer(0))
-            b = contorno.bounds
+            # el trazado del plano deja el territorio en retazos sueltos: primero
+            # se cierran en una sola figura, que es el contorno que corresponde
+            solido = E.limpiar(make_valid(E.cierre(piezas + relleno, radio_m=40)).buffer(0))
+            solido = max((q for q in (solido.geoms if solido.geom_type != 'Polygon' else [solido])
+                          if q.geom_type == 'Polygon'), key=lambda q: q.area, default=None)
+            b = solido.bounds if solido is not None else (0, 0, 0, 0)
             bbox = f'{b[1]-0.001},{b[0]-0.001},{b[3]+0.001},{b[2]+0.001}'
-            finas = []
-            for c in malla_fina(bbox, cfg['vias']):
-                if not c.representative_point().within(contorno):
-                    continue
-                t = make_valid(c.intersection(contorno)).buffer(0)
-                for q in (t.geoms if t.geom_type == 'MultiPolygon' else [t]):
-                    if q.geom_type == 'Polygon' and E.m2(q.area) >= cfg['minimo_m2']:
-                        finas.append(q)
-            if finas:
-                print(f'  T{n} remapeado desde el mapa: {len(piezas)} -> {len(finas)} manzanas')
-                # el contorno se mantiene: las piezas nuevas van dentro de él
-                relleno = relleno + [contorno.difference(unary_union(finas))]
-                piezas, letras = finas, [''] * len(finas)
+            zona = zona_osm(cfg['zona'], bbox) if solido is not None else None
+            if zona is not None:
+                dentro = make_valid(solido.intersection(zona)).buffer(0)
+                grande = max((q for q in (dentro.geoms if dentro.geom_type != 'Polygon' else [dentro])
+                              if q.geom_type == 'Polygon'), key=lambda q: q.area, default=None)
+                # lo que queda fuera del parque se parte por sus calles
+                sobra = make_valid(solido.difference(zona.buffer(4 / E.M))).buffer(0)
+                calles = unary_union([E.a_metrico(l).buffer(9 / E.M)
+                                      for l in lineas_vehiculares(bbox)])
+                cortado = make_valid(E.a_metrico(sobra).difference(calles)).buffer(0)
+                nuevas = [grande] if grande is not None else []
+                for q in (cortado.geoms if cortado.geom_type != 'Polygon' else [cortado]):
+                    if q.geom_type != 'Polygon':
+                        continue
+                    g2 = E.a_grados(q)
+                    if E.m2(g2.area) >= cfg['minimo_m2']:
+                        nuevas.append(g2)
+                if nuevas:
+                    print(f'  T{n} rehecho: {len(piezas)} -> {len(nuevas)} manzanas '
+                          f'(el parque entero más lo que queda al norte)')
+                    # la envolvente es la figura completa, sin el hueco de las calles
+                    relleno = [solido]
+                    piezas, letras = nuevas, [''] * len(nuevas)
+
+        # una pieza puede venir como MultiPolygon; cada trozo es una manzana
+        sueltos, sueltosL = [], []
+        for g, l in zip(piezas, letras):
+            if g.is_empty:
+                continue
+            for parte in (g.geoms if g.geom_type == 'MultiPolygon' else [g]):
+                if parte.geom_type == 'Polygon' and not parte.is_empty:
+                    sueltos.append(parte)
+                    sueltosL.append(l if len(sueltos) and l else '')
+                    l = ''
+        piezas, letras = sueltos, sueltosL
 
         if not piezas:
             print(f'  !! T{n} se quedó sin geometría')
@@ -647,10 +747,12 @@ def main():
         # cada territorio por separado desalinea los bordes que comparten.
         # buffer(0) deja la geometría utilizable por otras herramientas, y
         # `limpiar` descarta las astillas que dejan los recortes.
-        env = E.limpiar(make_valid(unary_union(piezas + relleno)).buffer(0))
+        env = E.limpiar(make_valid(unary_union(piezas + plazas + relleno)).buffer(0))
         p = dict(props[n])
         p['nmanzanas'] = len(piezas)
         p['letras'] = ''.join(letras)
+        if plazas:
+            p['plazas'] = nombres
         rp = env.representative_point()
         p['centro'] = [round(rp.x, 6), round(rp.y, 6)]
         # las cuadras llegan hasta el eje de la calle, así que vecinas se tocan.
@@ -658,7 +760,7 @@ def main():
         # queda el espacio de la calle a la vista, como en el plano. La
         # envolvente se calcula sin recortar, para que el borde siga completo.
         sueltas = []
-        for g in piezas:
+        for g in piezas + plazas:
             r = min(SEPARACION_M / 2, SEPARACION_MAX * lados(g)[0])
             h = g.buffer(-r / E.M, join_style=2)
             sueltas.append(g if h.is_empty or h.geom_type != 'Polygon' else h)

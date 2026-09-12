@@ -53,6 +53,14 @@ CONEXIONES = [
     # se cortan 13 m antes de Manuel de Amat, por el sur
     [(-70.670701, -33.468208), (-70.670700, -33.468327)],
     [(-70.670917, -33.468209), (-70.670916, -33.468328)],
+    # la calle peatonal que pasa por encima de la Plaza Manuel Rodríguez sí se
+    # camina, pero en OSM le faltan 11 m para llegar a Almirante Latorre
+    [(-70.664749, -33.451067), (-70.664652, -33.451058)],
+    # la manzana del T22 que llega a Av. Manuel Rodríguez Sur, junto a la
+    # Autopista, son en realidad dos: arriba la plaza (la media luna verde del
+    # plano) y abajo la manzana. Nada las separa en OSM, así que el corte va
+    # trazado por donde el plano deja de estar pintado de verde.
+    [(-70.659441, -33.453522), (-70.658798, -33.453344)],
 ]
 
 TOLERANCIA_M = 2          # cuánto se puede mover un tramo a mano para engancharse
