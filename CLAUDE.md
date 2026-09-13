@@ -348,6 +348,13 @@ auditar contra el PDF.
   El mapa pasó de 152 a 595 px con el listado recogido en un iPhone SE. No volver a
   apilar barras ni filas de header: el alto del mapa es el recurso escaso. El nombre de
   cada icono se muestra con `aviso()` al tocarlo.
+- **Los números de territorio (`pintarNumeros`) salen solo en Mapa y en Dibujo.** En
+  Plano y en Ambos el plano ya trae los suyos impresos y salir dos veces confunde; la
+  condición es `dibujo || (mapa a la vista && plano no)`. Se saltan los territorios del
+  día, que ya llevan chapa roja, se ocultan bajo `ZOOM_NUMEROS` para no amontonarse, y
+  van `interactive:false` para que el clic lo reciba la manzana de abajo. El color se
+  invierte con `body.fondo-oscuro` (Mapa) o `body.dibujo-oscuro` (Dibujo), que son
+  cosas distintas: hay que mirar además si `body.dibujo` está puesto.
 - **El grosor de los bordes de territorio va con el zoom** (`grueso()`): a ancho fijo,
   alejado el borde rojo del territorio marcado es más grueso que la manzana que rodea y
   el territorio se ve como una mancha. Por eso `restilarTerr()` cuelga de `zoomend`, y

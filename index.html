@@ -187,6 +187,14 @@ body.dibujo.dibujo-oscuro .rotulo{color:#a7b4c2;
 .rotulo{position:absolute;white-space:nowrap;font-size:9px;font-weight:600;
   letter-spacing:.4px;color:#4a5560;text-transform:uppercase;pointer-events:none;
   text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+/* el número del territorio, como en el plano: sin chapa, solo el número con un
+   halo que lo despega del color de abajo */
+.nterr{position:absolute;transform:translate(-50%,-50%);font-weight:800;font-size:13px;
+  letter-spacing:-.3px;color:#1f2833;pointer-events:none;
+  text-shadow:0 0 4px #fff,0 0 4px #fff,0 0 3px #fff,0 0 3px #fff}
+/* claro sobre oscuro: en Mapa manda el mapa de fondo, en Dibujo el papel */
+body:not(.dibujo).fondo-oscuro .nterr,body.dibujo.dibujo-oscuro .nterr{color:#f2f5f8;
+  text-shadow:0 0 4px #0b0f14,0 0 4px #0b0f14,0 0 3px #0b0f14,0 0 3px #0b0f14}
 .tlabel{background:#c62828;color:#fff;font-weight:700;font-size:12px;border-radius:9px;
   padding:2px 0;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 .hint{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:470;background:rgba(20,30,40,.86);

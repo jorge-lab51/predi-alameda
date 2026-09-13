@@ -116,6 +116,9 @@ oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que resp
 - Tocar una actividad: el mapa se acerca al territorio, aparece el punto de encuentro
   y se abre una ficha con el capitán, la hora y la dirección. **Cómo llegar** abre
   Google Maps con la ruta. La ficha se cierra con la **✕**.
+- En las vistas **Mapa** y **Dibujo** cada territorio lleva su número escrito encima,
+  como en el plano. En **Plano** y en **Ambos** no, porque el plano ya trae los suyos
+  impresos. Los territorios del día llevan su chapa roja en vez del número.
 - El territorio marcado se dibuja con un borde rojo que se afina al alejar el mapa,
   para que los bordes de manzanas vecinas no se junten.
 - Tocar un territorio en el mapa: muestra sus manzanas, las **plazas** que tiene

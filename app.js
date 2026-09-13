@@ -165,6 +165,7 @@ function iniciarMapa() {
   // cambiarlo. Va aquí y no en construirCalles(), que se salta si falta el
   // archivo de calles
   map.on('zoomend', restilarTerr);
+  map.on('zoomend', pintarNumeros);
 
   construirTerritorios();
   construirCalles();
@@ -235,6 +236,7 @@ function ponerMapaBase(clave) {
   if (capaMapa) map.removeLayer(capaMapa);
   if (capaRotulos) { map.removeLayer(capaRotulos); capaRotulos = null; }
   const opc = { maxZoom: 20, minZoom: 13, maxNativeZoom: cfg.maxNativeZoom };
+  document.body.classList.toggle('fondo-oscuro', clave === 'oscuro');
   capaMapa = L.tileLayer(cfg.url, Object.assign({ attribution: cfg.attribution }, opc));
   // la atribución la pone el mapa de abajo; aquí sobraría repetida
   if (cfg.rotulos) capaRotulos = L.tileLayer(cfg.rotulos,
@@ -455,14 +457,41 @@ function estiloTerr(f) {
     dashArray: hecho && !sel ? '4,3' : null
   };
 }
-let capaEtiquetas = null;
+let capaEtiquetas = null, capaNumeros = null;
 /* solo el color y el grosor: sin rehacer las etiquetas, que no cambian */
 function restilarTerr() { if (capaTerr) capaTerr.setStyle(estiloTerr); }
+
+/* El número de cada territorio escrito encima, como en el plano. Va en la vista
+   de Mapa y en la de Dibujo; en Plano y en Ambos no, porque el plano ya trae los
+   suyos impresos y salir dos veces confunde. Los territorios del día ya llevan
+   su chapa roja, así que esos se saltan. */
+const ZOOM_NUMEROS = 14;     // más lejos que esto se amontonan
+
+function numerosALaVista() {
+  return !!map && (dibujo || (capaMapa && map.hasLayer(capaMapa) && !map.hasLayer(capaPlano)));
+}
+
+function pintarNumeros() {
+  if (capaNumeros) { map.removeLayer(capaNumeros); capaNumeros = null; }
+  if (!TERR || !numerosALaVista() || map.getZoom() < ZOOM_NUMEROS) return;
+  const conChapa = new Set(territoriosDelDia());
+  const ms = TERR.features.filter(f => !conChapa.has(f.properties.n)).map(f => {
+    const n = f.properties.n;
+    // no interactivo: el clic lo recibe la manzana de abajo, que ya selecciona
+    return L.marker([f.properties.centro[1], f.properties.centro[0]], {
+      interactive: false, keyboard: false,
+      icon: L.divIcon({ className: '', iconSize: [0, 0],
+        html: '<div class="nterr">' + n + '</div>' })
+    });
+  });
+  capaNumeros = L.layerGroup(ms).addTo(map);
+}
 
 function pintarTerritorios() {
   if (!capaTerr) return;
   capaTerr.setStyle(estiloTerr);
   if (capaEtiquetas) { map.removeLayer(capaEtiquetas); capaEtiquetas = null; }
+  pintarNumeros();
   const hoy = territoriosDelDia();
   if (!hoy.length) return;
   const ms = hoy.map(n => {
