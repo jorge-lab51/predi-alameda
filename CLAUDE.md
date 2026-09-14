@@ -43,12 +43,16 @@ coordenadas, y escribe encima. Es correcto: carga en memoria antes de escribir.
 
 ### Antes de hacer push — obligatorio
 
-**Subir la versión del caché en `sw.js`** (`const CACHE = 'alameda-vN'`) si cambió
-cualquier archivo salvo `programa.json`. Sin eso, los celulares que ya tienen la app
-instalada se quedan con la versión vieja. Ver *Service worker*.
+Vale para cualquier cambio, no solo para el programa del mes:
 
-Actualizar el `README.md` si cambió cómo se usa la app: está escrito para la
-congregación, no para desarrolladores.
+1. `node pruebas/revisar.js` — tiene que terminar en 0 mal.
+2. **Subir la versión del caché en `sw.js`** (`const CACHE = 'alameda-vN'`) si cambió
+   cualquier archivo salvo `programa.json`. Sin eso, los celulares que ya tienen la app
+   instalada se quedan con la versión vieja. Ver *Service worker*.
+3. Actualizar el `README.md` si cambió cómo se usa la app: está escrito para la
+   congregación, no para desarrolladores. Y este archivo si cambió cómo funciona.
+
+Los mensajes de commit van en español, explican **por qué** y no solo qué.
 
 ### Después del push
 
@@ -208,6 +212,21 @@ Dos detalles que ya están resueltos y conviene no deshacer:
 
 ---
 
+# Lo que quedó pendiente
+
+Nada de esto bloquea nada; son decisiones que esperan confirmación de la congregación.
+
+- **Tres cuadras sin resolver en `dudosos.json`** (`"aplicado": false`): las caras 237,
+  16 y 430. El color del plano no desambigua porque varios territorios vecinos están
+  pintados igual, entre el 51 y el 55. Quedaron como estaban. Para cerrarlas hay que
+  preguntar de quién son y agregarlas a `CORRECCIONES`.
+- **Las cuatro manzanas chicas de Pje. Uno con Rayén** están hoy en el T29, que es lo
+  que dice el color del plano, pero podrían ser del T46. Nadie lo ha confirmado.
+- **Tres pedacitos del T51** en el borde oriental, contra la Autopista, podrían sobrar.
+  Se dejaron porque el trazado original los tiene.
+
+---
+
 # Privacidad
 
 El repositorio es **público** (GitHub Pages gratis lo exige) y el programa incluye
@@ -248,47 +267,51 @@ nombres.
 
 ## En la red local, desde el celular
 
-Hace falta un servidor que mande `Cache-Control: no-store`. **`python3 -m http.server`
-a secas no sirve**: manda `Last-Modified` sin `Cache-Control`, el navegador aplica caché
+```bash
+node pruebas/servir.js          # imprime la dirección para el celular
+```
+
+Manda `Cache-Control: no-store`, que es lo que importa: **`python3 -m http.server` a
+secas no sirve**, manda `Last-Modified` sin `Cache-Control`, el navegador aplica caché
 heurístico y termina mostrando la versión anterior — es exactamente el síntoma descrito
 en *Service worker*, y hace perder tiempo buscando un bug que no existe.
 
-```python
-# guardar fuera del repo y correr: python3 servidor.py 8080
-import http.server, socketserver, sys
-RAIZ = '/Users/jorgerock/garage/predi-alameda'
-class H(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *a, **k): super().__init__(*a, directory=RAIZ, **k)
-    def end_headers(self):
-        self.send_header('Cache-Control', 'no-store, must-revalidate')
-        super().end_headers()
-class S(socketserver.ThreadingTCPServer):
-    allow_reuse_address = True; daemon_threads = True
-with S(('0.0.0.0', int(sys.argv[1])), H) as s: s.serve_forever()
-```
+El celular tiene que estar en la misma WiFi y el firewall de macOS permitir la
+conexión. Sobre `http://` en una IP de la red local **no hay contexto seguro**: no se
+registra el service worker y el GPS (botón ◎) no funciona. Todo lo demás sí. Para
+probar esas dos cosas hace falta HTTPS.
 
-La IP local se obtiene con `ipconfig getifaddr en0`. El celular tiene que estar en la
-misma WiFi y el firewall de macOS permitir la conexión.
-
-Sobre `http://` en una IP de la red local **no hay contexto seguro**: no se registra el
-service worker y el GPS (botón ◎) no funciona. Todo lo demás sí. Para probar esas dos
-cosas hace falta HTTPS.
-
-## Verificar de verdad
-
-Este proyecto no tiene tests. La forma de comprobar cambios de interfaz que ha
-funcionado es abrir la app en Chrome headless por el protocolo de depuración, emular un
-celular, y leer el DOM y sacar capturas:
+## La batería de pruebas
 
 ```bash
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
-  --remote-debugging-port=9336 --user-data-dir=/tmp/chr --disable-gpu about:blank
-# luego abrir pestaña con PUT a /json/new?<url> y hablar por WebSocket
+node pruebas/revisar.js            # las 61 comprobaciones
+node pruebas/revisar.js fondos     # solo los grupos cuyo nombre contenga eso
 ```
 
-Vale la pena para cualquier cambio de comportamiento: varias de las trampas de arriba
-solo aparecieron simulando el flujo completo (celular con la versión vieja instalada →
-se publica la nueva → qué ve al abrir).
+**Correrla siempre antes de publicar.** Termina con código 1 si algo falla y deja una
+captura en `pruebas/ultima.png`.
+
+No hay que instalar nada: el script levanta su propio servidor sin caché, abre Chrome
+headless por el protocolo de depuración, emula un iPhone y lee el DOM. Node 22 ya trae
+`WebSocket`, así que el proyecto sigue sin dependencias de npm. Si Chrome no está en
+`/Applications/Google Chrome.app`, hay que cambiar la constante `CHROME`.
+
+Los grupos que comprueba: `datos`, `arranque`, `alto` (header, barras y mapa),
+`tira de días`, `barra de iconos y vistas`, `desplegable del fondo`, `fondos de mapa`,
+`nombres de calle en Dibujo`, `números de territorio`, `letras de manzana`,
+`bordes y toques`. **Al agregar una funcionalidad, agregarle ahí su comprobación**:
+casi todas las trampas de este archivo aparecieron simulando el flujo completo en el
+navegador, no leyendo el código.
+
+Tres cosas del arnés que cuesta redescubrir:
+
+- **Hay que pasar por encima del service worker** (`Network.setBypassServiceWorker`).
+  Si no, la primera carga sirve el `app.js` viejo del caché y se prueba lo que no es.
+- Las variables de `app.js` se declaran con `let` en el tope del script, así que
+  **no cuelgan de `window`**: hay que evaluarlas como identificadores pelados.
+- Toda expresión evaluada tiene que **terminar en un valor simple**. `map.setZoom(15)`
+  devuelve el mapa y el protocolo responde *Object reference chain is too long*; por
+  eso los `ev(...)` terminan en `; 1`.
 
 ---
 
@@ -313,6 +336,27 @@ se publica la nueva → qué ve al abrir).
 | `envolventes.py` | Saca las cuadras de OSM y arma los contornos |
 | `calles_geojson.py` | Saca de OSM las calles con nombre |
 | `cruce.py` | Busca cruces de calles en OpenStreetMap |
+| `pruebas/revisar.js` | La batería de comprobaciones en el navegador |
+| `pruebas/servir.js` | Servidor sin caché para probar desde el celular |
+
+## Por dónde anda cada cosa en `app.js`
+
+Un solo archivo, sin módulos. De arriba a abajo:
+
+| Zona | Qué hay |
+|---|---|
+| Constantes | `MAPAS` (los seis fondos), claves de `localStorage`, estado suelto (`diaSel`, `terrSel`, `modoTerr`, `dibujo`, `dibujoOscuro`) |
+| `cargar()` | Baja los cinco archivos de datos y arranca todo |
+| `iniciarMapa()` | Crea el mapa, el panel `rotulosMapa`, cuelga los eventos y ata **todos** los botones de las barras |
+| `baseInicial()` / `dibujoInicial()` / `ponerDibujoOscuro()` | Qué fondo y qué papel al abrir |
+| `ponerMapaBase()` / `actualizarBarraBase()` / `desplegarFondo()` | El fondo del mapa y su desplegable |
+| `construirCalles()` / `colocarRotulos()` y ayudantes | Los nombres de calle de la vista Dibujo |
+| `estiloTerr()` / `grueso()` / `restilarTerr()` | Cómo se pinta cada territorio |
+| `construirTerritorios()` / `pintarTerritorios()` / `pintarNumeros()` / `pintarLetras()` | Las capas del mapa |
+| `seleccionarTerritorio()` / `resaltarTerritorio()` / `limpiarSeleccion()` / `mostrarPanel()` | La ficha del territorio |
+| `render()` / `pintarSemana()` / `posicionarTira()` / `pintarLista()` | El programa del día y la tira de días |
+| `ajustarHoja()` | Mostrar y ocultar el listado |
+| `ubicar()` | El GPS del botón ◎ |
 
 ## Forma de `programa.json`
 
@@ -348,6 +392,14 @@ auditar contra el PDF.
   El mapa pasó de 152 a 595 px con el listado recogido en un iPhone SE. No volver a
   apilar barras ni filas de header: el alto del mapa es el recurso escaso. El nombre de
   cada icono se muestra con `aviso()` al tocarlo.
+- **Las letras de manzana (`pintarLetras`) salen solo con un territorio marcado.** Se
+  anclan en el vértice **más al noroeste** de cada manzana —el que maximiza
+  `lat - lon*cos(lat)`, porque las cuadras del barrio están giradas y mirar solo la
+  latitud no da la esquina de la izquierda— y el rótulo se dibuja hacia abajo y a la
+  derecha, que es donde está la cuadra, así que la letra cae dentro sea cual sea la
+  orientación. Se recorta con `coordinates.slice(0, letras.length)`, que
+  funciona porque `territorios_desde_osm.py` escribe **las plazas al final** del
+  MultiPolygon; si eso cambiara, las letras se correrían de manzana.
 - **Los números de territorio (`pintarNumeros`) salen solo en Mapa y en Dibujo.** En
   Plano y en Ambos el plano ya trae los suyos impresos y salir dos veces confunde; la
   condición es `dibujo || (mapa a la vista && plano no)`. Se saltan los territorios del

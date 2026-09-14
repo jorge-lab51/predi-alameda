@@ -457,7 +457,8 @@ function estiloTerr(f) {
     dashArray: hecho && !sel ? '4,3' : null
   };
 }
-let capaEtiquetas = null, capaNumeros = null;
+let capaEtiquetas = null, capaNumeros = null, capaLetras = null;
+const COS_LAT = Math.cos(-33.46 * Math.PI / 180);   // para comparar longitudes con latitudes
 /* solo el color y el grosor: sin rehacer las etiquetas, que no cambian */
 function restilarTerr() { if (capaTerr) capaTerr.setStyle(estiloTerr); }
 
@@ -487,11 +488,38 @@ function pintarNumeros() {
   capaNumeros = L.layerGroup(ms).addTo(map);
 }
 
+/* Al marcar un territorio, la letra de cada manzana en su esquina de arriba a
+   la izquierda: el vértice que más se interna hacia el noroeste. El rótulo se
+   dibuja hacia abajo y a la derecha de ese punto, que es donde está la cuadra,
+   así que la letra cae dentro sea cual sea la orientación. Las manzanas del
+   barrio están giradas, así que no sirve mirar solo la latitud.
+   Las plazas no llevan: no son manzanas y no tienen letra, y por eso van al
+   final de la lista de polígonos. */
+function pintarLetras() {
+  if (capaLetras) { map.removeLayer(capaLetras); capaLetras = null; }
+  if (terrSel === null || !TERR) return;
+  const f = TERR.features.find(x => x.properties.n === terrSel);
+  const letras = f && f.properties.letras;
+  if (!letras) return;
+  const noroeste = p => p[1] - p[0] * COS_LAT;   // cuanto más arriba y más a la izquierda, mayor
+  const ms = f.geometry.coordinates.slice(0, letras.length).map((poly, i) => {
+    let alto = poly[0][0];
+    for (const p of poly[0]) if (noroeste(p) > noroeste(alto)) alto = p;
+    return L.marker([alto[1], alto[0]], {
+      interactive: false, keyboard: false,
+      icon: L.divIcon({ className: '', iconSize: [0, 0],
+        html: '<div class="letramz">' + letras[i] + '</div>' })
+    });
+  });
+  capaLetras = L.layerGroup(ms).addTo(map);
+}
+
 function pintarTerritorios() {
   if (!capaTerr) return;
   capaTerr.setStyle(estiloTerr);
   if (capaEtiquetas) { map.removeLayer(capaEtiquetas); capaEtiquetas = null; }
   pintarNumeros();
+  pintarLetras();
   const hoy = territoriosDelDia();
   if (!hoy.length) return;
   const ms = hoy.map(n => {

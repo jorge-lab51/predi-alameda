@@ -1,4 +1,4 @@
-const CACHE = 'alameda-v17';
+const CACHE = 'alameda-v18';
 const ASSETS = [
   './', 'index.html', 'app.js', 'leaflet.js', 'leaflet.css',
   'programa.json', 'territorios.geojson', 'envolventes.geojson', 'calles.geojson',

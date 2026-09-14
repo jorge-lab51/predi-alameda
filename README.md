@@ -121,9 +121,10 @@ oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que resp
   impresos. Los territorios del día llevan su chapa roja en vez del número.
 - El territorio marcado se dibuja con un borde rojo que se afina al alejar el mapa,
   para que los bordes de manzanas vecinas no se junten.
-- Tocar un territorio en el mapa: muestra sus manzanas, las **plazas** que tiene
-  dentro (son parte del territorio, pero no llevan letra ni se cuentan como
-  manzana), **en qué día del mes está asignado** —o que no lo está— y cómo llegar.
+- Tocar un territorio en el mapa: muestra sus manzanas —cada una con **su letra** en
+  la esquina de arriba—, las **plazas** que tiene dentro (son parte del territorio,
+  pero no llevan letra ni se cuentan como manzana), **en qué día del mes está
+  asignado** —o que no lo está— y cómo llegar.
 - Sobre el mapa hay una sola barra de iconos. Los cuatro primeros eligen **qué se ve**
   (ver abajo), los dos siguientes **cómo se marca el territorio** —las cuadras sueltas
   o el contorno entero— y el último despliega **el fondo**, que queda abierto hasta que

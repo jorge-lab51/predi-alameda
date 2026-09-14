@@ -234,3 +234,6 @@ fino_cache.json
 
 # polígonos de parques bajados de OpenStreetMap
 zonas_cache.json
+
+# capturas que deja la batería de pruebas
+pruebas/*.png
