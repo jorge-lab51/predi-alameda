@@ -1,7 +1,9 @@
 /* Batería de comprobaciones de la app, para correr antes de publicar.
  *
- *     node pruebas/revisar.js            # todo
+ *     node pruebas/revisar.js            # todo, contra los archivos de este repo
  *     node pruebas/revisar.js fondos     # solo los grupos cuyo nombre contenga eso
+ *     node pruebas/revisar.js --publicado          # contra el sitio ya publicado
+ *     node pruebas/revisar.js --url https://...    # contra otra dirección
  *
  * No necesita instalar nada: levanta él mismo un servidor sin caché, abre Chrome
  * headless por el protocolo de depuración, emula un celular y lee el DOM. Node 22
@@ -17,6 +19,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 const RAIZ = path.resolve(__dirname, '..');
+const PUBLICADO = 'https://jorge-lab51.github.io/predi-alameda/';
 const PUERTO = 8099;
 const DEPURACION = 9399;
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -55,9 +58,9 @@ async function abrirChrome() {
   throw new Error('Chrome no levantó; ¿está instalado en ' + CHROME + '?');
 }
 
-async function pestana(ancho, alto) {
+async function pestana(ancho, alto, base) {
   const t = await (await fetch(
-    `http://127.0.0.1:${DEPURACION}/json/new?http://127.0.0.1:${PUERTO}/index.html?cb=${Date.now()}`,
+    `http://127.0.0.1:${DEPURACION}/json/new?${base}index.html?cb=${Date.now()}`,
     { method: 'PUT' })).json();
   const ws = new WebSocket(t.webSocketDebuggerUrl);
   await new Promise(r => ws.addEventListener('open', r));
@@ -368,10 +371,17 @@ prueba('bordes y toques', async p => {
 
 /* ---------- correr ------------------------------------------------------ */
 (async () => {
-  const filtro = process.argv[2];
-  const servidor = await servir();
+  const args = process.argv.slice(2);
+  const iUrl = args.indexOf('--url');
+  const base = iUrl >= 0 ? args[iUrl + 1]
+    : args.includes('--publicado') ? PUBLICADO
+    : `http://127.0.0.1:${PUERTO}/`;
+  const filtro = args.find(a => !a.startsWith('--') && a !== base);
+  const local = base.includes('127.0.0.1');
+  console.log('probando ' + base);
+  const servidor = local ? await servir() : null;
   const chrome = await abrirChrome();
-  const p = await pestana(390, 844);
+  const p = await pestana(390, 844, base);
   try {
     await p.listo();
     for (const g of GRUPOS) {
@@ -383,7 +393,7 @@ prueba('bordes y toques', async p => {
     await p.captura('ultima');
   } finally {
     p.cerrar();
-    servidor.close();
+    if (servidor) servidor.close();
     try { process.kill(-chrome.pid); } catch (e) { try { chrome.kill(); } catch (e2) {} }
   }
   console.log(`\n${bien} bien, ${mal} mal`);

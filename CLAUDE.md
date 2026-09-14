@@ -56,8 +56,21 @@ Los mensajes de commit van en español, explican **por qué** y no solo qué.
 
 ### Después del push
 
-Esperar a que GitHub Pages termine de construir y comprobar contra la URL pública, con
-un parámetro anti-caché:
+GitHub Pages tarda un par de minutos. Para esperarlo y comprobar el sitio de verdad:
+
+```bash
+# esperar a que la versión nueva del caché esté arriba
+until curl -s "https://jorge-lab51.github.io/predi-alameda/sw.js?cb=$(date +%s%N)" \
+  | grep -q "alameda-vN"; do sleep 5; done
+
+node pruebas/revisar.js --publicado     # las mismas 61 comprobaciones, contra el sitio
+```
+
+Comprobar los archivos con `curl` no alcanza: dicen que llegaron, no que la app
+funcione. La batería contra `--publicado` la abre de verdad, con su propio service
+worker.
+
+Si solo cambió el programa del mes, basta con mirarlo:
 
 ```bash
 curl -s "https://jorge-lab51.github.io/predi-alameda/programa.json?cb=$(date +%s)" | python3 -m json.tool | head
@@ -284,8 +297,9 @@ probar esas dos cosas hace falta HTTPS.
 ## La batería de pruebas
 
 ```bash
-node pruebas/revisar.js            # las 61 comprobaciones
-node pruebas/revisar.js fondos     # solo los grupos cuyo nombre contenga eso
+node pruebas/revisar.js              # las 61 comprobaciones, con los archivos del repo
+node pruebas/revisar.js fondos       # solo los grupos cuyo nombre contenga eso
+node pruebas/revisar.js --publicado  # las mismas, contra el sitio ya publicado
 ```
 
 **Correrla siempre antes de publicar.** Termina con código 1 si algo falla y deja una
