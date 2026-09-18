@@ -64,6 +64,79 @@ def norm(s):
                 if unicodedata.category(c) != 'Mn')
     return re.sub(r'\s+', ' ', s).lower().strip()
 
+# ------------------------------------------------------- mayúsculas sostenidas
+# El PDF viene todo en mayúsculas. La app no las usa: las etiquetas en español
+# llevan mayúscula solo en la primera letra, y los nombres propios una por
+# palabra. Las tildes NO se inventan aquí: las repone `con_tildes` con el
+# diccionario TILDES, que se escribe a mano.
+
+# partículas que van en minúscula dentro de un nombre propio
+PARTICULAS = {'de', 'del', 'la', 'las', 'los', 'el', 'y', 'e', 'o', 'da', 'do'}
+# palabras que conservan su mayúscula dentro de una frase; agregar aquí los
+# nombres propios nuevos que aparezcan
+PROPIOS = {'zoom'}
+# lo que ocupa la columna del capitán sin ser el nombre de una persona
+NO_SON_NOMBRES = {'sin capitan': 'Sin capitán', 'por confirmar': 'Por confirmar'}
+
+# Tildes de los nombres de los capitanes. Va aparte de TILDES y **no se deduce**:
+# cada línea la confirma alguien. Mientras el PDF venía en mayúsculas sostenidas
+# daba igual —en mayúsculas nadie echa de menos la tilde—, pero al escribirlos en
+# minúscula la falta se ve. Si hay duda, no se pone: 'Cristian' y 'Cristián' son
+# los dos nombres reales y no hay cómo saber cuál es.
+TILDES_NOMBRES = {
+    'Jose': 'José', 'Raul': 'Raúl', 'Martinez': 'Martínez',
+}
+
+
+def _palabra(p):
+    """Mayúscula inicial y el resto en minúscula. Lo que trae dígitos se deja
+    como está: `408A` no puede volverse `408a`."""
+    return p if any(c.isdigit() for c in p) else p[:1].upper() + p[1:].lower()
+
+
+def titulo_es(texto):
+    """Nombre propio: una mayúscula por palabra, salvo las partículas.
+    Tras un separador fuerte (`/`, `(`) vuelve a contar como primera palabra."""
+    salida, primera = [], True
+    for tr in re.split(r'(\W+)', texto or '', flags=re.UNICODE):
+        if not tr:
+            continue
+        if re.match(r'\W', tr, flags=re.UNICODE):
+            salida.append(tr)
+            if any(c in tr for c in '/(-'):
+                primera = True
+            continue
+        salida.append(tr.lower() if not primera and norm(tr) in PARTICULAS else _palabra(tr))
+        primera = False
+    return ''.join(salida)
+
+
+def frase_es(texto):
+    """Etiqueta: mayúscula solo en la primera letra. Nada de `capitalize`, que
+    pondría en mayúscula las preposiciones."""
+    salida, primera = [], True
+    for tr in re.split(r'(\W+)', texto or '', flags=re.UNICODE):
+        if not tr:
+            continue
+        if re.match(r'\W', tr, flags=re.UNICODE):
+            salida.append(tr)
+            continue
+        if primera or norm(tr) in PROPIOS:
+            salida.append(_palabra(tr))
+        else:
+            salida.append(tr if any(c.isdigit() for c in tr) else tr.lower())
+        primera = False
+    return ''.join(salida)
+
+
+def nombre_capitan(texto):
+    """La columna del capitán trae nombres de persona, y a veces un aviso."""
+    aviso = NO_SON_NOMBRES.get(norm(texto))
+    if aviso:
+        return aviso
+    return re.sub(r'[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+',
+                  lambda m: TILDES_NOMBRES.get(m.group(), m.group()), titulo_es(texto))
+
 def clave(direccion):
     """Clave estable para comparar direcciones entre meses."""
     return norm(re.sub(r'\(.*?\)', '', direccion))
@@ -99,7 +172,18 @@ centros = {f['properties']['n']: (f['properties']['centro'][1], f['properties'][
 def enriquecer(prog, buscar_cruce=None, log=print):
     cache = {}
     for d in prog['dias']:
+        if d.get('nota'):
+            d['nota'] = con_tildes(frase_es(d['nota']))
         for a in d['actividades']:
+            # primero las mayúsculas, después las tildes: TILDES está escrito
+            # con la palabra ya capitalizada ('Bascunan', no 'BASCUNAN')
+            if a.get('capitan'):
+                a['capitan'] = nombre_capitan(a['capitan'])
+            if a.get('direccion'):
+                a['direccion'] = titulo_es(a['direccion'])
+            for campo in ('grupo', 'nombre'):
+                if a.get(campo):
+                    a[campo] = frase_es(a[campo])
             for campo in ('direccion', 'grupo', 'nombre'):
                 if a.get(campo):
                     a[campo] = con_tildes(a[campo])

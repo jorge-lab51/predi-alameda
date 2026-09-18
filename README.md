@@ -100,6 +100,7 @@ El plano (`plano.webp`) solo hay que rehacerlo si cambia el dibujo original.
 | `calles_geojson.py` | Saca de OpenStreetMap las calles con nombre |
 | `cruce.py` | Busca cruces de calles en OpenStreetMap |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Para que funcione sin conexión e instalada |
+| `fonts/` | La tipografía de la app (Space Grotesk, licencia OFL) |
 
 ## Cómo se usa
 
@@ -111,16 +112,20 @@ oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que resp
 - Arriba solo va el nombre de la app y el mes. Los días están **al pie del listado**,
   donde cae el pulgar: la tira con **el mes completo**, que se desliza, entre las
   **flechas ‹ ›** y el botón **Hoy**. El día elegido es el que se ve marcado en la
-  tira; **Hoy** vuelve al día actual y deja a la vista la semana en la que cae.
+  tira con un disco negro, y hoy lleva un aro; **Hoy** vuelve al día actual y deja a la
+  vista la semana en la que cae.
   Deslizar sobre el listado también cambia de día.
 - Tocar una actividad: el mapa se acerca al territorio, aparece el punto de encuentro
   y se abre una ficha con el capitán, la hora y la dirección. **Cómo llegar** abre
-  Google Maps con la ruta. La ficha se cierra con la **✕**.
+  Google Maps con la ruta. La ficha se cierra con la **✕**. La actividad tocada queda
+  marcada en el listado.
 - En las vistas **Mapa** y **Dibujo** cada territorio lleva su número escrito encima,
   como en el plano. En **Plano** y en **Ambos** no, porque el plano ya trae los suyos
-  impresos. Los territorios del día llevan su chapa roja en vez del número.
-- El territorio marcado se dibuja con un borde rojo que se afina al alejar el mapa,
-  para que los bordes de manzanas vecinas no se junten.
+  impresos. Los territorios del día llevan, en vez del número, un **disco negro** —el
+  mismo que marca el día elegido en la tira de abajo—, que además se puede tocar.
+- El territorio que se está mirando se dibuja con un **borde rojo** que se afina al
+  alejar el mapa, para que los bordes de manzanas vecinas no se junten. El rojo es
+  solo para eso, así no se confunde con los territorios del día.
 - Tocar un territorio en el mapa: muestra sus manzanas —cada una con **su letra** en
   la esquina de arriba—, las **plazas** que tiene dentro (son parte del territorio,
   pero no llevan letra ni se cuentan como manzana), **en qué día del mes está
@@ -144,7 +149,13 @@ oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que resp
   plano original, los dos superpuestos, o un dibujo limpio de los territorios con los
   nombres de las calles y sin nada de fondo, sobre papel claro o sobre negro. Los nombres acompañan la vista: cada calle que se ve
   lleva el suyo escrito encima, se mire donde se mire.
-- **◎**: muestra dónde estás y en qué territorio te encuentras.
+- Arriba a la derecha del mapa hay dos botones redondos: la **mira** muestra dónde
+  estás y en qué territorio te encuentras, y el de las **cuatro esquinas** vuelve a
+  encuadrar el plano entero.
+- El **⋯** del encabezado abre los **ajustes**. Por ahora solo está el **tema de la
+  app**: *Auto* la deja seguir el modo claro u oscuro del celular, y *Claro* u
+  *Oscuro* lo fijan. Es aparte del fondo del mapa y del papel de la vista Dibujo, que
+  se eligen con el botón de capas.
 
 ## Precisión
 

@@ -34,10 +34,12 @@ coordenadas, y escribe encima. Es correcto: carga en memoria antes de escribir.
    actividades. Si el PDF cambió de diseño, el parser no falla con error — devuelve
    *menos* días o actividades. Esa comparación es la única red de seguridad.
 2. **Los cruces nuevos que buscó en OpenStreetMap**, que quedan listados en pantalla.
-3. **Las direcciones sin coordenada** que también lista. Deberían ser solo las casas
+3. **Los capitanes nuevos**: si alguno queda sin su tilde, se agrega a
+   `TILDES_NOMBRES` — ver *Tildes y mayúsculas*.
+4. **Las direcciones sin coordenada** que también lista. Deberían ser solo las casas
    de familia (ver *Privacidad*). Si aparece un cruce de calles ahí, es que falta el
    nombre en `CALLES_OSM`.
-4. Que los puntos de encuentro caigan cerca de su territorio. Dos casos son normales y
+5. Que los puntos de encuentro caigan cerca de su territorio. Dos casos son normales y
    no son errores: el Salón (punto fijo, lejos del territorio del día) y los días en
    que se juntan en una esquina para trabajar un territorio a varias cuadras.
 
@@ -63,7 +65,7 @@ GitHub Pages tarda un par de minutos. Para esperarlo y comprobar el sitio de ver
 until curl -s "https://jorge-lab51.github.io/predi-alameda/sw.js?cb=$(date +%s%N)" \
   | grep -q "alameda-vN"; do sleep 5; done
 
-node pruebas/revisar.js --publicado     # las mismas 61 comprobaciones, contra el sitio
+node pruebas/revisar.js --publicado     # las mismas 72 comprobaciones, contra el sitio
 ```
 
 Comprobar los archivos con `curl` no alcanza: dicen que llegaron, no que la app
@@ -156,6 +158,77 @@ Cada una costó encontrarla y está resuelta; no re-descubrirlas.
 - **Para el territorio 58, el plano tiene más información que el mapa.** Se midió: OSM
   solo alcanza a estructurar el 37% de ese sector. Es el caso inverso al resto.
 
+# El lenguaje visual
+
+Está escrito completo en `DESIGN-PROMPT.md`, que vino de otra app y **no se edita**:
+es la fuente. Resumen de lo que obliga aquí:
+
+- **Monocromo.** Toda la interfaz sale de una escala de grises neutra. El color solo
+  aparece donde significa algo: `--danger` en lo marcado y `--success` en lo hecho.
+  Los territorios son la excepción y no son diseño: llevan **el color que les puso el
+  plano de la congregación**, que es dato.
+- **Nunca un color literal en un componente.** Siempre un token de `:root`
+  (`index.html`). Lo que se dibuja en el mapa lo lee con `tok('--danger')`, porque
+  Leaflet quiere colores literales y no variables CSS; por eso `ponerTema()` termina
+  llamando a `restilarTerr()`.
+- **El modo oscuro es el claro invertido**, y va duplicado en dos bloques: el de
+  `prefers-color-scheme` y el de `[data-theme="dark"]`.
+- **Tipografía Space Grotesk**, variable, en `fonts/` con licencia OFL. Peso 500 para
+  casi todo, 400 para el texto secundario. **Sin `font-variant-numeric: tabular-nums`**,
+  aunque el prompt lo pida: con la figura tabular esta fuente le pone al `1` un remate
+  en la base que se lee como un subrayado, y aquí no hay ninguna columna de números que
+  tenga que alinearse. No volver a ponerlo sin mirar cómo queda el 1.
+- **Sin sombras** salvo la hoja de ajustes, sin degradados, bordes siempre de 1 px,
+  sin emojis ni íconos de librería —los pocos glifos son `‹ › ⋯ ✕`, y el resto son
+  SVG de trazo propios.
+- **Sin mayúsculas sostenidas en la interfaz.** Lo que sí sale en mayúsculas —nombres
+  de capitanes, notas del mes— viene así del PDF: es dato, no rótulo.
+- El **tema de la app** (Auto/Claro/Oscuro) se guarda en `KEY_TEMA` y se aplica con un
+  script *inline* en el `<head>`, antes del CSS, o la app parpadea en claro al abrir.
+  Es **una cosa distinta** del fondo del mapa (`KEY_BASE`) y del papel de la vista
+  Dibujo (`KEY_DIB`), que son capas y siguen eligiéndose en el botón de capas.
+
+## Dos juegos de tokens, no uno
+
+Lo que se escribe **encima del mapa** —los números de territorio, las letras de
+manzana, los rótulos de calle y la chapa del día— no puede usar `--text` ni `--ink`:
+con la app en claro se puede estar mirando el fondo **Oscuro**, y al revés. Para eso
+están `--map-ink`, `--map-ink-2` y `--map-paper`, que se redefinen según
+`body.fondo-oscuro` (en Mapa) o `body.dibujo-oscuro` (en Dibujo), que son cosas
+distintas: hay que mirar además si `body.dibujo` está puesto. `--map-paper` es además
+el fondo de la vista Dibujo, así que el papel y el halo de los rótulos salen del mismo
+sitio y no se pueden desincronizar.
+
+## Decisiones de la portada que ya se discutieron
+
+- **La tira de días no lleva botones.** Encajonar cada día en una píldora los hacía
+  parecer acciones; ahora se leen solos y lo único dibujado es el **disco tinta** del
+  día elegido y un aro de 1 px alrededor de hoy.
+- **El territorio del día lleva un disco tinta**, el mismo disco de la tira. El rojo
+  (`--danger`) quedó para una sola cosa: el territorio que se está mirando. Antes los
+  dos eran rojos y competían.
+- **Las letras de manzana van en la sans del sistema**, no en la de la app: a 9,5 px
+  los remates de la Space Grotesk se empastan. Son anotaciones sobre el mapa, como los
+  números del plano, no interfaz.
+- **La nota del día es una línea de texto**, no una tarjeta. Como bloque invertido le
+  quitaba al listado más alto del que vale un aviso de dos palabras.
+- El **1 de la Space Grotesk lleva un remate en la base** cuando está activo
+  `tabular-nums`; por eso está apagado. Es la figura tabular de la fuente, no un
+  subrayado ni un bug.
+
+## Trampas de portarlo
+
+- **Leaflet pinta de azul todo enlace dentro del mapa** (`.leaflet-container a`) y le
+  pone `margin:0` a la atribución (`.leaflet-container .leaflet-control-attribution`).
+  Las dos reglas tienen más especificidad que una clase suelta: hay que igualarla.
+- **El mapa se mete 18 px bajo la hoja** (`#map{margin-bottom:-18px}`) para que las
+  esquinas redondeadas de `#sheet` dejen ver el mapa por detrás y no un recorte del
+  fondo de página. Eso deja la **atribución de CARTO tapada**, y hay que subirla con
+  `margin-bottom`. No quitarla: es la condición de usar sus teselas. La comprobación
+  está en el grupo `diseño`.
+- El botón de ajustes va **en absoluto** dentro del header. Si se pone en el flujo, el
+  header pasa de 33 a 40+ px y se come el alto del mapa, que es el recurso escaso.
+
 # Trampas conocidas
 
 Cada una de estas costó encontrarla. No re-descubrirlas.
@@ -178,14 +251,32 @@ Otras variaciones ya contempladas:
   clasifica como `cartas`.
 - Una celda de territorio puede traer varios (`"57,56,55"`).
 
-## Tildes
+## Tildes y mayúsculas
 
-El PDF viene sin tildes. `enriquecer_programa.py` las repone con el diccionario
-`TILDES`, palabra por palabra. Si aparece una palabra nueva mal acentuada, se agrega
-ahí — nunca se edita `programa.json` a mano, porque se regenera cada mes.
+El PDF viene **sin tildes y todo en mayúsculas sostenidas**. `enriquecer_programa.py`
+arregla las dos cosas, en ese orden: primero las mayúsculas, después las tildes,
+porque `TILDES` está escrito con la palabra ya capitalizada (`Bascunan`, no
+`BASCUNAN`). Nunca se edita `programa.json` a mano: se regenera cada mes.
 
-**No se tocan los nombres de los capitanes**: adivinar tildes en nombres de personas es
-inventar.
+| Campo | Qué se le hace |
+|---|---|
+| `nota`, `grupo`, `nombre` | `frase_es`: mayúscula solo en la primera letra |
+| `direccion` | `titulo_es`: una mayúscula por palabra, salvo las partículas |
+| `capitan` | `titulo_es` + `TILDES_NOMBRES` (o el aviso de `NO_SON_NOMBRES`) |
+
+Cuatro listas gobiernan esto, y cada una está para agregarle entradas a mano:
+
+- `TILDES` — palabra por palabra, para direcciones, grupos y nombres de reunión.
+- `TILDES_NOMBRES` — **aparte, y solo para los capitanes**. Mientras el programa venía
+  en mayúsculas daba igual: en mayúsculas nadie echa de menos la tilde. Al escribir los
+  nombres en minúscula la falta se ve, así que hay que reponerla — pero **no se deduce**:
+  cada línea la confirma alguien. Si hay duda no se pone; *Cristian* y *Cristián* son
+  los dos nombres reales y no hay cómo saber cuál es.
+- `PROPIOS` — palabras que conservan su mayúscula dentro de una frase (hoy, `Zoom`).
+- `NO_SON_NOMBRES` — lo que ocupa la columna del capitán sin ser una persona
+  (`SIN CAPITAN`, `POR CONFIRMAR`).
+
+`_palabra()` deja intacto lo que trae dígitos, o `408A` se volvería `408a`.
 
 ## Nombres de calles en OpenStreetMap
 
@@ -297,7 +388,7 @@ probar esas dos cosas hace falta HTTPS.
 ## La batería de pruebas
 
 ```bash
-node pruebas/revisar.js              # las 61 comprobaciones, con los archivos del repo
+node pruebas/revisar.js              # las 72 comprobaciones, con los archivos del repo
 node pruebas/revisar.js fondos       # solo los grupos cuyo nombre contenga eso
 node pruebas/revisar.js --publicado  # las mismas, contra el sitio ya publicado
 ```
@@ -313,7 +404,7 @@ headless por el protocolo de depuración, emula un iPhone y lee el DOM. Node 22 
 Los grupos que comprueba: `datos`, `arranque`, `alto` (header, barras y mapa),
 `tira de días`, `barra de iconos y vistas`, `desplegable del fondo`, `fondos de mapa`,
 `nombres de calle en Dibujo`, `números de territorio`, `letras de manzana`,
-`bordes y toques`. **Al agregar una funcionalidad, agregarle ahí su comprobación**:
+`bordes y toques`, `diseño` (tipografía, atribución a la vista y hoja de ajustes). **Al agregar una funcionalidad, agregarle ahí su comprobación**:
 casi todas las trampas de este archivo aparecieron simulando el flujo completo en el
 navegador, no leyendo el código.
 
@@ -336,6 +427,9 @@ Tres cosas del arnés que cuesta redescubrir:
 | `index.html` | Interfaz y todos los estilos (no hay CSS aparte) |
 | `app.js` | Toda la lógica |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Offline e instalación |
+| `DESIGN-PROMPT.md` | El lenguaje visual, tal como llegó de la otra app. Fuente, no se edita |
+| `fonts/` | Space Grotesk variable (`woff2`) y su licencia OFL |
+| `icono.py` | Genera `icon-192.png`, `icon-512.png` y `icon-maskable-512.png` |
 | `programa.json` | El programa del mes, generado |
 | `territorios.geojson` | Generado: los 58 territorios, manzana por manzana (`n`, `centro`, `color`, `letras`, `nmanzanas`) |
 | `envolventes.geojson` | Generado: el contorno de cada territorio, de una pieza |
@@ -400,7 +494,7 @@ auditar contra el PDF.
 
 - El idioma del código, los comentarios y los mensajes de commit es **español**.
 - **La interfaz se comprime a propósito.** El header es **una línea** con el nombre de
-  la app y el mes (29 px); la navegación por días vive **al pie de `#sheet`**, bajo el
+  la app y el mes (33 px), con el botón de ajustes puesto encima en absoluto; la navegación por días vive **al pie de `#sheet`**, bajo el
   listado, y se recoge con él; las tres barras que había sobre el mapa son **una sola
   de iconos**, con el mapa de fondo en un desplegable que solo cierra su propio botón.
   El mapa pasó de 152 a 595 px con el listado recogido en un iPhone SE. No volver a

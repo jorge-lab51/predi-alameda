@@ -150,6 +150,18 @@ prueba('datos', async p => {
       const l = f.properties.letras || '';
       return l.length === f.properties.nmanzanas && new Set(l).size === l.length;
     })`), 'las letras no se repiten y son tantas como manzanas');
+  // el PDF viene en mayúsculas sostenidas y enriquecer_programa.py las baja; si
+  // alguna se cuela, la interfaz deja de leerse como el resto del sistema
+  const gritados = await ev(`(()=>{
+    const mal = [];
+    const mira = (t) => { if (!t) return;
+      for (const w of String(t).match(/[A-Za-zÁÉÍÓÚÜÑ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]*/g) || [])
+        if (w.length > 2 && w === w.toUpperCase()) mal.push(w); };
+    for (const d of PROG.dias) { mira(d.nota);
+      for (const a of d.actividades) ['capitan','grupo','nombre','direccion'].forEach(k => mira(a[k])); }
+    return [...new Set(mal)];})()`);
+  ok(gritados.length === 0, 'el programa no trae mayúsculas sostenidas'
+    + (gritados.length ? ' -> ' + gritados.join(', ') : ''));
 });
 
 prueba('arranque', async p => {
@@ -367,6 +379,41 @@ prueba('bordes y toques', async p => {
     if(e) e.dispatchEvent(new MouseEvent('click',{bubbles:true}));
     return 1;})()`); await dormir(900);
   ok(await ev('terrSel') !== null, 'tocar una manzana abre su ficha: los rótulos no roban el clic');
+});
+
+prueba('diseño', async p => {
+  const { ev } = p;
+  await ev('limpiarSeleccion()'); await dormir(600);
+  ok(await ev(`document.fonts.check('500 15px "Space Grotesk"')`),
+    'la tipografía Space Grotesk carga desde el repo');
+  ok(await ev(`document.fonts.check('500 15px "Space Grotesk"', 'miércoles ñ á')`),
+    'y trae las tildes y la eñe');
+  // la clave de CARTO se paga con dejar su atribución a la vista: el mapa se
+  // mete bajo la hoja, así que hay que comprobar que no queda tapada
+  ok(await ev(`(()=>{const a=$('.leaflet-control-attribution');
+    if(!a || !a.offsetParent) return false;
+    const r=a.getBoundingClientRect(), s=$('#sheet').getBoundingClientRect();
+    return r.width>0 && r.height>0 && r.bottom<=s.top+1 && r.right<=innerWidth+1;})()`),
+    'la atribución del mapa queda por encima de la hoja, entera y visible');
+  // el sistema de color: ni un color literal fuera de los tokens
+  const bg = async () => ev("getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()");
+  const meta = () => ev("$('#metaTema').getAttribute('content')");
+  await ev("$('#btnAjustes').click()"); await dormir(500);
+  ok(await ev("$('#ajustes').open"), 'el botón ⋯ abre la hoja de ajustes');
+  await ev("document.querySelector('#segTema [data-tema=dark]').click()"); await dormir(500);
+  ok(await ev('document.documentElement.dataset.theme') === 'dark' && await bg() === '#0b0b0b',
+    'elegir Oscuro invierte la interfaz');
+  ok(await meta() === '#0b0b0b', 'y la barra de estado del celular lo sigue');
+  await ev("document.querySelector('#segTema [data-tema=light]').click()"); await dormir(500);
+  ok(await bg() === '#e6e6e6' && await meta() === '#e6e6e6', 'y Claro la devuelve');
+  await p.recargar();
+  ok(await ev('document.documentElement.dataset.theme') === 'light',
+    'lo elegido se guarda y se aplica antes del CSS, sin parpadeo');
+  await ev("$('#btnAjustes').click()"); await dormir(400);
+  await ev("document.querySelector('#segTema [data-tema=auto]').click()"); await dormir(400);
+  ok(!(await ev('document.documentElement.dataset.theme')), 'y Auto vuelve a seguir al sistema');
+  await ev("$('#ajustes').close()"); await dormir(300);
+  ok(!(await ev("$('#ajustes').open")), 'la hoja se cierra');
 });
 
 /* ---------- correr ------------------------------------------------------ */

@@ -1,9 +1,10 @@
-const CACHE = 'alameda-v18';
+const CACHE = 'alameda-v19';
 const ASSETS = [
   './', 'index.html', 'app.js', 'leaflet.js', 'leaflet.css',
   'programa.json', 'territorios.geojson', 'envolventes.geojson', 'calles.geojson',
   'plano.webp', 'plano_bounds.json',
-  'manifest.webmanifest', 'icon-192.png', 'icon-512.png'
+  'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
+  'fonts/SpaceGrotesk.woff2'
 ];
 
 // 'reload' evita que el caché del navegador devuelva la versión anterior

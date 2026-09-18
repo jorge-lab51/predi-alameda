@@ -1,6 +1,6 @@
 /* Territorios Alameda — mapa + programa (offline-first) */
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-const DIAS_C = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+const DIAS_C = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
   'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
@@ -23,6 +23,7 @@ const el = (t, c, h) => { const n = document.createElement(t); if (c) n.classNam
 const KEY = 'alameda_trabajados';
 const KEY_BASE = 'alameda_mapa_base';
 const KEY_DIB = 'alameda_dibujo_fondo';
+const KEY_TEMA = 'alameda_tema';
 
 /* Mapas de calles disponibles. `maxNativeZoom` es hasta dónde tiene teselas
    cada uno: más allá Leaflet amplía la última en vez de dejar hueco.
@@ -101,8 +102,35 @@ async function cargar() {
   render('semana');
 }
 
-const sistemaOscuro = () =>
-  !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+/* ---------- tema de la interfaz ----------
+   Tres estados: 'auto' sigue al sistema, 'light' y 'dark' lo fuerzan. Lo elegido
+   se guarda y se aplica ya en el <head>, antes del CSS, para que la app no
+   parpadee en claro. Aparte va el claro/oscuro de la vista Dibujo, que es un
+   dibujo y no una interfaz, y el mapa de fondo, que es una capa. */
+const temaGuardado = () => {
+  try { const t = localStorage.getItem(KEY_TEMA); return t === 'light' || t === 'dark' ? t : 'auto'; }
+  catch (e) { return 'auto'; }
+};
+const sistemaOscuro = () => {
+  const t = temaGuardado();
+  if (t !== 'auto') return t === 'dark';
+  return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+};
+/* El valor de un token del sistema de color, para lo que se dibuja en el mapa:
+   Leaflet quiere colores literales, no variables CSS. Se lee del <body> y no de
+   :root porque los tokens del mapa (`--map-*`) se redefinen ahí según el fondo
+   que esté puesto. */
+const tok = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+
+function ponerTema(t) {
+  if (t === 'auto') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = t;
+  try { t === 'auto' ? localStorage.removeItem(KEY_TEMA) : localStorage.setItem(KEY_TEMA, t); } catch (e) {}
+  document.querySelectorAll('#segTema button').forEach(b => b.classList.toggle('on', b.dataset.tema === t));
+  // la barra de estado del celular toma el color del fondo de página
+  $('#metaTema').setAttribute('content', tok('--bg') || '#e6e6e6');
+  restilarTerr();
+}
 
 /* Qué mapa de fondo mostrar al abrir: CARTO, o su versión oscura si el celular
    está en modo oscuro. Lo que el usuario haya elegido a mano manda sobre ambos. */
@@ -243,6 +271,7 @@ function ponerMapaBase(clave) {
     Object.assign({ pane: 'rotulosMapa' }, opc));
   if (visible) { anadirMapa(); if (capaPlano) capaPlano.bringToFront(); }
   if (capaTerr) capaTerr.bringToFront();
+  restilarTerr();        // el fondo Oscuro invierte `--map-ink`: los bordes cambian
   actualizarBarraBase();
 }
 
@@ -444,15 +473,15 @@ function estiloTerr(f) {
   const hecho = estaTrabajado(n);
   if (dibujo) {
     // imita el plano: cada territorio con su color, sin fondo debajo
-    return { color: sel ? '#c62828' : (dibujoOscuro ? '#0e1218' : '#ffffff'),
+    return { color: sel ? tok('--danger') : tok('--map-paper'),
              weight: grueso(sel ? 3 : 1), opacity: 1,
              fillColor: f.properties.color, fillOpacity: 1 };
   }
   return {
-    color: sel ? '#c62828' : (hoy ? '#1d3b5c' : (hecho ? '#2f7d5b' : '#33414f')),
+    color: sel ? tok('--danger') : (hoy ? tok('--map-ink') : (hecho ? tok('--success') : tok('--map-ink-2'))),
     weight: grueso(sel ? 3 : (hoy ? 2 : 0.8)),
     opacity: sel || hoy ? 0.95 : 0.5,
-    fillColor: hecho ? '#2f7d5b' : f.properties.color,
+    fillColor: hecho ? tok('--success') : f.properties.color,
     fillOpacity: soloPlano ? (sel ? 0.35 : (hoy ? 0.22 : 0.02)) : (sel ? 0.62 : (hoy ? 0.55 : 0.42)),
     dashArray: hecho && !sel ? '4,3' : null
   };
@@ -527,7 +556,7 @@ function pintarTerritorios() {
     if (!f) return null;
     return L.marker([f.properties.centro[1], f.properties.centro[0]], {
       interactive: true, keyboard: false,
-      icon: L.divIcon({ className: '', iconSize: [30, 24], iconAnchor: [15, 12],
+      icon: L.divIcon({ className: '', iconSize: [26, 26], iconAnchor: [13, 13],
         html: '<div class="tlabel">' + n + '</div>' })
     }).on('click', () => seleccionarTerritorio(n, false));
   }).filter(Boolean);
@@ -541,8 +570,8 @@ function ubicar() {
     const ll = [pos.coords.latitude, pos.coords.longitude];
     if (marcadorGps) map.removeLayer(marcadorGps);
     if (circuloGps) map.removeLayer(circuloGps);
-    circuloGps = L.circle(ll, { radius: Math.max(pos.coords.accuracy, 12), color: '#1d7fd6', weight: 1, fillOpacity: .12 }).addTo(map);
-    marcadorGps = L.circleMarker(ll, { radius: 7, color: '#fff', weight: 2, fillColor: '#1d7fd6', fillOpacity: 1 }).addTo(map);
+    circuloGps = L.circle(ll, { radius: Math.max(pos.coords.accuracy, 12), color: tok('--text'), weight: 1, fillOpacity: .10 }).addTo(map);
+    marcadorGps = L.circleMarker(ll, { radius: 7, color: tok('--surface'), weight: 2, fillColor: tok('--text'), fillOpacity: 1 }).addTo(map);
     map.setView(ll, Math.max(map.getZoom(), 17));
     const dentro = quienContiene(ll);
     aviso(dentro ? 'Estás en el territorio ' + dentro : 'Estás fuera del plano');
@@ -689,12 +718,12 @@ function pintarLista() {
     fila.appendChild(el('div', 'hora', horas[0] + (horas[1] ? `<small>a ${horas[1]}</small>` : '')));
 
     const info = el('div', 'info');
-    const tipo = a.tipo === 'reunion' ? '<span class="tag reunion">reunión</span>'
-      : a.tipo === 'cartas' ? '<span class="tag cartas">cartas</span>' : '';
+    const tipo = a.tipo === 'reunion' ? '<span class="tag reunion">Reunión</span>'
+      : a.tipo === 'cartas' ? '<span class="tag cartas">Cartas</span>' : '';
     const titulo = a.tipo === 'reunion' ? (a.nombre || 'Reunión')
       : (a.capitan || 'Sin capitán');
     info.appendChild(el('div', 'cap', titulo + tipo));
-    if (a.grupo) info.appendChild(el('div', 'meta', a.grupo.toLowerCase()));
+    if (a.grupo) info.appendChild(el('div', 'meta', a.grupo));
     // texto, no enlace: tocarlo abre la ficha, igual que el resto de la fila
     if (a.direccion) info.appendChild(el('div', 'dir', a.direccion));
     fila.appendChild(info);
@@ -703,10 +732,10 @@ function pintarLista() {
     if (a.terr && a.terr.length) {
       chip.appendChild(el('div', 'tnum', a.terr.join(' · ')));
     } else if (a.calles) {
-      chip.appendChild(el('div', 'tnum calles', 'CALLES'));
+      chip.appendChild(el('div', 'tnum calles', 'Calles'));
     }
     if (a.direccion) {
-      const go = el('a', 'go', '➤ cómo llegar');
+      const go = el('a', 'go', 'Cómo llegar');
       go.href = urlComoLlegar(a); go.target = '_blank'; go.rel = 'noopener';
       go.onclick = e => e.stopPropagation();
       chip.appendChild(go);
@@ -732,7 +761,7 @@ function irAActividad(a) {
   if (a.coord) {
     marcadorPunto = L.marker(a.coord, {
       icon: L.divIcon({ className: '', iconSize: [22, 22], iconAnchor: [11, 11],
-        html: '<div style="width:20px;height:20px;border-radius:50%;background:#c62828;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>' })
+        html: `<div style="width:18px;height:18px;border-radius:50%;background:${tok('--danger')};border:3px solid ${tok('--surface')}"></div>` })
     }).addTo(map).bindPopup('<b>Punto de encuentro</b><br>' + a.direccion);
   }
   panelActividad(a);
@@ -764,7 +793,7 @@ function panelActividad(a) {
       ${hora ? `<div class="dato-hora">${hora}</div>` : ''}
       ${url ? `<div class="dato-fila">
         <a class="dato-dir" href="${url}" target="_blank" rel="noopener">${a.direccion}</a>
-        <a class="btn primary" target="_blank" rel="noopener" href="${url}">➤ Cómo llegar</a>
+        <a class="btn primary" target="_blank" rel="noopener" href="${url}">Cómo llegar</a>
       </div>` : ''}
     </div>`);
 }
@@ -804,7 +833,7 @@ function seleccionarTerritorio(n, zoom) {
     <div class="sub dias">${textoDias(n)}</div>
     <div class="row">
       <a class="btn" target="_blank" rel="noopener"
-         href="https://www.google.com/maps/dir/?api=1&destination=${centro[1]},${centro[0]}">➤ Cómo llegar</a>
+         href="https://www.google.com/maps/dir/?api=1&destination=${centro[1]},${centro[0]}">Cómo llegar</a>
     </div>`);
 }
 
@@ -864,6 +893,21 @@ $('#grab').onclick = () => {
 $('#grab').addEventListener('touchstart', () => $('#grab').classList.add('tocando'), { passive: true });
 $('#grab').addEventListener('touchend', () => setTimeout(() => $('#grab').classList.remove('tocando'), 250), { passive: true });
 ajustarHoja();
+
+/* ---------- hoja de ajustes ---------- */
+ponerTema(temaGuardado());
+document.querySelectorAll('#segTema button').forEach(b => {
+  b.onclick = () => ponerTema(b.dataset.tema);
+});
+$('#btnAjustes').onclick = () => $('#ajustes').showModal();
+$('#cerrarAjustes').onclick = () => $('#ajustes').close();
+// tocar fuera de la hoja la cierra
+$('#ajustes').addEventListener('click', e => { if (e.target === $('#ajustes')) $('#ajustes').close(); });
+// con el tema en Auto, seguir al sistema si cambia con la app abierta
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => { if (temaGuardado() === 'auto') ponerTema('auto'); });
+}
 
 cargar();
 if ('serviceWorker' in navigator) {

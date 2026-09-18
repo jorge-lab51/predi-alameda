@@ -3,74 +3,149 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<meta name="theme-color" content="#1d3b5c">
+<meta name="theme-color" content="#e6e6e6" id="metaTema">
 <meta name="robots" content="noindex, nofollow">
 <title>Territorios Alameda</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- el tema elegido se aplica antes de cargar el CSS, o la app parpadea en
+     claro un instante antes de ponerse oscura -->
+<script>
+try { var t = localStorage.getItem('alameda_tema');
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 <link rel="stylesheet" href="leaflet.css">
 <style>
+/* ---------------------------------------------------------------------------
+   Lenguaje visual monocromo: todo se construye con una escala de grises y la
+   tipografía es el elemento gráfico. El color solo aparece donde significa algo
+   —el rojo de lo marcado, el verde de lo hecho— y en los territorios, que
+   llevan el color que les puso el plano de la congregación: eso es dato, no
+   diseño. Nunca un color literal en un componente; siempre un token.
+--------------------------------------------------------------------------- */
 :root{
-  --bg:#f5f6f8; --panel:#ffffff; --ink:#16202b; --muted:#6a7787;
-  --line:#e3e7ec; --accent:#1d3b5c; --accent2:#2f7d5b; --warn:#b4531f;
-  --chip:#eef1f5; --shadow:0 2px 10px rgba(16,32,48,.10);
-  --safe-b: env(safe-area-inset-bottom, 0px);
+  --bg:#e6e6e6;         /* fondo de página */
+  --surface:#f5f5f5;    /* tarjetas, barras, paneles */
+  --surface-2:#d8d8d8;  /* pistas, fondos de selectores segmentados */
+  --text:#0b0b0b;
+  --text-2:#737373;
+  --border:#cbcbcb;
+  --ink:#0b0b0b;        /* relleno del botón primario y de la tarjeta invertida */
+  --ink-text:#f5f5f5;
+  --danger:#d9472e;     /* lo marcado, lo que detiene */
+  --success:#2e8f5a;    /* lo cumplido */
+  --on-color:#ffffff;
+  --radius:18px;
+  --pill:999px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+  /* Lo que se escribe ENCIMA del mapa —números, letras, la chapa del día— no
+     sigue el tema de la interfaz sino el fondo del mapa, que se elige aparte:
+     con la app en claro se puede estar mirando el mapa Oscuro. */
+  --map-ink:#1f1f1f; --map-ink-2:#5a5a5a; --map-paper:#ffffff;
+  color-scheme:light;
 }
+/* En Mapa manda el fondo elegido; en Dibujo, el papel sobre el que se dibuja.
+   Son dos cosas distintas y por eso son cuatro reglas. */
+body.dibujo{--map-paper:#fdfdfb}
+body:not(.dibujo).fondo-oscuro{--map-ink:#f2f2f2; --map-ink-2:#8f8f8f; --map-paper:#0b0b0b}
+body.dibujo.dibujo-oscuro{--map-ink:#f2f2f2; --map-ink-2:#8f8f8f; --map-paper:#141a21}
+/* oscuro: el claro invertido. Automático por sistema salvo que se fuerce claro */
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --bg:#12161b; --panel:#1a2029; --ink:#e8edf3; --muted:#9aa7b6;
-  --line:#28313d; --accent:#7fb2e5; --accent2:#6fcf9f; --chip:#232c37;
-  --shadow:0 2px 12px rgba(0,0,0,.45); }
+  :root:not([data-theme="light"]){
+    --bg:#0b0b0b; --surface:#171717; --surface-2:#262626;
+    --text:#ececec; --text-2:#8c8c8c; --border:#2c2c2c;
+    --ink:#ececec; --ink-text:#0b0b0b;
+    --danger:#e8654d; --success:#47b273;
+    color-scheme:dark;
+  }
 }
-:root[data-theme="dark"]{ --bg:#12161b; --panel:#1a2029; --ink:#e8edf3; --muted:#9aa7b6;
-  --line:#28313d; --accent:#7fb2e5; --accent2:#6fcf9f; --chip:#232c37;
-  --shadow:0 2px 12px rgba(0,0,0,.45); }
+:root[data-theme="dark"]{
+  --bg:#0b0b0b; --surface:#171717; --surface-2:#262626;
+  --text:#ececec; --text-2:#8c8c8c; --border:#2c2c2c;
+  --ink:#ececec; --ink-text:#0b0b0b;
+  --danger:#e8654d; --success:#47b273;
+  color-scheme:dark;
+}
+
+/* Space Grotesk variable, en el repo con licencia OFL (fonts/OFL.txt) */
+@font-face{
+  font-family:'Space Grotesk';
+  src:url('fonts/SpaceGrotesk.woff2') format('woff2');
+  font-weight:300 700; font-style:normal; font-display:swap;
+}
+
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  background:var(--bg);color:var(--ink);overflow:hidden}
+/* Sin `tabular-nums`: con esa figura la Space Grotesk le pone al 1 un remate en
+   la base que se lee como un subrayado. Aquí no hay ninguna columna de números
+   que deba alinearse —las horas van en tarjetas sueltas y los días, centrados en
+   discos de ancho fijo—, así que la figura tabular no compraba nada. */
+body{margin:0;
+  font:500 15px/1.45 'Space Grotesk',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  background:var(--bg);color:var(--text);overflow:hidden}
 #app{display:flex;flex-direction:column;height:100dvh}
+button,.btn,.go,.fab,.iconbtn{font:inherit}
+button:active,.btn:active,.fab:active,.iconbtn:active,.wd:active{transform:scale(.97);opacity:.85}
 
-/* El header quedó en una línea: el nombre de la app y el mes, nada más. La
-   navegación por días se mudó al pie del listado, que es donde se usa. */
-header{background:var(--panel);border-bottom:1px solid var(--line);padding:5px 10px 6px;
-  padding-top:calc(5px + env(safe-area-inset-top,0px));box-shadow:var(--shadow);z-index:600}
-.titulo{font-size:12px;font-weight:700;letter-spacing:.2px;white-space:nowrap;
+/* El header es una línea: el nombre de la app, el mes, y el botón de ajustes
+   puesto encima en absoluto para que no le agregue alto. */
+header{position:relative;background:var(--surface);border-bottom:1px solid var(--border);
+  padding:5px 38px 5px;padding-top:calc(5px + env(safe-area-inset-top,0px));z-index:600}
+.titulo{font-size:15px;font-weight:500;letter-spacing:.01em;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;text-align:center}
-.titulo span{font-weight:500;color:var(--muted)}
+.titulo span{color:var(--text-2)}
 .titulo span::before{content:' · '}
-.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
-  min-width:38px;height:34px;font-size:15px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 8px}
-.iconbtn:active{background:var(--chip)}
-.iconbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+#btnAjustes{position:absolute;right:6px;bottom:3px;width:30px;height:26px;border:0;
+  background:transparent;color:var(--text-2);border-radius:var(--pill);
+  font-size:17px;line-height:1;cursor:pointer;padding:0}
+
+.iconbtn{border:1px solid var(--border);background:var(--surface);color:var(--text);
+  border-radius:var(--pill);min-width:38px;height:34px;font-size:15px;
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 10px}
 
 /* la tira de días vive al pie de la hoja, bajo el listado */
-.datebar{display:flex;align-items:center;gap:4px;border-top:1px solid var(--line);
-  padding:5px 8px calc(5px + var(--safe-b))}
-.datebar .flecha{min-width:26px;height:40px;padding:0 2px;font-size:18px;border-color:transparent;background:transparent}
-.datebar #btnHoy{height:40px;font-size:13px;font-weight:600;padding:0 9px}
+.datebar{display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);
+  padding:6px 8px calc(6px + var(--safe-b))}
+.datebar .flecha{min-width:28px;height:40px;padding:0;font-size:20px;color:var(--text-2);
+  border-color:transparent;background:transparent}
+.datebar #btnHoy{height:40px;font-size:14px;padding:0 12px}
 /* `position` para que el `offsetLeft` de los chips se mida contra la tira y no
    contra el header: si no, posicionarTira() se pasa el ancho de la flecha */
-.week{position:relative;flex:1;min-width:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.week{position:relative;flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .week::-webkit-scrollbar{display:none}
-.wd{flex:0 0 auto;min-width:40px;text-align:center;border:1px solid var(--line);border-radius:9px;
-  padding:3px 6px;background:var(--panel);cursor:pointer}
-.wd b{display:block;font-size:15px;line-height:1.1}
-.wd i{font-style:normal;font-size:9.5px;line-height:1.2;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.wd.sel{background:var(--accent);border-color:var(--accent);color:#fff}
-.wd.sel i{color:#dbe7f3}
-.wd.hoy{border-color:var(--accent2);border-width:2px}
+/* La tira no lleva botones: los días se leen solos, y encajonar cada uno en una
+   píldora los hacía parecer acciones. Queda la tipografía, y lo único dibujado
+   es el disco tinta del día elegido —el mismo que marca el territorio del día
+   sobre el mapa— y un aro de 1 px alrededor de hoy. */
+.wd{flex:0 0 auto;min-width:40px;border:0;background:transparent;cursor:pointer;
+  padding:0;display:flex;flex-direction:column;align-items:center;gap:1px}
+.wd i{font-style:normal;font-weight:400;font-size:11px;line-height:1.2;color:var(--text-2)}
+.wd b{display:flex;width:34px;height:34px;align-items:center;justify-content:center;
+  border:1px solid transparent;border-radius:50%;
+  font-size:16px;font-weight:500;letter-spacing:-.02em;color:var(--text)}
+.wd.sel b{background:var(--ink);border-color:var(--ink);color:var(--ink-text)}
+.wd.sel i{color:var(--text)}
+.wd.hoy b{border-color:var(--text)}
 
-#map{flex:1 1 auto;min-height:120px;background:#dfe4ea;z-index:1}
-.leaflet-container{font:inherit;background:#e8ecf1}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .leaflet-container{background:#1b222b}}
-:root[data-theme="dark"] .leaflet-container{background:#1b222b}
+/* el mapa se mete bajo la hoja para que sus esquinas redondeadas dejen ver el
+   mapa por detrás, no un recorte del fondo de página */
+#map{flex:1 1 auto;min-height:120px;margin-bottom:-18px;background:var(--surface-2);z-index:1}
+.leaflet-container{font:inherit;background:var(--surface-2)}
+/* la especificidad la manda leaflet.css (`.leaflet-container .leaflet-...`), que
+   le pone `margin:0`; hay que igualarla para poder subirla sobre la hoja */
+.leaflet-container .leaflet-control-attribution{background:var(--surface);color:var(--text-2);
+  border-radius:var(--pill);padding:1px 8px;margin:0 8px 24px 0;font-size:10px}
+.leaflet-control-attribution a{color:var(--text-2)}
+/* Leaflet pinta de azul todo enlace dentro del mapa (`.leaflet-container a`), y
+   la ficha del territorio vive dentro: sin esto, sus botones salen azules */
+.leaflet-container a{color:inherit}
 
-.sheet{background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -3px 14px rgba(16,32,48,.10);
-  display:flex;flex-direction:column;z-index:500;max-height:62dvh;flex:0 0 auto}
+.sheet{background:var(--bg);border-top:1px solid var(--border);border-radius:24px 24px 0 0;
+  display:flex;flex-direction:column;z-index:500;max-height:62dvh;flex:0 0 auto;position:relative}
 .grab{display:flex;align-items:center;justify-content:center;min-height:30px;
-  padding:7px 12px 6px;cursor:pointer;position:relative}
+  padding:9px 12px 6px;cursor:pointer;position:relative}
 /* con el listado oculto la barra es lo único que queda: se agranda para
    que sea cómoda de tocar */
 #sheet.oculto .grab{min-height:42px;padding-bottom:calc(8px + var(--safe-b))}
@@ -78,7 +153,7 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:5px 1
    sola línea, y al apuntarla se inclinan hasta formar una flecha */
 .grab .bar{position:relative;width:40px;height:10px}
 .grab .bar::before,.grab .bar::after{content:'';position:absolute;top:3px;width:21px;height:4px;
-  border-radius:3px;background:var(--line);transition:transform .2s ease,background .2s ease}
+  border-radius:3px;background:var(--border);transition:transform .2s ease,background .2s ease}
 .grab .bar::before{left:0;transform-origin:left center}
 .grab .bar::after{right:0;transform-origin:right center}
 /* ▲ va a mostrar el listado */
@@ -87,132 +162,154 @@ header{background:var(--panel);border-bottom:1px solid var(--line);padding:5px 1
 /* ▼ va a ocultarlo */
 .grab.cerrar.tocando .bar::before{transform:rotate(17deg)}
 .grab.cerrar.tocando .bar::after{transform:rotate(-17deg)}
-.grab.tocando .bar::before,.grab.tocando .bar::after{background:var(--accent)}
+.grab.tocando .bar::before,.grab.tocando .bar::after{background:var(--text)}
 @media (hover:hover){
   .grab:hover .bar::before{transform:rotate(-17deg)}
   .grab:hover .bar::after{transform:rotate(17deg)}
   .grab.cerrar:hover .bar::before{transform:rotate(17deg)}
   .grab.cerrar:hover .bar::after{transform:rotate(-17deg)}
-  .grab:hover .bar::before,.grab:hover .bar::after{background:var(--accent)}
+  .grab:hover .bar::before,.grab:hover .bar::after{background:var(--text)}
 }
-.sheet .list{overflow-y:auto;padding:2px 10px 8px;-webkit-overflow-scrolling:touch}
+.sheet .list{overflow-y:auto;padding:2px 20px 10px;-webkit-overflow-scrolling:touch}
 
-.act{display:flex;gap:9px;padding:9px 8px;border-radius:12px;border:1px solid transparent;align-items:flex-start}
-.act + .act{border-top:1px solid var(--line)}
-.act.sel{background:var(--chip);border-color:var(--line)}
-.hora{flex:0 0 62px;font-weight:700;font-size:13px;color:var(--accent);padding-top:1px}
-.hora small{display:block;font-weight:500;color:var(--muted);font-size:10px}
-.info{flex:1;min-width:0}
-.info .cap{font-weight:600;font-size:14px}
-.info .meta{color:var(--muted);font-size:12.5px;margin-top:1px}
-.info .dir{font-size:13px;margin-top:3px;color:var(--ink)}
-.terrchip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px}
-.tnum{min-width:42px;text-align:center;border-radius:9px;padding:4px 6px;font-weight:700;font-size:14px;
-  background:var(--chip);border:1px solid var(--line)}
-.tnum.calles{font-size:11px;font-weight:600;letter-spacing:.4px}
-.go{font-size:11.5px;font-weight:600;color:#fff;text-decoration:none;border:1px solid var(--accent);
-  border-radius:8px;padding:4px 8px;background:var(--accent);white-space:nowrap}
-.tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;
-  border-radius:6px;padding:1px 6px;background:var(--chip);color:var(--muted);margin-left:6px}
-.tag.reunion{background:#e7efe9;color:#2f7d5b}
-.tag.cartas{background:#f2ecdf;color:#8a6521}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag.reunion{background:#1f3329;color:#8fdcb4}
-  :root:not([data-theme="light"]) .tag.cartas{background:#33291a;color:#e2c185}}
-:root[data-theme="dark"] .tag.reunion{background:#1f3329;color:#8fdcb4}
-:root[data-theme="dark"] .tag.cartas{background:#33291a;color:#e2c185}
-.nota{margin:6px 2px 2px;font-size:12px;color:var(--warn);font-weight:600}
-.vacio{padding:18px 6px;color:var(--muted);text-align:center}
+/* Tarjeta: la hora hace de indicador a la izquierda, el texto al medio y el
+   número de territorio —la cifra— a la derecha. */
+.act{display:grid;grid-template-columns:62px 1fr auto;gap:10px;align-items:center;
+  min-height:68px;padding:10px 14px;margin-bottom:8px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);cursor:pointer}
+.act.sel{background:var(--surface-2);border-color:var(--text)}
+.hora{font-size:16px;font-weight:500;letter-spacing:-.02em}
+.hora small{display:block;font-size:13px;font-weight:400;color:var(--text-2);letter-spacing:0}
+.act.sel .hora small{color:var(--text-2)}
+.info{min-width:0}
+.info .cap{font-size:16px;font-weight:500}
+.info .meta{color:var(--text-2);font-weight:400;font-size:13px;margin-top:1px}
+.info .dir{font-size:13px;font-weight:400;margin-top:2px;color:var(--text)}
+.terrchip{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.tnum{font-size:22px;font-weight:500;letter-spacing:-.02em;white-space:nowrap}
+.tnum.calles{font-size:14px;font-weight:400;color:var(--text-2);letter-spacing:0}
+/* enlace discreto, no un botón: la fila entera ya es tocable */
+.go{font-size:13px;font-weight:400;color:var(--text-2);text-decoration:underline;
+  text-underline-offset:3px;white-space:nowrap}
+.tag{display:inline-block;font-size:12px;font-weight:400;border:1px solid var(--border);
+  border-radius:var(--pill);padding:0 8px;color:var(--text-2);margin-left:6px;vertical-align:1px}
+/* la nota del día es una línea de texto, no una tarjeta: es un aviso corto y
+   ocupando un bloque entero le quitaba sitio al listado */
+.nota{margin:6px 4px 10px;font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--text)}
+.vacio{padding:24px 6px;color:var(--text-2);font-weight:400;text-align:center}
 
-.fabs{position:absolute;right:10px;top:10px;display:flex;flex-direction:row;gap:8px;z-index:450}
-.fab{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);
-  color:var(--ink);font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer}
-.fab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fabs{position:absolute;right:10px;top:10px;display:flex;flex-direction:row;gap:10px;z-index:450}
+.fab{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
+  color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.fab svg{width:20px;height:20px;display:block}
+.fab.on{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
 /* Las tres barras que había —vista, marcado y fondo— en una sola fila de
-   iconos. El fondo del mapa, que es lo que menos se toca y lo que más opciones
-   tiene, se despliega debajo al pedirlo. */
+   iconos, leída como un selector segmentado. El fondo del mapa, que es lo que
+   menos se toca y lo que más opciones tiene, se despliega debajo al pedirlo. */
 .mapbar{position:absolute;left:10px;top:10px;z-index:450;display:flex;align-items:center;
-  background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:3px;box-shadow:var(--shadow)}
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--pill);padding:4px}
 .mapbar .grupo{display:flex;gap:2px}
-.mapbar button{border:0;background:transparent;color:var(--muted);width:34px;height:34px;
-  border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.mapbar button{border:0;background:transparent;color:var(--text-2);width:34px;height:34px;
+  border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .mapbar button svg{width:20px;height:20px;display:block}
-.mapbar button.on{background:var(--accent);color:#fff}
-.mapbar .sep{width:1px;align-self:stretch;background:var(--line);margin:3px}
+.mapbar button.on{background:var(--ink);color:var(--ink-text)}
+.mapbar .sep{width:1px;align-self:stretch;background:var(--border);margin:4px}
 .mapbar .oculta{display:none}
 
-.popfondo{position:absolute;left:10px;top:56px;z-index:450;display:flex;gap:4px;flex-wrap:wrap;
-  max-width:calc(100% - 20px);background:var(--panel);border:1px solid var(--line);
-  border-radius:11px;padding:4px;box-shadow:var(--shadow)}
+.popfondo{position:absolute;left:10px;top:58px;z-index:450;display:flex;gap:6px;flex-wrap:wrap;
+  max-width:calc(100% - 20px);background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:6px}
 .popfondo.oculta,.popfondo .grupofondo.oculta{display:none}
-.popfondo .grupofondo{display:flex;gap:4px;flex-wrap:wrap}
-.popfondo button{border:0;background:transparent;color:var(--muted);font-size:11.5px;font-weight:600;
-  padding:5px 8px;border-radius:8px;cursor:pointer}
-.popfondo button.on{background:var(--accent);color:#fff}
+.popfondo .grupofondo{display:flex;gap:6px;flex-wrap:wrap}
+.popfondo button{border:1px solid var(--border);background:transparent;color:var(--text-2);
+  font-size:13px;font-weight:500;padding:5px 12px;border-radius:var(--pill);cursor:pointer}
+.popfondo button.on{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
 
-.tpanel{position:absolute;left:10px;right:10px;bottom:12px;z-index:460;background:var(--panel);
-  border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:10px 12px;display:none}
+.tpanel{position:absolute;left:10px;right:10px;bottom:30px;z-index:460;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:none}
 .tpanel.show{display:block}
-.tpanel h3{margin:0 0 4px;font-size:16px;display:flex;align-items:center;gap:8px;line-height:1.2}
-.dot{width:14px;height:14px;border-radius:4px;border:1px solid rgba(0,0,0,.25);display:inline-block}
-.tpanel .sub{color:var(--muted);font-size:12.5px;line-height:1.5}
+.tpanel h3{margin:0 0 4px;font-size:22px;font-weight:500;letter-spacing:-.02em;
+  display:flex;align-items:center;gap:8px;line-height:1.2}
+.dot{width:14px;height:14px;border-radius:4px;border:1px solid var(--border);
+  display:inline-block;flex:0 0 auto}
+.tpanel .sub{color:var(--text-2);font-weight:400;font-size:13px;line-height:1.5}
 /* el día que se está mirando, resaltado dentro de la lista */
-.tpanel .dias b{color:var(--accent);font-weight:700}
-.tpanel .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.tpanel .dato{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
-.tpanel .dato-nombre{font-weight:600;font-size:14.5px}
-.tpanel .dato-hora{font-weight:700;font-size:14px;color:var(--accent);margin-top:1px}
-.tpanel .dato-fila{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:3px}
+.tpanel .dias b{color:var(--text);font-weight:500}
+.tpanel .row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.tpanel .dato{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.tpanel .dato-nombre{font-size:16px;font-weight:500}
+.tpanel .dato-hora{font-size:22px;font-weight:500;letter-spacing:-.02em;margin-top:1px}
+.tpanel .dato-fila{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
 .tpanel .dato-fila .btn{flex:0 0 auto}
-.tpanel .dato-dir{min-width:0;overflow-wrap:anywhere;font-size:14px;color:var(--ink);
-  text-decoration:none;border-bottom:1px dashed var(--muted)}
-.tpanel .dato-dir:active{color:var(--accent)}
+.tpanel .dato-dir{min-width:0;overflow-wrap:anywhere;font-size:13px;font-weight:400;
+  color:var(--text-2);text-decoration:underline;text-underline-offset:3px}
 /* oculto: queda solo la barra, para volver a desplegar el listado */
 #sheet.oculto .list,#sheet.oculto .datebar{display:none}
-.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;
-  padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn.done{background:var(--accent2);color:#fff;border-color:var(--accent2)}
-.close{margin-left:auto;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.btn{border:1px solid var(--border);background:transparent;color:var(--text);
+  border-radius:var(--pill);padding:0 16px;height:40px;font-size:14px;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
+.close{margin-left:auto;color:var(--text-2);cursor:pointer;font-size:20px;line-height:1}
 .leaflet-popup-content{margin:8px 10px;font:inherit}
-/* vista Dibujo: fondo liso, sin foto ni mapa, con los nombres de las calles */
-/* la vista Dibujo tiene su propio claro/oscuro, aparte del del sistema: es un
-   dibujo, no una interfaz, y hay quien lo prefiere sobre papel y quien sobre
-   negro. Lo elige el mismo botón de capas. */
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--surface);color:var(--text)}
+
+/* hoja de ajustes: <dialog> anclado abajo, la única pieza con sombra */
+dialog{border:0;padding:0;margin:0 0 0 auto;width:100%;max-width:100%;
+  position:fixed;left:0;right:0;bottom:0;top:auto;background:var(--surface);color:var(--text);
+  border-radius:24px 24px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.2)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog .hoja{display:flex;flex-direction:column;gap:14px;
+  padding:18px 20px calc(18px + var(--safe-b))}
+dialog h2{margin:0;font-size:22px;font-weight:500;letter-spacing:-.02em}
+.campo label{display:block;font-size:13px;font-weight:400;color:var(--text-2);margin-bottom:6px}
+.seg{display:flex;gap:2px;background:var(--surface-2);border-radius:var(--pill);padding:4px}
+.seg button{flex:1;border:0;background:transparent;color:var(--text-2);font-size:14px;
+  font-weight:500;height:36px;border-radius:var(--pill);cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--ink-text)}
+dialog .pie{display:flex;gap:10px;justify-content:flex-end}
+
+/* vista Dibujo: fondo liso, sin foto ni mapa, con los nombres de las calles.
+   Tiene su propio claro/oscuro, aparte del de la interfaz: es un dibujo, no
+   una interfaz, y lo elige el mismo botón de capas. */
 body.dibujo #map,
-body.dibujo .leaflet-container{background:#fdfdfb}
-body.dibujo.dibujo-oscuro #map,
-body.dibujo.dibujo-oscuro .leaflet-container{background:#141a21}
-body.dibujo.dibujo-oscuro .rotulo{color:#a7b4c2;
-  text-shadow:0 0 3px #141a21,0 0 3px #141a21,0 0 3px #141a21}
-.rotulo{position:absolute;white-space:nowrap;font-size:9px;font-weight:600;
-  letter-spacing:.4px;color:#4a5560;text-transform:uppercase;pointer-events:none;
-  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+body.dibujo .leaflet-container{background:var(--map-paper)}
+.rotulo{position:absolute;white-space:nowrap;font-size:9px;font-weight:500;
+  letter-spacing:.4px;color:var(--map-ink-2);text-transform:uppercase;pointer-events:none;
+  text-shadow:0 0 3px var(--map-paper),0 0 3px var(--map-paper),0 0 3px var(--map-paper)}
 /* la letra de la manzana, bien chica en su esquina de arriba a la izquierda: se
    dibuja hacia dentro desde el vértice, que es donde está la cuadra */
-.letramz{position:absolute;transform:translate(5px,2px);font-size:8px;font-weight:700;
-  letter-spacing:0;color:#1f2833;pointer-events:none;
-  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 2px #fff}
-body:not(.dibujo).fondo-oscuro .letramz,body.dibujo.dibujo-oscuro .letramz{color:#f2f5f8;
-  text-shadow:0 0 3px #0b0f14,0 0 3px #0b0f14,0 0 2px #0b0f14}
+/* van en la sans del sistema y no en la de la app: a este tamaño los remates de
+   la Space Grotesk se empastan y la letra cuesta leerla. Son anotaciones sobre
+   el mapa, como los números del plano, no interfaz. */
+.letramz{position:absolute;transform:translate(5px,2px);font-size:9.5px;font-weight:700;
+  font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  letter-spacing:0;color:var(--map-ink);pointer-events:none;
+  text-shadow:0 0 3px var(--map-paper),0 0 3px var(--map-paper),0 0 2px var(--map-paper)}
 
 /* el número del territorio, como en el plano: sin chapa, solo el número con un
    halo que lo despega del color de abajo */
-.nterr{position:absolute;transform:translate(-50%,-50%);font-weight:800;font-size:13px;
-  letter-spacing:-.3px;color:#1f2833;pointer-events:none;
-  text-shadow:0 0 4px #fff,0 0 4px #fff,0 0 3px #fff,0 0 3px #fff}
-/* claro sobre oscuro: en Mapa manda el mapa de fondo, en Dibujo el papel */
-body:not(.dibujo).fondo-oscuro .nterr,body.dibujo.dibujo-oscuro .nterr{color:#f2f5f8;
-  text-shadow:0 0 4px #0b0f14,0 0 4px #0b0f14,0 0 3px #0b0f14,0 0 3px #0b0f14}
-.tlabel{background:#c62828;color:#fff;font-weight:700;font-size:12px;border-radius:9px;
-  padding:2px 0;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
-.hint{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:470;background:rgba(20,30,40,.86);
-  color:#fff;padding:7px 12px;border-radius:20px;font-size:12.5px;display:none}
+.nterr{position:absolute;transform:translate(-50%,-50%);font-weight:700;font-size:13px;
+  letter-spacing:-.03em;color:var(--map-ink);pointer-events:none;
+  text-shadow:0 0 4px var(--map-paper),0 0 4px var(--map-paper),
+              0 0 3px var(--map-paper),0 0 3px var(--map-paper)}
+/* El territorio que toca hoy: un disco tinta, el mismo que marca el día elegido
+   en la tira de abajo. El rojo queda para una sola cosa —el territorio que se
+   está mirando—, así los dos no compiten. El aro del color de la superficie lo
+   despega del color del territorio, sea cual sea. */
+.tlabel{display:flex;width:26px;height:26px;align-items:center;justify-content:center;
+  background:var(--map-ink);color:var(--map-paper);font-weight:500;font-size:13px;
+  letter-spacing:-.02em;border-radius:50%;border:1px solid var(--map-paper)}
+/* aviso: píldora tinta sobre el panel de abajo */
+.hint{position:absolute;left:50%;transform:translateX(-50%);bottom:32px;z-index:470;
+  background:var(--ink);color:var(--ink-text);padding:8px 16px;border-radius:var(--pill);
+  font-size:14px;display:none}
 </style>
 </head>
 <body>
 <div id="app">
   <header>
     <div class="titulo">Territorios Alameda<span id="mestitulo"></span></div>
+    <button id="btnAjustes" aria-label="Ajustes">⋯</button>
   </header>
 
   <div id="map">
@@ -246,8 +343,8 @@ body:not(.dibujo).fondo-oscuro .nterr,body.dibujo.dibujo-oscuro .nterr{color:#f2
       </div>
     </div>
     <div class="fabs">
-      <button class="fab" id="fabGps" title="Dónde estoy">◎</button>
-      <button class="fab" id="fabFit" title="Ver todo">⤢</button>
+      <button class="fab" id="fabGps" title="Dónde estoy" aria-label="Dónde estoy"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="4.4"/><circle cx="10" cy="10" r="1.1" fill="currentColor" stroke="none"/><path d="M10 1.6v2.6M10 15.8v2.6M1.6 10h2.6M15.8 10h2.6"/></g></svg></button>
+      <button class="fab" id="fabFit" title="Ver todo" aria-label="Ver todo"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.2 2.8H2.8v4.4M12.8 2.8h4.4v4.4M17.2 12.8v4.4h-4.4M2.8 12.8v4.4h4.4"/></g></svg></button>
     </div>
     <div class="tpanel" id="tpanel"></div>
     <div class="hint" id="hint"></div>
@@ -264,6 +361,22 @@ body:not(.dibujo).fondo-oscuro .nterr,body.dibujo.dibujo-oscuro .nterr{color:#f2
     </div>
   </div>
 </div>
+
+<dialog id="ajustes">
+  <div class="hoja">
+    <h2>Ajustes</h2>
+    <div class="campo">
+      <label for="segTema">Tema de la app</label>
+      <div class="seg" id="segTema">
+        <button type="button" data-tema="auto">Auto</button>
+        <button type="button" data-tema="light">Claro</button>
+        <button type="button" data-tema="dark">Oscuro</button>
+      </div>
+    </div>
+    <div class="pie"><button class="btn" id="cerrarAjustes">Cerrar</button></div>
+  </div>
+</dialog>
+
 <script src="leaflet.js"></script>
 <script src="app.js"></script>
 </body>

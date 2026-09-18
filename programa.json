@@ -7,12 +7,12 @@
   {
    "dia": 1,
    "nombre": "MARTES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JOSE TUAREZ",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
      "direccion": "Pizarro / Rondizzoni",
      "territorio": "47",
      "tipo": "predicacion",
@@ -28,8 +28,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Vergara / Sazié",
      "territorio": "10",
      "tipo": "predicacion",
@@ -48,12 +48,12 @@
   {
    "dia": 2,
    "nombre": "MIERCOLES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JOSE TUAREZ",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
      "direccion": "Ramón Subercaseaux / Longaví",
      "territorio": "45",
      "tipo": "predicacion",
@@ -74,7 +74,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Vida y Ministerio",
+     "nombre": "Reunión de vida y ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -89,8 +89,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "FRANCISCO CARRASCO",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
      "direccion": "Ramón Subercaseaux / Longaví",
      "territorio": "43",
      "tipo": "predicacion",
@@ -106,8 +106,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "",
      "territorio": "14",
      "tipo": "predicacion",
@@ -120,9 +120,9 @@
     },
     {
      "hora": "19:00-21:00",
-     "capitan": "KEVIN CARRERO",
-     "grupo": "Cartas y Telefónicas",
-     "direccion": "Las Fucsias 2119 (FAMILIA CARRERO)",
+     "capitan": "Kevin Carrero",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
      "territorio": "",
      "tipo": "cartas",
      "calles": false,
@@ -135,12 +135,12 @@
   {
    "dia": 4,
    "nombre": "VIERNES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Gaspar de la Barrera / Sta Margarita",
      "territorio": "39",
      "tipo": "predicacion",
@@ -156,8 +156,8 @@
     },
     {
      "hora": "18:00-20:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Avenida España / Gay",
      "territorio": "20",
      "tipo": "predicacion",
@@ -176,18 +176,18 @@
   {
    "dia": 5,
    "nombre": "SABADO",
-   "nota": "DÍA DEL PRECURSOR",
+   "nota": "Día del precursor",
    "actividades": [
     {
      "hora": "08:00",
-     "capitan": "CRISTIAN ROZAS",
-     "grupo": "GRUPO GENERAL",
-     "direccion": "Luis Cousiño av. Rondizzoni",
+     "capitan": "Cristian Rozas",
+     "grupo": "Grupo general",
+     "direccion": "Luis Cousiño Av. Rondizzoni",
      "territorio": "CALLES",
      "tipo": "predicacion",
      "calles": true,
      "terr": [],
-     "mapsq": "Luis Cousiño av. Rondizzoni, Santiago, Chile",
+     "mapsq": "Luis Cousiño Av. Rondizzoni, Santiago, Chile",
      "coord": [
       -33.47024,
       -70.65967
@@ -195,9 +195,9 @@
     },
     {
      "hora": "10:00",
-     "capitan": "MERVIN MARTINEZ",
-     "grupo": "GRUPO GENERAL",
-     "direccion": "Las Fucsias 2119 (FAMILIA CARRERO)",
+     "capitan": "Mervin Martínez",
+     "grupo": "Grupo general",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
      "territorio": "57,56,55",
      "tipo": "predicacion",
      "calles": false,
@@ -211,8 +211,8 @@
     },
     {
      "hora": "14:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Pizarro / Rondizzoni",
      "territorio": "54",
      "tipo": "predicacion",
@@ -231,7 +231,7 @@
   {
    "dia": 6,
    "nombre": "DOMINGO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
@@ -240,7 +240,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Fin de Semana",
+     "nombre": "Reunión de fin de semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -248,8 +248,8 @@
     },
     {
      "hora": "12:00",
-     "capitan": "MERVIN MARTINEZ",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Mervin Martínez",
+     "grupo": "Grupo general",
      "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "4",
      "tipo": "predicacion",
@@ -272,8 +272,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Antofagasta / San Alfonso",
      "territorio": "36",
      "tipo": "predicacion",
@@ -289,7 +289,7 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
+     "capitan": "Sin capitán",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -301,7 +301,7 @@
     },
     {
      "hora": "19:00-21:00",
-     "capitan": "CRISTIAN ROZAS",
+     "capitan": "Cristian Rozas",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -316,12 +316,12 @@
   {
    "dia": 8,
    "nombre": "MARTES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "FRANCISCO CARRASCO",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
      "direccion": "Unión Latinoamericana / Sazié",
      "territorio": "7",
      "tipo": "predicacion",
@@ -337,8 +337,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Plaza Manuel Rodríguez",
      "territorio": "5",
      "tipo": "predicacion",
@@ -357,12 +357,12 @@
   {
    "dia": 9,
    "nombre": "MIERCOLES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "LUIS FLORES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Luis Flores",
+     "grupo": "Grupo general",
      "direccion": "San Vicente / Antofagasta",
      "territorio": "34",
      "tipo": "predicacion",
@@ -383,7 +383,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Vida y Ministerio",
+     "nombre": "Reunión de vida y ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -398,8 +398,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Blanco / Unión Latinoamericana",
      "territorio": "32",
      "tipo": "predicacion",
@@ -415,8 +415,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "",
      "territorio": "6",
      "tipo": "predicacion",
@@ -429,14 +429,14 @@
     },
     {
      "hora": "19:00-21:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "Cartas y Telefónicas",
-     "direccion": "BLANCO ENCALADA 2527 DEPTO 408A (FAMILIA MORALES)",
+     "capitan": "Jorge Morales",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
      "territorio": "",
      "tipo": "cartas",
      "calles": false,
      "terr": [],
-     "mapsq": "BLANCO ENCALADA 2527 DEPTO 408A, Santiago, Chile",
+     "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
      "coord": null
     }
    ]
@@ -444,12 +444,12 @@
   {
    "dia": 11,
    "nombre": "VIERNES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Blanco / Conferencia",
      "territorio": "30",
      "tipo": "predicacion",
@@ -465,8 +465,8 @@
     },
     {
      "hora": "18:00-20:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "",
      "territorio": "ZOOM",
      "tipo": "cartas",
@@ -480,12 +480,12 @@
   {
    "dia": 12,
    "nombre": "SABADO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "RAUL PALACIOS",
-     "grupo": "GRUPO 1",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
      "direccion": "",
      "territorio": "3",
      "tipo": "predicacion",
@@ -498,8 +498,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO 2",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
      "direccion": "",
      "territorio": "11",
      "tipo": "predicacion",
@@ -512,8 +512,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "GUILLERMO NAVEAS",
-     "grupo": "GRUPO 3",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
      "direccion": "",
      "territorio": "8",
      "tipo": "predicacion",
@@ -526,8 +526,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "RAUL VARAS",
-     "grupo": "GRUPO 4",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
      "direccion": "",
      "territorio": "49",
      "tipo": "predicacion",
@@ -540,8 +540,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "KEUDIS ANDRADE",
-     "grupo": "GRUPO 5",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
      "direccion": "",
      "territorio": "50",
      "tipo": "predicacion",
@@ -557,7 +557,7 @@
   {
    "dia": 13,
    "nombre": "DOMINGO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
@@ -566,7 +566,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Fin de Semana",
+     "nombre": "Reunión de fin de semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -574,8 +574,8 @@
     },
     {
      "hora": "12:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
      "tipo": "predicacion",
@@ -596,8 +596,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Latorre / Domeyko",
      "territorio": "27",
      "tipo": "predicacion",
@@ -613,7 +613,7 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
+     "capitan": "Sin capitán",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -628,12 +628,12 @@
   {
    "dia": 15,
    "nombre": "MARTES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "FRANCISCO CARRASCO",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
      "direccion": "Almirante Latorre / Gay",
      "territorio": "21",
      "tipo": "predicacion",
@@ -649,8 +649,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Almirante Latorre / Gay",
      "territorio": "22",
      "tipo": "predicacion",
@@ -669,12 +669,12 @@
   {
    "dia": 16,
    "nombre": "MIERCOLES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JOSE TUAREZ",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
      "direccion": "Rondizzoni / Club Hípico",
      "territorio": "53",
      "tipo": "predicacion",
@@ -695,7 +695,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Vida y Ministerio",
+     "nombre": "Reunión de vida y ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -710,8 +710,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Antofagasta / Bascuñán Guerrero",
      "territorio": "37",
      "tipo": "predicacion",
@@ -727,8 +727,8 @@
     },
     {
      "hora": "18:00",
-     "capitan": "POR CONFIRMAR",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Por confirmar",
+     "grupo": "Grupo general",
      "direccion": "",
      "territorio": "",
      "tipo": "predicacion",
@@ -739,9 +739,9 @@
     },
     {
      "hora": "18:00",
-     "capitan": "CRISTIAN ROZAS",
-     "grupo": "Cartas y Telefónicas",
-     "direccion": "Av. España 613 Dpto. 724 (FAMILIA ROZAS)",
+     "capitan": "Cristian Rozas",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Av. España 613 Dpto. 724 (Familia Rozas)",
      "territorio": "",
      "tipo": "cartas",
      "calles": false,
@@ -754,12 +754,12 @@
   {
    "dia": 18,
    "nombre": "VIERNES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "11:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Avenida España / Grajales",
      "territorio": "12",
      "tipo": "predicacion",
@@ -775,8 +775,8 @@
     },
     {
      "hora": "18:00-20:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "",
      "territorio": "ZOOM",
      "tipo": "cartas",
@@ -790,12 +790,12 @@
   {
    "dia": 19,
    "nombre": "SABADO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "11:00",
-     "capitan": "RAUL PALACIOS",
-     "grupo": "GRUPO 1",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
      "direccion": "",
      "territorio": "35",
      "tipo": "predicacion",
@@ -808,8 +808,8 @@
     },
     {
      "hora": "11:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO 2",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
      "direccion": "",
      "territorio": "33",
      "tipo": "predicacion",
@@ -822,8 +822,8 @@
     },
     {
      "hora": "11:00",
-     "capitan": "GUILLERMO NAVEAS",
-     "grupo": "GRUPO 3",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
      "direccion": "",
      "territorio": "40",
      "tipo": "predicacion",
@@ -836,8 +836,8 @@
     },
     {
      "hora": "11:00",
-     "capitan": "RAUL VARAS",
-     "grupo": "GRUPO 4",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
      "direccion": "",
      "territorio": "41",
      "tipo": "predicacion",
@@ -850,8 +850,8 @@
     },
     {
      "hora": "11:00",
-     "capitan": "KEUDIS ANDRADE",
-     "grupo": "GRUPO 5",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
      "direccion": "",
      "territorio": "38",
      "tipo": "predicacion",
@@ -867,7 +867,7 @@
   {
    "dia": 20,
    "nombre": "DOMINGO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
@@ -876,7 +876,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Fin de Semana",
+     "nombre": "Reunión de fin de semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -884,8 +884,8 @@
     },
     {
      "hora": "12:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
      "tipo": "predicacion",
@@ -906,8 +906,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Rondizzoni / Pizarro",
      "territorio": "58",
      "tipo": "predicacion",
@@ -923,7 +923,7 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
+     "capitan": "Sin capitán",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -935,7 +935,7 @@
     },
     {
      "hora": "19:00-21:00",
-     "capitan": "CRISTIAN ROZAS",
+     "capitan": "Cristian Rozas",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -950,12 +950,12 @@
   {
    "dia": 22,
    "nombre": "MARTES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "FRANCISCO CARRASCO",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
      "direccion": "Ramón Subercaseaux / Longaví",
      "territorio": "44",
      "tipo": "predicacion",
@@ -971,8 +971,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Rondizzoni / Pizarro",
      "territorio": "46",
      "tipo": "predicacion",
@@ -991,12 +991,12 @@
   {
    "dia": 23,
    "nombre": "MIERCOLES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "LUIS FLORES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Luis Flores",
+     "grupo": "Grupo general",
      "direccion": "Ramón Subercaseaux / Conferencia",
      "territorio": "42",
      "tipo": "predicacion",
@@ -1017,7 +1017,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Vida y Ministerio",
+     "nombre": "Reunión de vida y ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -1032,8 +1032,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "FRANCISCO CARRASCO",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
      "direccion": "",
      "territorio": "52",
      "tipo": "predicacion",
@@ -1046,8 +1046,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Avenida España / Grajales",
      "territorio": "9",
      "tipo": "predicacion",
@@ -1063,14 +1063,14 @@
     },
     {
      "hora": "19:00-21:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "Cartas y Telefónicas",
-     "direccion": "DOMEIKO 2477 DEPTO 851 (FAMILIA VILCHES)",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Domeiko 2477 Depto 851 (Familia Vilches)",
      "territorio": "",
      "tipo": "cartas",
      "calles": false,
      "terr": [],
-     "mapsq": "DOMEIKO 2477 DEPTO 851, Santiago, Chile",
+     "mapsq": "Domeiko 2477 Depto 851, Santiago, Chile",
      "coord": null
     }
    ]
@@ -1078,12 +1078,12 @@
   {
    "dia": 25,
    "nombre": "VIERNES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Salvador Sanfuentes / Meiggs",
      "territorio": "2",
      "tipo": "predicacion",
@@ -1099,8 +1099,8 @@
     },
     {
      "hora": "18:00-20:00",
-     "capitan": "KEUDIS ANDRADE",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo general",
      "direccion": "Grajales / Latorre",
      "territorio": "13",
      "tipo": "predicacion",
@@ -1119,12 +1119,12 @@
   {
    "dia": 26,
    "nombre": "SABADO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "RAUL PALACIOS",
-     "grupo": "GRUPO 1",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
      "direccion": "",
      "territorio": "18",
      "tipo": "predicacion",
@@ -1137,8 +1137,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO 2",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
      "direccion": "",
      "territorio": "17",
      "tipo": "predicacion",
@@ -1151,8 +1151,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "GUILLERMO NAVEAS",
-     "grupo": "GRUPO 3",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
      "direccion": "",
      "territorio": "16",
      "tipo": "predicacion",
@@ -1165,8 +1165,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "RAUL VARAS",
-     "grupo": "GRUPO 4",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
      "direccion": "",
      "territorio": "28",
      "tipo": "predicacion",
@@ -1179,8 +1179,8 @@
     },
     {
      "hora": "10:00",
-     "capitan": "KEUDIS ANDRADE",
-     "grupo": "GRUPO 5",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
      "direccion": "",
      "territorio": "29",
      "tipo": "predicacion",
@@ -1196,7 +1196,7 @@
   {
    "dia": 27,
    "nombre": "DOMINGO",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
@@ -1205,7 +1205,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Fin de Semana",
+     "nombre": "Reunión de fin de semana",
      "calles": false,
      "terr": [],
      "mapsq": "",
@@ -1213,8 +1213,8 @@
     },
     {
      "hora": "12:00",
-     "capitan": "SIN CAPITAN",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
      "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
      "tipo": "predicacion",
@@ -1235,8 +1235,8 @@
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Toesca / Unión Latinoamericana",
      "territorio": "15",
      "tipo": "predicacion",
@@ -1252,7 +1252,7 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "SIN CAPITAN",
+     "capitan": "Sin capitán",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -1264,7 +1264,7 @@
     },
     {
      "hora": "19:00-21:00",
-     "capitan": "CRISTIAN ROZAS",
+     "capitan": "Cristian Rozas",
      "grupo": "Cartas por Zoom",
      "direccion": "",
      "territorio": "",
@@ -1279,12 +1279,12 @@
   {
    "dia": 29,
    "nombre": "MARTES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JORGE MORALES",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
      "direccion": "Toesca / Unión Latinoamericana",
      "territorio": "19",
      "tipo": "predicacion",
@@ -1300,8 +1300,8 @@
     },
     {
      "hora": "17:00-19:00",
-     "capitan": "JUAN EDUARDO ESPINOZA",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "Juan Eduardo Espinoza",
+     "grupo": "Grupo general",
      "direccion": "Latorre / Domeyko",
      "territorio": "25",
      "tipo": "predicacion",
@@ -1320,12 +1320,12 @@
   {
    "dia": 30,
    "nombre": "MIERCOLES",
-   "nota": "CAMPAÑA ESPECIAL",
+   "nota": "Campaña especial",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "JOSE TUAREZ",
-     "grupo": "GRUPO GENERAL",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
      "direccion": "José Miguel Carrera / Domeyko",
      "territorio": "26",
      "tipo": "predicacion",
@@ -1346,7 +1346,7 @@
      "direccion": "",
      "territorio": "",
      "tipo": "reunion",
-     "nombre": "Reunión de Vida y Ministerio",
+     "nombre": "Reunión de vida y ministerio",
      "calles": false,
      "terr": [],
      "mapsq": "",
