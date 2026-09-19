@@ -931,6 +931,7 @@ async function pintarDiagnostico() {
     `Pantalla <b>${screen.width}×${screen.height}</b>`,
     `Viewport <b>${innerHeight}</b> · doc ${document.documentElement.clientHeight} · visual ${vv}`,
     `Empieza en y <b>${window.screenY}</b> · la app termina en <b>${app}</b>`,
+    `Sobra abajo <b>${Math.round(screen.height - window.screenY - innerHeight)}</b>`,
     `Área segura arriba <b>${areaSegura('top')}</b> · abajo <b>${areaSegura('bottom')}</b>`
   ].join('<br>');
 }

@@ -235,6 +235,13 @@ sitio y no se pueden desincronizar.
   la tira entera— sin que se entienda de dónde sale. Con `max(6px, var(--safe-b))`
   queda lo que el sistema pide y nada más. Va en tres sitios: `.datebar`, el `.grab`
   del listado recogido y la hoja de ajustes.
+- **iOS congela los `<meta>` de la app al agregarla a la pantalla de inicio.** El
+  estilo de la barra de estado, el nombre, el icono y el manifiesto se leen **una
+  sola vez, al instalar**. Cambiarlos después y publicar no hace nada: el icono ya
+  instalado sigue comportándose con lo que había ese día, por muchas veces que se
+  cierre y se abra. **Para probar un cambio de esos hay que borrar el icono y volver
+  a agregarlo.** Esto costó tres publicaciones seguidas creyendo que el arreglo no
+  funcionaba, cuando sí funcionaba y no llegaba.
 - **La barra de estado del iPhone va en `default`, nunca en `black-translucent`.**
   Con la barra translúcida iOS deja que la app se dibuje bajo la isla dinámica,
   pero le entrega **un viewport más corto que la pantalla justo en ese alto**.
@@ -245,7 +252,9 @@ sitio y no se pueden desincronizar.
   la barra de estado, el área segura de arriba pasa a 0 y la app llega al borde. El
   header se ahorra además esos 59 px de relleno, que se los queda el mapa. Esto no
   se ve en el navegador de ninguna manera: hay que mirar el diagnóstico de la hoja
-  de Ajustes con la app instalada.
+  de Ajustes con la app instalada. Se comprobó contra las otras dos PWA del mismo
+  autor —`~/garage/horas` y `~/garage/revisitas`—, que no tienen el problema: las
+  dos llevan `default`, y `horas` mide incluso en `dvh` sin que le pase nada.
 - **El `theme-color` va en `--surface`, no en `--bg`.** Es el color con que el
   sistema pinta la barra de estado, que está pegada al header: con `--bg` queda un
   escalón.
