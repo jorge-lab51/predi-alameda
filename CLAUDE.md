@@ -188,6 +188,24 @@ es la fuente. Resumen de lo que obliga aquí:
   Es **una cosa distinta** del fondo del mapa (`KEY_BASE`) y del papel de la vista
   Dibujo (`KEY_DIB`), que son capas y siguen eligiéndose en el botón de capas.
 
+## Medir en el celular, no deducir
+
+La hoja de Ajustes muestra **qué versión está corriendo** (el nombre del caché del
+service worker, que es lo que de verdad sirve los archivos) y si va instalada o en
+el navegador. Eso se queda: una PWA se actualiza sola y sin ese dato no hay forma
+de saber si el cambio que estás probando llegó siquiera — la mitad de esta cacería
+fue justamente eso.
+
+Ahí vivieron un tiempo también las medidas del viewport y de las áreas seguras. Se
+quitaron al cerrar el caso, pero si hace falta volver a medirlas:
+
+- `innerHeight`, `document.documentElement.clientHeight`, `visualViewport.height`,
+  `screen.height` y `window.screenY`. Lo que sobra abajo es
+  `screen.height - screenY - innerHeight`, y tiene que dar 0.
+- **`env(safe-area-inset-*)` no se puede leer pidiendo el valor de una variable
+  CSS**: el valor computado devuelve el token sin resolver. Hay que crear un
+  elemento con `height:env(safe-area-inset-top)` y medirlo.
+
 ## Dos juegos de tokens, no uno
 
 Lo que se escribe **encima del mapa** —los números de territorio, las letras de
@@ -255,6 +273,8 @@ sitio y no se pueden desincronizar.
   de Ajustes con la app instalada. Se comprobó contra las otras dos PWA del mismo
   autor —`~/garage/horas` y `~/garage/revisitas`—, que no tienen el problema: las
   dos llevan `default`, y `horas` mide incluso en `dvh` sin que le pase nada.
+  **Cuando algo solo se vea mal en el celular, comparar con esas dos antes de
+  teorizar**: están en la misma máquina y usan el mismo lenguaje visual.
 - **El `theme-color` va en `--surface`, no en `--bg`.** Es el color con que el
   sistema pinta la barra de estado, que está pegada al header: con `--bg` queda un
   escalón.

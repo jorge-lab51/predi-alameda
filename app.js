@@ -901,42 +901,23 @@ ponerTema(temaGuardado());
 document.querySelectorAll('#segTema button').forEach(b => {
   b.onclick = () => ponerTema(b.dataset.tema);
 });
-/* Cuánto mide de verdad un `env(safe-area-inset-*)`: el valor computado de una
-   variable CSS devuelve el token sin resolver, así que hay que medir un elemento
-   que lo use. */
-function areaSegura(lado) {
-  const d = document.createElement('div');
-  d.style.cssText = `position:fixed;left:0;top:0;width:0;visibility:hidden;`
-                  + `height:env(safe-area-inset-${lado},0px)`;
-  document.body.appendChild(d);
-  const alto = Math.round(d.getBoundingClientRect().height);
-  d.remove();
-  return alto;
-}
-
-/* Qué versión está corriendo y qué tamaños le está dando el sistema. La versión
-   sirve siempre —una PWA se actualiza sola y no hay cómo saber si ya lo hizo—;
-   las medidas están para perseguir el hueco de abajo en el iPhone instalado. */
-async function pintarDiagnostico() {
-  let version = '—';
+/* Qué versión está corriendo. Una PWA se actualiza sola y sin esto no hay forma
+   de saber si ya lo hizo: la versión sale del nombre del caché del service
+   worker, que es lo que de verdad está sirviendo los archivos.
+   Aquí vivieron un tiempo las medidas del viewport y de las áreas seguras, para
+   perseguir un hueco que salía solo con la app instalada. Si hiciera falta
+   volver a medirlas, el cómo está anotado en CLAUDE.md. */
+async function pintarVersion() {
+  let version = 'sin caché';
   try {
     version = (await caches.keys()).find(k => /^alameda-v\d+$/.test(k)) || 'sin caché';
   } catch (e) {}
-  const app = Math.round($('#app').getBoundingClientRect().bottom);
-  const vv = window.visualViewport ? Math.round(window.visualViewport.height) : '—';
-  const modo = window.matchMedia('(display-mode: standalone)').matches ? 'instalada'
-    : (navigator.standalone ? 'instalada' : 'navegador');
-  $('#diag').innerHTML = [
-    `Versión <b>${version}</b> · ${modo}`,
-    `Pantalla <b>${screen.width}×${screen.height}</b>`,
-    `Viewport <b>${innerHeight}</b> · doc ${document.documentElement.clientHeight} · visual ${vv}`,
-    `Empieza en y <b>${window.screenY}</b> · la app termina en <b>${app}</b>`,
-    `Sobra abajo <b>${Math.round(screen.height - window.screenY - innerHeight)}</b>`,
-    `Área segura arriba <b>${areaSegura('top')}</b> · abajo <b>${areaSegura('bottom')}</b>`
-  ].join('<br>');
+  const modo = matchMedia('(display-mode: standalone)').matches || navigator.standalone
+    ? 'instalada' : 'en el navegador';
+  $('#diag').textContent = `${version} · ${modo}`;
 }
 
-$('#btnAjustes').onclick = () => { pintarDiagnostico(); $('#ajustes').showModal(); };
+$('#btnAjustes').onclick = () => { pintarVersion(); $('#ajustes').showModal(); };
 $('#cerrarAjustes').onclick = () => $('#ajustes').close();
 // tocar fuera de la hoja la cierra
 $('#ajustes').addEventListener('click', e => { if (e.target === $('#ajustes')) $('#ajustes').close(); });

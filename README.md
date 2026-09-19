@@ -152,10 +152,11 @@ oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que resp
 - Arriba a la derecha del mapa hay dos botones redondos: la **mira** muestra dónde
   estás y en qué territorio te encuentras, y el de las **cuatro esquinas** vuelve a
   encuadrar el plano entero.
-- El **⋯** del encabezado abre los **ajustes**. Por ahora solo está el **tema de la
-  app**: *Auto* la deja seguir el modo claro u oscuro del celular, y *Claro* u
-  *Oscuro* lo fijan. Es aparte del fondo del mapa y del papel de la vista Dibujo, que
-  se eligen con el botón de capas.
+- El **⋯** del encabezado abre los **ajustes**. Ahí está el **tema de la app**:
+  *Auto* la deja seguir el modo claro u oscuro del celular, y *Claro* u *Oscuro* lo
+  fijan. Es aparte del fondo del mapa y del papel de la vista Dibujo, que se eligen
+  con el botón de capas. Abajo dice qué **versión** está corriendo: la app se
+  actualiza sola al abrirla, y esa línea sirve para confirmarlo.
 
 ## Precisión
 

@@ -400,9 +400,9 @@ prueba('diseño', async p => {
   const meta = () => ev("$('#metaTema').getAttribute('content')");
   await ev("$('#btnAjustes').click()"); await dormir(500);
   ok(await ev("$('#ajustes').open"), 'el botón ⋯ abre la hoja de ajustes');
-  ok(/Versión/.test(await ev("$('#diag').textContent") || '') &&
-     /la app termina en \d+/.test(await ev("$('#diag').textContent") || ''),
-    'que trae el diagnóstico: versión, tamaños y área segura');
+  ok(/(alameda-v\d+|sin caché) · (instalada|en el navegador)/
+       .test(await ev("$('#diag').textContent") || ''),
+    'que dice qué versión está corriendo y si va instalada');
   await ev("document.querySelector('#segTema [data-tema=dark]').click()"); await dormir(500);
   ok(await ev('document.documentElement.dataset.theme') === 'dark' && await bg() === '#0b0b0b',
     'elegir Oscuro invierte la interfaz');
