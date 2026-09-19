@@ -428,6 +428,9 @@ prueba('diseño', async p => {
     r.style.removeProperty('--safe-b'); $('#grab').click();
     return sin.join()==='6px,8px,18px' && con.join()==='34px,34px,34px';})()`),
     'el área segura del iPhone se reserva con max(), no sumada: no se duplica el hueco');
+  ok(await ev(`![...document.styleSheets].some(h => {
+      try { return [...h.cssRules].some(r => /\\bdvh\\b/.test(r.cssText)); } catch (e) { return false; }
+    })`), 'ninguna regla mide en dvh: instalada como PWA, iOS lo calcula de menos');
 });
 
 /* ---------- correr ------------------------------------------------------ */

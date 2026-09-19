@@ -65,7 +65,7 @@ GitHub Pages tarda un par de minutos. Para esperarlo y comprobar el sitio de ver
 until curl -s "https://jorge-lab51.github.io/predi-alameda/sw.js?cb=$(date +%s%N)" \
   | grep -q "alameda-vN"; do sleep 5; done
 
-node pruebas/revisar.js --publicado     # las mismas 74 comprobaciones, contra el sitio
+node pruebas/revisar.js --publicado     # las mismas 75 comprobaciones, contra el sitio
 ```
 
 Comprobar los archivos con `curl` no alcanza: dicen que llegaron, no que la app
@@ -235,6 +235,14 @@ sitio y no se pueden desincronizar.
   la tira entera— sin que se entienda de dónde sale. Con `max(6px, var(--safe-b))`
   queda lo que el sistema pide y nada más. Va en tres sitios: `.datebar`, el `.grab`
   del listado recogido y la hoja de ajustes.
+- **Nunca medir la altura de la app en `dvh`.** Instalada como PWA, **iOS calcula
+  `dvh` de menos**: le resta el alto del área segura de arriba. En un iPhone 15 Pro
+  —852 px de pantalla, 59 de isla dinámica— `100dvh` da 793, y la app termina 59 px
+  antes del borde inferior dejando ver el fondo de la página por debajo de la barra.
+  En el navegador `dvh` es correcto, así que probando ahí no se ve nada. Va en `%`:
+  `html` y `body` ya miden 100%, y como `body` lleva `overflow:hidden` las barras del
+  navegador nunca se repliegan, así que el 100% vale lo mismo que `dvh` allí. Hay una
+  comprobación que falla si vuelve a aparecer un `dvh`.
 - **La tira de días va sobre `--surface`, no sobre `--bg`.** Esos 34 px reservados
   tienen que leerse como el suelo de la barra —como la barra de pestañas de
   cualquier app de iPhone— y no como un vacío. Con el color de la página parecen un
@@ -399,7 +407,7 @@ probar esas dos cosas hace falta HTTPS.
 ## La batería de pruebas
 
 ```bash
-node pruebas/revisar.js              # las 74 comprobaciones, con los archivos del repo
+node pruebas/revisar.js              # las 75 comprobaciones, con los archivos del repo
 node pruebas/revisar.js fondos       # solo los grupos cuyo nombre contenga eso
 node pruebas/revisar.js --publicado  # las mismas, contra el sitio ya publicado
 ```
