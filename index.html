@@ -105,13 +105,11 @@ html{background:var(--surface)}
 body{margin:0;
   font:500 15px/1.45 'Space Grotesk',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   background:var(--bg);color:var(--text);overflow:hidden}
-/* `height:100%` y no `100dvh`: **instalada como PWA, iOS calcula `dvh` de menos**,
-   le resta el alto del área segura de arriba. En un iPhone 15 Pro —852 px de
-   pantalla, 59 de isla dinámica— `100dvh` da 793, y la app termina 59 px antes
-   del borde dejando ver el fondo de la página. En el navegador no pasa, así que
-   no se nota probando ahí. `html` y `body` ya miden 100%, y como `body` va con
-   `overflow:hidden` las barras del navegador nunca se repliegan: el 100% es
-   exactamente lo mismo que `dvh` allí, sin el error. */
+/* `height:100%` y no `100dvh`. Ojo: `dvh` no estaba roto —el viewport corto lo
+   causaba la barra de estado translúcida, ver CLAUDE.md—, pero el 100% vale
+   exactamente lo mismo aquí (`html` y `body` ya miden 100%, y con `body` en
+   `overflow:hidden` las barras del navegador nunca se repliegan) y es una pieza
+   móvil menos. */
 #app{display:flex;flex-direction:column;height:100%}
 button,.btn,.go,.fab,.iconbtn{font:inherit}
 button:active,.btn:active,.fab:active,.iconbtn:active,.wd:active{transform:scale(.97);opacity:.85}

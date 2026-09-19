@@ -258,14 +258,13 @@ sitio y no se pueden desincronizar.
 - **El `theme-color` va en `--surface`, no en `--bg`.** Es el color con que el
   sistema pinta la barra de estado, que está pegada al header: con `--bg` queda un
   escalón.
-- **Nunca medir la altura de la app en `dvh`.** Instalada como PWA, **iOS calcula
-  `dvh` de menos**: le resta el alto del área segura de arriba. En un iPhone 15 Pro
-  —852 px de pantalla, 59 de isla dinámica— `100dvh` da 793, y la app termina 59 px
-  antes del borde inferior dejando ver el fondo de la página por debajo de la barra.
-  En el navegador `dvh` es correcto, así que probando ahí no se ve nada. Va en `%`:
-  `html` y `body` ya miden 100%, y como `body` lleva `overflow:hidden` las barras del
-  navegador nunca se repliegan, así que el 100% vale lo mismo que `dvh` allí. Hay una
-  comprobación que falla si vuelve a aparecer un `dvh`.
+- **La altura se mide en `%`, no en `dvh`** — pero que quede claro por qué, porque
+  en su momento se anotó mal aquí: `dvh` **no** era el culpable del viewport corto,
+  lo era la barra translúcida de arriba. `horas` mide en `dvh` y no le pasa nada.
+  Se dejó en `%` porque vale exactamente lo mismo (`html` y `body` ya miden 100%, y
+  con `body` en `overflow:hidden` las barras del navegador nunca se repliegan) y es
+  una pieza móvil menos. La comprobación que prohíbe `dvh` es para que no vuelva a
+  entrar sin querer, no porque `dvh` esté roto.
 - **La tira de días va sobre `--surface`, no sobre `--bg`.** Esos 34 px reservados
   tienen que leerse como el suelo de la barra —como la barra de pestañas de
   cualquier app de iPhone— y no como un vacío. Con el color de la página parecen un

@@ -434,7 +434,7 @@ prueba('diseño', async p => {
     'el área segura del iPhone se reserva con max(), no sumada: no se duplica el hueco');
   ok(await ev(`![...document.styleSheets].some(h => {
       try { return [...h.cssRules].some(r => /\\bdvh\\b/.test(r.cssText)); } catch (e) { return false; }
-    })`), 'ninguna regla mide en dvh: instalada como PWA, iOS lo calcula de menos');
+    })`), 'ninguna regla mide en dvh: la altura va en %, ver CLAUDE.md');
 });
 
 /* ---------- correr ------------------------------------------------------ */
