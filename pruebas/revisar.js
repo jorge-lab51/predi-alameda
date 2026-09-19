@@ -400,6 +400,9 @@ prueba('diseño', async p => {
   const meta = () => ev("$('#metaTema').getAttribute('content')");
   await ev("$('#btnAjustes').click()"); await dormir(500);
   ok(await ev("$('#ajustes').open"), 'el botón ⋯ abre la hoja de ajustes');
+  ok(/Versión/.test(await ev("$('#diag').textContent") || '') &&
+     /La app termina en \d+/.test(await ev("$('#diag').textContent") || ''),
+    'que trae el diagnóstico: versión, tamaños y área segura');
   await ev("document.querySelector('#segTema [data-tema=dark]').click()"); await dormir(500);
   ok(await ev('document.documentElement.dataset.theme') === 'dark' && await bg() === '#0b0b0b',
     'elegir Oscuro invierte la interfaz');

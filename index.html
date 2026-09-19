@@ -81,6 +81,11 @@ body.dibujo.dibujo-oscuro{--map-ink:#f2f2f2; --map-ink-2:#8f8f8f; --map-paper:#1
 
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
 html,body{height:100%}
+/* El lienzo —lo que queda fuera del documento si el viewport que da el sistema
+   es más corto que la pantalla— toma su color de <html>. Se le pone el de la
+   barra de abajo, que es contra la que asomaría, para que esa franja se lea como
+   su continuación y no como un hueco. */
+html{background:var(--surface)}
 /* Sin `tabular-nums`: con esa figura la Space Grotesk le pone al 1 un remate en
    la base que se lee como un subrayado. Aquí no hay ninguna columna de números
    que deba alinearse —las horas van en tarjetas sueltas y los días, centrados en
@@ -98,6 +103,9 @@ body{margin:0;
 #app{display:flex;flex-direction:column;height:100%}
 button,.btn,.go,.fab,.iconbtn{font:inherit}
 button:active,.btn:active,.fab:active,.iconbtn:active,.wd:active{transform:scale(.97);opacity:.85}
+/* el foco del navegador viene en azul o naranja según el sistema: se trae al
+   sistema de color, que no tiene ni uno ni otro */
+:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 
 /* El header es una línea: el nombre de la app, el mes, y el botón de ajustes
    puesto encima en absoluto para que no le agregue alto. */
@@ -277,6 +285,8 @@ dialog .hoja{display:flex;flex-direction:column;gap:14px;
   padding:18px 20px max(18px,var(--safe-b))}
 dialog h2{margin:0;font-size:22px;font-weight:500;letter-spacing:-.02em}
 .campo label{display:block;font-size:13px;font-weight:400;color:var(--text-2);margin-bottom:6px}
+.diag{font-size:12px;font-weight:400;color:var(--text-2);line-height:1.6;overflow-wrap:anywhere}
+.diag b{font-weight:500;color:var(--text)}
 .seg{display:flex;gap:2px;background:var(--surface-2);border-radius:var(--pill);padding:4px}
 .seg button{flex:1;border:0;background:transparent;color:var(--text-2);font-size:14px;
   font-weight:500;height:36px;border-radius:var(--pill);cursor:pointer}
@@ -387,6 +397,10 @@ body.dibujo .leaflet-container{background:var(--map-paper)}
         <button type="button" data-tema="light">Claro</button>
         <button type="button" data-tema="dark">Oscuro</button>
       </div>
+    </div>
+    <div class="campo">
+      <label>Diagnóstico</label>
+      <div class="diag" id="diag"></div>
     </div>
     <div class="pie"><button class="btn" id="cerrarAjustes">Cerrar</button></div>
   </div>

@@ -899,7 +899,41 @@ ponerTema(temaGuardado());
 document.querySelectorAll('#segTema button').forEach(b => {
   b.onclick = () => ponerTema(b.dataset.tema);
 });
-$('#btnAjustes').onclick = () => $('#ajustes').showModal();
+/* Cuánto mide de verdad un `env(safe-area-inset-*)`: el valor computado de una
+   variable CSS devuelve el token sin resolver, así que hay que medir un elemento
+   que lo use. */
+function areaSegura(lado) {
+  const d = document.createElement('div');
+  d.style.cssText = `position:fixed;left:0;top:0;width:0;visibility:hidden;`
+                  + `height:env(safe-area-inset-${lado},0px)`;
+  document.body.appendChild(d);
+  const alto = Math.round(d.getBoundingClientRect().height);
+  d.remove();
+  return alto;
+}
+
+/* Qué versión está corriendo y qué tamaños le está dando el sistema. La versión
+   sirve siempre —una PWA se actualiza sola y no hay cómo saber si ya lo hizo—;
+   las medidas están para perseguir el hueco de abajo en el iPhone instalado. */
+async function pintarDiagnostico() {
+  let version = '—';
+  try {
+    version = (await caches.keys()).find(k => /^alameda-v\d+$/.test(k)) || 'sin caché';
+  } catch (e) {}
+  const app = Math.round($('#app').getBoundingClientRect().bottom);
+  const vv = window.visualViewport ? Math.round(window.visualViewport.height) : '—';
+  const modo = window.matchMedia('(display-mode: standalone)').matches ? 'instalada'
+    : (navigator.standalone ? 'instalada' : 'navegador');
+  $('#diag').innerHTML = [
+    `Versión <b>${version}</b> · ${modo}`,
+    `Pantalla <b>${screen.width}×${screen.height}</b>`,
+    `Viewport <b>${innerHeight}</b> · doc ${document.documentElement.clientHeight} · visual ${vv}`,
+    `La app termina en <b>${app}</b>`,
+    `Área segura arriba <b>${areaSegura('top')}</b> · abajo <b>${areaSegura('bottom')}</b>`
+  ].join('<br>');
+}
+
+$('#btnAjustes').onclick = () => { pintarDiagnostico(); $('#ajustes').showModal(); };
 $('#cerrarAjustes').onclick = () => $('#ajustes').close();
 // tocar fuera de la hoja la cierra
 $('#ajustes').addEventListener('click', e => { if (e.target === $('#ajustes')) $('#ajustes').close(); });
