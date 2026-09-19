@@ -65,7 +65,7 @@ GitHub Pages tarda un par de minutos. Para esperarlo y comprobar el sitio de ver
 until curl -s "https://jorge-lab51.github.io/predi-alameda/sw.js?cb=$(date +%s%N)" \
   | grep -q "alameda-vN"; do sleep 5; done
 
-node pruebas/revisar.js --publicado     # las mismas 72 comprobaciones, contra el sitio
+node pruebas/revisar.js --publicado     # las mismas 74 comprobaciones, contra el sitio
 ```
 
 Comprobar los archivos con `curl` no alcanza: dicen que llegaron, no que la app
@@ -228,6 +228,17 @@ sitio y no se pueden desincronizar.
   está en el grupo `diseño`.
 - El botón de ajustes va **en absoluto** dentro del header. Si se pone en el flujo, el
   header pasa de 33 a 40+ px y se come el alto del mapa, que es el recurso escaso.
+- **El área segura del iPhone se reserva con `max()`, nunca sumándola.**
+  `env(safe-area-inset-bottom)` vale **0 en el navegador y ~34 px en la PWA
+  instalada**, así que un `calc(6px + var(--safe-b))` se ve perfecto al probarlo en el
+  navegador y en el celular deja 40 px de hueco bajo la tira de días —casi el alto de
+  la tira entera— sin que se entienda de dónde sale. Con `max(6px, var(--safe-b))`
+  queda lo que el sistema pide y nada más. Va en tres sitios: `.datebar`, el `.grab`
+  del listado recogido y la hoja de ajustes.
+- **La tira de días va sobre `--surface`, no sobre `--bg`.** Esos 34 px reservados
+  tienen que leerse como el suelo de la barra —como la barra de pestañas de
+  cualquier app de iPhone— y no como un vacío. Con el color de la página parecen un
+  error de maquetación. Fue exactamente el síntoma que se reportó.
 
 # Trampas conocidas
 
@@ -388,7 +399,7 @@ probar esas dos cosas hace falta HTTPS.
 ## La batería de pruebas
 
 ```bash
-node pruebas/revisar.js              # las 72 comprobaciones, con los archivos del repo
+node pruebas/revisar.js              # las 74 comprobaciones, con los archivos del repo
 node pruebas/revisar.js fondos       # solo los grupos cuyo nombre contenga eso
 node pruebas/revisar.js --publicado  # las mismas, contra el sitio ya publicado
 ```

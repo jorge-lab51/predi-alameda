@@ -39,6 +39,9 @@ try { var t = localStorage.getItem('alameda_tema');
   --on-color:#ffffff;
   --radius:18px;
   --pill:999px;
+  /* El alto del indicador de inicio del iPhone: 0 en el navegador y ~34 px en la
+     PWA instalada. Se reserva siempre con `max(...)`, nunca sumándolo a un
+     padding, o en el celular el hueco sale del doble de lo que hace falta. */
   --safe-b:env(safe-area-inset-bottom,0px);
   /* Lo que se escribe ENCIMA del mapa —números, letras, la chapa del día— no
      sigue el tema de la interfaz sino el fondo del mapa, que se elige aparte:
@@ -101,13 +104,18 @@ header{position:relative;background:var(--surface);border-bottom:1px solid var(-
   background:transparent;color:var(--text-2);border-radius:var(--pill);
   font-size:17px;line-height:1;cursor:pointer;padding:0}
 
-.iconbtn{border:1px solid var(--border);background:var(--surface);color:var(--text);
+.iconbtn{border:1px solid var(--border);background:transparent;color:var(--text);
   border-radius:var(--pill);min-width:38px;height:34px;font-size:15px;
   display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 10px}
 
-/* la tira de días vive al pie de la hoja, bajo el listado */
-.datebar{display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);
-  padding:6px 8px calc(6px + var(--safe-b))}
+/* La tira de días vive al pie de la hoja, bajo el listado, y es la barra que se
+   apoya en el borde inferior de la pantalla. Va sobre `--surface` a propósito:
+   instalada como PWA hay que dejarle al indicador de inicio del iPhone sus
+   ~34 px libres, y si la barra fuera del color de la página ese espacio se leería
+   como un hueco en blanco en vez de como el suelo de la barra. */
+.datebar{display:flex;align-items:center;gap:6px;background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:6px 8px max(6px,var(--safe-b))}
 .datebar .flecha{min-width:28px;height:40px;padding:0;font-size:20px;color:var(--text-2);
   border-color:transparent;background:transparent}
 .datebar #btnHoy{height:40px;font-size:14px;padding:0 12px}
@@ -148,7 +156,7 @@ header{position:relative;background:var(--surface);border-bottom:1px solid var(-
   padding:9px 12px 6px;cursor:pointer;position:relative}
 /* con el listado oculto la barra es lo único que queda: se agranda para
    que sea cómoda de tocar */
-#sheet.oculto .grab{min-height:42px;padding-bottom:calc(8px + var(--safe-b))}
+#sheet.oculto .grab{min-height:42px;padding-bottom:max(8px,var(--safe-b))}
 /* la barra son dos mitades que se superponen: en reposo se leen como una
    sola línea, y al apuntarla se inclinan hasta formar una flecha */
 .grab .bar{position:relative;width:40px;height:10px}
@@ -259,7 +267,7 @@ dialog{border:0;padding:0;margin:0 0 0 auto;width:100%;max-width:100%;
   border-radius:24px 24px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.2)}
 dialog::backdrop{background:rgba(0,0,0,.45)}
 dialog .hoja{display:flex;flex-direction:column;gap:14px;
-  padding:18px 20px calc(18px + var(--safe-b))}
+  padding:18px 20px max(18px,var(--safe-b))}
 dialog h2{margin:0;font-size:22px;font-weight:500;letter-spacing:-.02em}
 .campo label{display:block;font-size:13px;font-weight:400;color:var(--text-2);margin-bottom:6px}
 .seg{display:flex;gap:2px;background:var(--surface-2);border-radius:var(--pill);padding:4px}

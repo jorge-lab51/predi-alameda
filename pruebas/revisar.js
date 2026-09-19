@@ -414,6 +414,20 @@ prueba('diseño', async p => {
   ok(!(await ev('document.documentElement.dataset.theme')), 'y Auto vuelve a seguir al sistema');
   await ev("$('#ajustes').close()"); await dormir(300);
   ok(!(await ev("$('#ajustes').open")), 'la hoja se cierra');
+  // El indicador de inicio del iPhone: el navegador da 0 y la PWA instalada ~34 px.
+  // Si se suma a un padding en vez de reservarse con max(), en el celular queda un
+  // hueco del doble de alto bajo la tira de días. Aquí se simula el valor.
+  ok(await ev("$('#app').getBoundingClientRect().bottom") === await ev('innerHeight'),
+    'la app termina justo en el borde inferior de la pantalla');
+  ok(await ev(`(()=>{
+    const r=document.documentElement, lee=q=>getComputedStyle($(q)).paddingBottom;
+    $('#grab').click();
+    const sin=[lee('#datebar'), lee('#sheet.oculto .grab'), lee('dialog .hoja')];
+    r.style.setProperty('--safe-b','34px');
+    const con=[lee('#datebar'), lee('#sheet.oculto .grab'), lee('dialog .hoja')];
+    r.style.removeProperty('--safe-b'); $('#grab').click();
+    return sin.join()==='6px,8px,18px' && con.join()==='34px,34px,34px';})()`),
+    'el área segura del iPhone se reserva con max(), no sumada: no se duplica el hueco');
 });
 
 /* ---------- correr ------------------------------------------------------ */
