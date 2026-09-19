@@ -3,13 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<meta name="theme-color" content="#e6e6e6" id="metaTema">
+<meta name="theme-color" content="#f5f5f5" id="metaTema">
 <meta name="robots" content="noindex, nofollow">
 <title>Territorios Alameda</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- `default` y NO `black-translucent`. Con la barra translúcida, iOS deja que la
+     app se dibuje bajo la isla dinámica, pero le entrega un viewport más corto
+     que la pantalla justo en ese alto: medido en un iPhone 15 Pro, pantalla 852,
+     viewport 793, área segura de arriba 59. La app terminaba 59 px antes del
+     borde inferior y esa franja queda FUERA del documento, así que no hay forma
+     de llenarla: no la tapa ni el fondo de un modal. Con `default`, iOS coloca la
+     app bajo la barra de estado, el área segura de arriba pasa a 0 y la app llega
+     al borde. De paso el header se ahorra esos 59 px de relleno, que se los queda
+     el mapa. La barra de estado la pinta el sistema con el `theme-color`, que va
+     en `--surface`, el mismo color del header: se lee como si siguiera. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <!-- el tema elegido se aplica antes de cargar el CSS, o la app parpadea en
      claro un instante antes de ponerse oscura -->
 <script>

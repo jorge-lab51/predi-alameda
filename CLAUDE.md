@@ -235,6 +235,20 @@ sitio y no se pueden desincronizar.
   la tira entera— sin que se entienda de dónde sale. Con `max(6px, var(--safe-b))`
   queda lo que el sistema pide y nada más. Va en tres sitios: `.datebar`, el `.grab`
   del listado recogido y la hoja de ajustes.
+- **La barra de estado del iPhone va en `default`, nunca en `black-translucent`.**
+  Con la barra translúcida iOS deja que la app se dibuje bajo la isla dinámica,
+  pero le entrega **un viewport más corto que la pantalla justo en ese alto**.
+  Medido en un iPhone 15 Pro instalada: pantalla 852, viewport 793, área segura de
+  arriba 59 — y 852 − 793 = 59. La app termina 59 px antes del borde inferior y esa
+  franja **queda fuera del documento**: no se puede llenar con nada, ni la tapa el
+  fondo de un modal; solo la pinta el lienzo. Con `default`, iOS coloca la app bajo
+  la barra de estado, el área segura de arriba pasa a 0 y la app llega al borde. El
+  header se ahorra además esos 59 px de relleno, que se los queda el mapa. Esto no
+  se ve en el navegador de ninguna manera: hay que mirar el diagnóstico de la hoja
+  de Ajustes con la app instalada.
+- **El `theme-color` va en `--surface`, no en `--bg`.** Es el color con que el
+  sistema pinta la barra de estado, que está pegada al header: con `--bg` queda un
+  escalón.
 - **Nunca medir la altura de la app en `dvh`.** Instalada como PWA, **iOS calcula
   `dvh` de menos**: le resta el alto del área segura de arriba. En un iPhone 15 Pro
   —852 px de pantalla, 59 de isla dinámica— `100dvh` da 793, y la app termina 59 px

@@ -401,14 +401,15 @@ prueba('diseño', async p => {
   await ev("$('#btnAjustes').click()"); await dormir(500);
   ok(await ev("$('#ajustes').open"), 'el botón ⋯ abre la hoja de ajustes');
   ok(/Versión/.test(await ev("$('#diag').textContent") || '') &&
-     /La app termina en \d+/.test(await ev("$('#diag').textContent") || ''),
+     /la app termina en \d+/.test(await ev("$('#diag').textContent") || ''),
     'que trae el diagnóstico: versión, tamaños y área segura');
   await ev("document.querySelector('#segTema [data-tema=dark]').click()"); await dormir(500);
   ok(await ev('document.documentElement.dataset.theme') === 'dark' && await bg() === '#0b0b0b',
     'elegir Oscuro invierte la interfaz');
-  ok(await meta() === '#0b0b0b', 'y la barra de estado del celular lo sigue');
+  // la barra de estado va en --surface, el color del header, no en --bg
+  ok(await meta() === '#171717', 'y la barra de estado del celular lo sigue');
   await ev("document.querySelector('#segTema [data-tema=light]').click()"); await dormir(500);
-  ok(await bg() === '#e6e6e6' && await meta() === '#e6e6e6', 'y Claro la devuelve');
+  ok(await bg() === '#e6e6e6' && await meta() === '#f5f5f5', 'y Claro la devuelve');
   await p.recargar();
   ok(await ev('document.documentElement.dataset.theme') === 'light',
     'lo elegido se guarda y se aplica antes del CSS, sin parpadeo');

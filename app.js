@@ -127,8 +127,10 @@ function ponerTema(t) {
   else document.documentElement.dataset.theme = t;
   try { t === 'auto' ? localStorage.removeItem(KEY_TEMA) : localStorage.setItem(KEY_TEMA, t); } catch (e) {}
   document.querySelectorAll('#segTema button').forEach(b => b.classList.toggle('on', b.dataset.tema === t));
-  // la barra de estado del celular toma el color del fondo de página
-  $('#metaTema').setAttribute('content', tok('--bg') || '#e6e6e6');
+  // La barra de estado del celular la pinta el sistema con este color. Va en
+  // `--surface`, el del header, para que se lea como si el header siguiera hacia
+  // arriba; no en `--bg`, que dejaría un escalón.
+  $('#metaTema').setAttribute('content', tok('--surface') || '#f5f5f5');
   restilarTerr();
 }
 
@@ -928,7 +930,7 @@ async function pintarDiagnostico() {
     `Versión <b>${version}</b> · ${modo}`,
     `Pantalla <b>${screen.width}×${screen.height}</b>`,
     `Viewport <b>${innerHeight}</b> · doc ${document.documentElement.clientHeight} · visual ${vv}`,
-    `La app termina en <b>${app}</b>`,
+    `Empieza en y <b>${window.screenY}</b> · la app termina en <b>${app}</b>`,
     `Área segura arriba <b>${areaSegura('top')}</b> · abajo <b>${areaSegura('bottom')}</b>`
   ].join('<br>');
 }
