@@ -1,180 +1,87 @@
 {
- "mes": 9,
+ "mes": 10,
  "anio": 2026,
  "titulo": "Programa Predicación Alameda",
  "lema": "“Felices los que reconocen sus necesidades espirituales” (Mt 5:3)",
  "dias": [
   {
    "dia": 1,
-   "nombre": "MARTES",
-   "nota": "Campaña especial",
+   "nombre": "JUEVES",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "José Tuarez",
-     "grupo": "Grupo general",
-     "direccion": "Pizarro / Rondizzoni",
-     "territorio": "47",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      47
-     ],
-     "mapsq": "Pizarro / Rondizzoni, Santiago, Chile",
-     "coord": [
-      -33.47059,
-      -70.67034
-     ]
-    },
-    {
-     "hora": "17:00-19:00",
      "capitan": "Jorge Morales",
      "grupo": "Grupo general",
-     "direccion": "Vergara / Sazié",
-     "territorio": "10",
+     "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
+     "territorio": "23",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      10
+      23
      ],
-     "mapsq": "Vergara / Sazié, Santiago, Chile",
+     "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo general",
+     "direccion": "Latorre / Domeyko",
+     "territorio": "27",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      27
+     ],
+     "mapsq": "Latorre / Domeyko, Santiago, Chile",
      "coord": [
-      -33.44975,
-      -70.66207
+      -33.45625,
+      -70.66411
      ]
     }
    ]
   },
   {
    "dia": 2,
-   "nombre": "MIERCOLES",
-   "nota": "Campaña especial",
+   "nombre": "VIERNES",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "José Tuarez",
      "grupo": "Grupo general",
-     "direccion": "Ramón Subercaseaux / Longaví",
-     "territorio": "45",
+     "direccion": "San Vicente / Antofagasta",
+     "territorio": "33",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      45
+      33
      ],
-     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
+     "mapsq": "San Vicente / Antofagasta, Santiago, Chile",
      "coord": [
-      -33.47062,
-      -70.67251
+      -33.46654,
+      -70.67561
      ]
     },
     {
-     "hora": "19:30",
-     "capitan": "",
-     "grupo": "",
-     "direccion": "",
-     "territorio": "",
-     "tipo": "reunion",
-     "nombre": "Reunión de vida y ministerio",
+     "hora": "19:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo general",
+     "direccion": "Gaspar de la Barrera 3089 (Familia Andrade)",
+     "territorio": "38",
+     "tipo": "predicacion",
      "calles": false,
-     "terr": [],
-     "mapsq": "",
+     "terr": [
+      38
+     ],
+     "mapsq": "Gaspar de la Barrera 3089, Santiago, Chile",
      "coord": null
     }
    ]
   },
   {
    "dia": 3,
-   "nombre": "JUEVES",
-   "nota": "",
-   "actividades": [
-    {
-     "hora": "10:00",
-     "capitan": "Francisco Carrasco",
-     "grupo": "Grupo general",
-     "direccion": "Ramón Subercaseaux / Longaví",
-     "territorio": "43",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      43
-     ],
-     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
-     "coord": [
-      -33.47062,
-      -70.67251
-     ]
-    },
-    {
-     "hora": "17:00-19:00",
-     "capitan": "Sin capitán",
-     "grupo": "Grupo general",
-     "direccion": "",
-     "territorio": "14",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      14
-     ],
-     "mapsq": "",
-     "coord": null
-    },
-    {
-     "hora": "19:00-21:00",
-     "capitan": "Kevin Carrero",
-     "grupo": "Cartas y telefónicas",
-     "direccion": "Las Fucsias 2119 (Familia Carrero)",
-     "territorio": "",
-     "tipo": "cartas",
-     "calles": false,
-     "terr": [],
-     "mapsq": "Las Fucsias 2119, Santiago, Chile",
-     "coord": null
-    }
-   ]
-  },
-  {
-   "dia": 4,
-   "nombre": "VIERNES",
-   "nota": "Campaña especial",
-   "actividades": [
-    {
-     "hora": "10:00",
-     "capitan": "Jorge Morales",
-     "grupo": "Grupo general",
-     "direccion": "Gaspar de la Barrera / Sta Margarita",
-     "territorio": "39",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      39
-     ],
-     "mapsq": "Gaspar de la Barrera / Sta Margarita, Santiago, Chile",
-     "coord": [
-      -33.46719,
-      -70.67686
-     ]
-    },
-    {
-     "hora": "18:00-20:00",
-     "capitan": "Sin capitán",
-     "grupo": "Grupo general",
-     "direccion": "Avenida España / Gay",
-     "territorio": "20",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      20
-     ],
-     "mapsq": "Avenida España / Gay, Santiago, Chile",
-     "coord": [
-      -33.456,
-      -70.66878
-     ]
-    }
-   ]
-  },
-  {
-   "dia": 5,
    "nombre": "SABADO",
    "nota": "Día del precursor",
    "actividades": [
@@ -182,56 +89,51 @@
      "hora": "08:00",
      "capitan": "Cristian Rozas",
      "grupo": "Grupo general",
-     "direccion": "Luis Cousiño Av. Rondizzoni",
+     "direccion": "Av. España 613 Dpto. 724 (Familia Rozas)",
      "territorio": "CALLES",
      "tipo": "predicacion",
      "calles": true,
      "terr": [],
-     "mapsq": "Luis Cousiño Av. Rondizzoni, Santiago, Chile",
-     "coord": [
-      -33.47024,
-      -70.65967
-     ]
+     "mapsq": "Av. España 613 Dpto. 724, Santiago, Chile",
+     "coord": null
     },
     {
      "hora": "10:00",
-     "capitan": "Mervin Martínez",
+     "capitan": "Jorge Morales",
      "grupo": "Grupo general",
-     "direccion": "Las Fucsias 2119 (Familia Carrero)",
-     "territorio": "57,56,55",
+     "direccion": "Av. España 613 Dpto. 724 (Familia Rozas)",
+     "territorio": "28,30,31,32",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      57,
-      56,
-      55
+      28,
+      30,
+      31,
+      32
      ],
-     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "mapsq": "Av. España 613 Dpto. 724, Santiago, Chile",
      "coord": null
     },
     {
      "hora": "14:00",
-     "capitan": "Sin capitán",
+     "capitan": "Cristian Rozas",
      "grupo": "Grupo general",
-     "direccion": "Pizarro / Rondizzoni",
-     "territorio": "54",
+     "direccion": "Av. España 613 Dpto. 724 (Familia Rozas)",
+     "territorio": "20",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      54
+      20
      ],
-     "mapsq": "Pizarro / Rondizzoni, Santiago, Chile",
-     "coord": [
-      -33.47059,
-      -70.67034
-     ]
+     "mapsq": "Av. España 613 Dpto. 724, Santiago, Chile",
+     "coord": null
     }
    ]
   },
   {
-   "dia": 6,
+   "dia": 4,
    "nombre": "DOMINGO",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
@@ -248,15 +150,13 @@
     },
     {
      "hora": "12:00",
-     "capitan": "Mervin Martínez",
+     "capitan": "Luis Paredes",
      "grupo": "Grupo general",
      "direccion": "Salón Salvador San Fuentes 2493",
-     "territorio": "4",
+     "territorio": "CALLES",
      "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      4
-     ],
+     "calles": true,
+     "terr": [],
      "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
      "coord": [
       -33.45174,
@@ -266,25 +166,25 @@
    ]
   },
   {
-   "dia": 7,
+   "dia": 5,
    "nombre": "LUNES",
    "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "capitan": "Eduardo Muñoz",
      "grupo": "Grupo general",
-     "direccion": "Antofagasta / San Alfonso",
-     "territorio": "36",
+     "direccion": "Ramón Subercaseaux / Longaví",
+     "territorio": "44",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      36
+      44
      ],
-     "mapsq": "Antofagasta / San Alfonso, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
      "coord": [
-      -33.46646,
-      -70.67304
+      -33.47062,
+      -70.67251
      ]
     },
     {
@@ -314,66 +214,72 @@
    ]
   },
   {
-   "dia": 8,
+   "dia": 6,
    "nombre": "MARTES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Francisco Carrasco",
      "grupo": "Grupo general",
-     "direccion": "Unión Latinoamericana / Sazié",
-     "territorio": "7",
+     "direccion": "José Miguel Carrera 359 Dpto. 112 (Familia Carrasco)",
+     "territorio": "14",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      7
+      14
      ],
-     "mapsq": "Unión Latinoamericana / Sazié, Santiago, Chile",
-     "coord": [
-      -33.45247,
-      -70.67362
-     ]
+     "mapsq": "José Miguel Carrera 359 Dpto. 112, Santiago, Chile",
+     "coord": null
     },
     {
-     "hora": "17:00-19:00",
-     "capitan": "Jorge Morales",
+     "hora": "17:00",
+     "capitan": "Sin capitán",
      "grupo": "Grupo general",
-     "direccion": "Plaza Manuel Rodríguez",
-     "territorio": "5",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
+     "territorio": "",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo general",
+     "direccion": "Las Fucsias 2119",
+     "territorio": "57",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      5
+      57
      ],
-     "mapsq": "Plaza Manuel Rodríguez, Santiago, Chile",
-     "coord": [
-      -33.45139,
-      -70.66518
-     ]
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
     }
    ]
   },
   {
-   "dia": 9,
+   "dia": 7,
    "nombre": "MIERCOLES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Luis Flores",
      "grupo": "Grupo general",
-     "direccion": "San Vicente / Antofagasta",
-     "territorio": "34",
+     "direccion": "Avenida España / Grajales",
+     "territorio": "8",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      34
+      8
      ],
-     "mapsq": "San Vicente / Antofagasta, Santiago, Chile",
+     "mapsq": "Avenida España / Grajales, Santiago, Chile",
      "coord": [
-      -33.46654,
-      -70.67561
+      -33.45267,
+      -70.66955
      ]
     },
     {
@@ -392,7 +298,7 @@
    ]
   },
   {
-   "dia": 10,
+   "dia": 8,
    "nombre": "JUEVES",
    "nota": "",
    "actividades": [
@@ -400,98 +306,88 @@
      "hora": "10:00",
      "capitan": "Jorge Morales",
      "grupo": "Grupo general",
-     "direccion": "Blanco / Unión Latinoamericana",
-     "territorio": "32",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      32
-     ],
-     "mapsq": "Blanco / Unión Latinoamericana, Santiago, Chile",
-     "coord": [
-      -33.45847,
-      -70.67219
-     ]
-    },
-    {
-     "hora": "17:00-19:00",
-     "capitan": "Sin capitán",
-     "grupo": "Grupo general",
-     "direccion": "",
-     "territorio": "6",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      6
-     ],
-     "mapsq": "",
-     "coord": null
-    },
-    {
-     "hora": "19:00-21:00",
-     "capitan": "Jorge Morales",
-     "grupo": "Cartas y telefónicas",
      "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
-     "territorio": "",
-     "tipo": "cartas",
+     "territorio": "19",
+     "tipo": "predicacion",
      "calles": false,
-     "terr": [],
+     "terr": [
+      19
+     ],
      "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
      "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo general",
+     "direccion": "José Miguel Carrera / Domeyko",
+     "territorio": "26",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      26
+     ],
+     "mapsq": "José Miguel Carrera / Domeyko, Santiago, Chile",
+     "coord": [
+      -33.45596,
+      -70.66264
+     ]
     }
    ]
   },
   {
-   "dia": 11,
+   "dia": 9,
    "nombre": "VIERNES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "capitan": "José Tuarez",
      "grupo": "Grupo general",
-     "direccion": "Blanco / Conferencia",
-     "territorio": "30",
+     "direccion": "San Vicente / Antofagasta",
+     "territorio": "34",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      30
+      34
      ],
-     "mapsq": "Blanco / Conferencia, Santiago, Chile",
+     "mapsq": "San Vicente / Antofagasta, Santiago, Chile",
      "coord": [
-      -33.45862,
-      -70.67615
+      -33.46654,
+      -70.67561
      ]
     },
     {
-     "hora": "18:00-20:00",
-     "capitan": "Sin capitán",
+     "hora": "19:00",
+     "capitan": "Keudis Andrade",
      "grupo": "Grupo general",
-     "direccion": "",
-     "territorio": "ZOOM",
-     "tipo": "cartas",
+     "direccion": "Gaspar de la Barrera 3089 (Familia Andrade)",
+     "territorio": "39",
+     "tipo": "predicacion",
      "calles": false,
-     "terr": [],
-     "mapsq": "",
+     "terr": [
+      39
+     ],
+     "mapsq": "Gaspar de la Barrera 3089, Santiago, Chile",
      "coord": null
     }
    ]
   },
   {
-   "dia": 12,
+   "dia": 10,
    "nombre": "SABADO",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Raúl Palacios",
      "grupo": "Grupo 1",
      "direccion": "",
-     "territorio": "3",
+     "territorio": "21",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      3
+      21
      ],
      "mapsq": "",
      "coord": null
@@ -501,11 +397,11 @@
      "capitan": "Jorge Morales",
      "grupo": "Grupo 2",
      "direccion": "",
-     "territorio": "11",
+     "territorio": "51",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      11
+      51
      ],
      "mapsq": "",
      "coord": null
@@ -515,11 +411,11 @@
      "capitan": "Guillermo Naveas",
      "grupo": "Grupo 3",
      "direccion": "",
-     "territorio": "8",
+     "territorio": "24",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      8
+      24
      ],
      "mapsq": "",
      "coord": null
@@ -543,11 +439,11 @@
      "capitan": "Keudis Andrade",
      "grupo": "Grupo 5",
      "direccion": "",
-     "territorio": "50",
+     "territorio": "58",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      50
+      58
      ],
      "mapsq": "",
      "coord": null
@@ -555,9 +451,9 @@
    ]
   },
   {
-   "dia": 13,
+   "dia": 11,
    "nombre": "DOMINGO",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
@@ -590,25 +486,26 @@
    ]
   },
   {
-   "dia": 14,
+   "dia": 12,
    "nombre": "LUNES",
    "nota": "",
    "actividades": [
     {
-     "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "hora": "11:00",
+     "capitan": "Mervin Martínez",
      "grupo": "Grupo general",
-     "direccion": "Latorre / Domeyko",
-     "territorio": "27",
+     "direccion": "Ramón Subercaseaux / Longaví",
+     "territorio": "42,43",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      27
+      42,
+      43
      ],
-     "mapsq": "Latorre / Domeyko, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
      "coord": [
-      -33.45625,
-      -70.66411
+      -33.47062,
+      -70.67251
      ]
     },
     {
@@ -622,34 +519,130 @@
      "terr": [],
      "mapsq": "",
      "coord": null
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Cristian Rozas",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
     }
    ]
   },
   {
-   "dia": 15,
+   "dia": 13,
    "nombre": "MARTES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Francisco Carrasco",
      "grupo": "Grupo general",
-     "direccion": "Almirante Latorre / Gay",
-     "territorio": "21",
+     "direccion": "José Miguel Carrera 359 Dpto. 112 (Familia Carrasco)",
+     "territorio": "10",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      21
+      10
      ],
-     "mapsq": "Almirante Latorre / Gay, Santiago, Chile",
+     "mapsq": "José Miguel Carrera 359 Dpto. 112, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "17:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
+     "territorio": "",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo general",
+     "direccion": "San Dionisio / Bascuñán Guerrero",
+     "territorio": "56",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      56
+     ],
+     "mapsq": "San Dionisio / Bascuñán Guerrero, Santiago, Chile",
      "coord": [
-      -33.4551,
-      -70.66423
+      -33.47191,
+      -70.67166
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 14,
+   "nombre": "MIERCOLES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "Avenida España / Grajales",
+     "territorio": "9",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      9
+     ],
+     "mapsq": "Avenida España / Grajales, Santiago, Chile",
+     "coord": [
+      -33.45267,
+      -70.66955
      ]
     },
     {
-     "hora": "17:00-19:00",
+     "hora": "19:30",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de vida y ministerio",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 15,
+   "nombre": "JUEVES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
      "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
+     "territorio": "15",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      15
+     ],
+     "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Varas",
      "grupo": "Grupo general",
      "direccion": "Almirante Latorre / Gay",
      "territorio": "22",
@@ -668,196 +661,113 @@
   },
   {
    "dia": 16,
-   "nombre": "MIERCOLES",
-   "nota": "Campaña especial",
+   "nombre": "VIERNES",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "José Tuarez",
      "grupo": "Grupo general",
-     "direccion": "Rondizzoni / Club Hípico",
-     "territorio": "53",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      53
-     ],
-     "mapsq": "Rondizzoni / Club Hípico, Santiago, Chile",
-     "coord": [
-      -33.47051,
-      -70.66492
-     ]
-    },
-    {
-     "hora": "19:30",
-     "capitan": "",
-     "grupo": "",
-     "direccion": "",
-     "territorio": "",
-     "tipo": "reunion",
-     "nombre": "Reunión de vida y ministerio",
-     "calles": false,
-     "terr": [],
-     "mapsq": "",
-     "coord": null
-    }
-   ]
-  },
-  {
-   "dia": 17,
-   "nombre": "JUEVES",
-   "nota": "",
-   "actividades": [
-    {
-     "hora": "10:00",
-     "capitan": "Jorge Morales",
-     "grupo": "Grupo general",
-     "direccion": "Antofagasta / Bascuñán Guerrero",
-     "territorio": "37",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      37
-     ],
-     "mapsq": "Antofagasta / Bascuñán Guerrero, Santiago, Chile",
-     "coord": [
-      -33.46643,
-      -70.67174
-     ]
-    },
-    {
-     "hora": "18:00",
-     "capitan": "Por confirmar",
-     "grupo": "Grupo general",
-     "direccion": "",
-     "territorio": "",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [],
-     "mapsq": "",
-     "coord": null
-    },
-    {
-     "hora": "18:00",
-     "capitan": "Cristian Rozas",
-     "grupo": "Cartas y telefónicas",
-     "direccion": "Av. España 613 Dpto. 724 (Familia Rozas)",
-     "territorio": "",
-     "tipo": "cartas",
-     "calles": false,
-     "terr": [],
-     "mapsq": "Av. España 613 Dpto. 724, Santiago, Chile",
-     "coord": null
-    }
-   ]
-  },
-  {
-   "dia": 18,
-   "nombre": "VIERNES",
-   "nota": "Campaña especial",
-   "actividades": [
-    {
-     "hora": "11:00",
-     "capitan": "Jorge Morales",
-     "grupo": "Grupo general",
-     "direccion": "Avenida España / Grajales",
-     "territorio": "12",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      12
-     ],
-     "mapsq": "Avenida España / Grajales, Santiago, Chile",
-     "coord": [
-      -33.45267,
-      -70.66955
-     ]
-    },
-    {
-     "hora": "18:00-20:00",
-     "capitan": "Sin capitán",
-     "grupo": "Grupo general",
-     "direccion": "",
-     "territorio": "ZOOM",
-     "tipo": "cartas",
-     "calles": false,
-     "terr": [],
-     "mapsq": "",
-     "coord": null
-    }
-   ]
-  },
-  {
-   "dia": 19,
-   "nombre": "SABADO",
-   "nota": "Campaña especial",
-   "actividades": [
-    {
-     "hora": "11:00",
-     "capitan": "Raúl Palacios",
-     "grupo": "Grupo 1",
-     "direccion": "",
+     "direccion": "Antofagasta / San Alfonso",
      "territorio": "35",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       35
      ],
-     "mapsq": "",
-     "coord": null
+     "mapsq": "Antofagasta / San Alfonso, Santiago, Chile",
+     "coord": [
+      -33.46646,
+      -70.67304
+     ]
     },
     {
-     "hora": "11:00",
-     "capitan": "Jorge Morales",
-     "grupo": "Grupo 2",
-     "direccion": "",
-     "territorio": "33",
-     "tipo": "predicacion",
-     "calles": false,
-     "terr": [
-      33
-     ],
-     "mapsq": "",
-     "coord": null
-    },
-    {
-     "hora": "11:00",
-     "capitan": "Guillermo Naveas",
-     "grupo": "Grupo 3",
-     "direccion": "",
+     "hora": "19:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo general",
+     "direccion": "Gaspar de la Barrera 3089 (Familia Andrade)",
      "territorio": "40",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
       40
      ],
-     "mapsq": "",
+     "mapsq": "Gaspar de la Barrera 3089, Santiago, Chile",
      "coord": null
-    },
+    }
+   ]
+  },
+  {
+   "dia": 17,
+   "nombre": "SABADO",
+   "nota": "Visita del superintendente de servicio · grupo 4 · fecha 17-10-2026",
+   "actividades": [
     {
-     "hora": "11:00",
-     "capitan": "Raúl Varas",
-     "grupo": "Grupo 4",
+     "hora": "10:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
      "direccion": "",
-     "territorio": "41",
+     "territorio": "2",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      41
+      2
      ],
      "mapsq": "",
      "coord": null
     },
     {
-     "hora": "11:00",
-     "capitan": "Keudis Andrade",
-     "grupo": "Grupo 5",
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
      "direccion": "",
-     "territorio": "38",
+     "territorio": "51",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      38
+      51
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
+     "direccion": "",
+     "territorio": "3",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      3
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Mervin Martínez",
+     "grupo": "Grupo 4",
+     "direccion": "Club Hípico 1528 Dpto. 416 (Familia Varas)",
+     "territorio": "50",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      50
+     ],
+     "mapsq": "Club Hípico 1528 Dpto. 416, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
+     "direccion": "",
+     "territorio": "52",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      52
      ],
      "mapsq": "",
      "coord": null
@@ -865,9 +775,9 @@
    ]
   },
   {
-   "dia": 20,
+   "dia": 18,
    "nombre": "DOMINGO",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
@@ -900,25 +810,25 @@
    ]
   },
   {
-   "dia": 21,
+   "dia": 19,
    "nombre": "LUNES",
    "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "capitan": "Mervin Martínez",
      "grupo": "Grupo general",
-     "direccion": "Rondizzoni / Pizarro",
-     "territorio": "58",
+     "direccion": "Ramón Subercaseaux / Longaví",
+     "territorio": "45",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      58
+      45
      ],
-     "mapsq": "Rondizzoni / Pizarro, Santiago, Chile",
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
      "coord": [
-      -33.47059,
-      -70.67034
+      -33.47062,
+      -70.67251
      ]
     },
     {
@@ -948,66 +858,72 @@
    ]
   },
   {
-   "dia": 22,
+   "dia": 20,
    "nombre": "MARTES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Francisco Carrasco",
      "grupo": "Grupo general",
-     "direccion": "Ramón Subercaseaux / Longaví",
-     "territorio": "44",
+     "direccion": "José Miguel Carrera 359 Dpto. 112 (Familia Carrasco)",
+     "territorio": "6",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      44
+      6
      ],
-     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
-     "coord": [
-      -33.47062,
-      -70.67251
-     ]
+     "mapsq": "José Miguel Carrera 359 Dpto. 112, Santiago, Chile",
+     "coord": null
     },
     {
-     "hora": "17:00-19:00",
+     "hora": "17:00",
      "capitan": "Sin capitán",
      "grupo": "Grupo general",
-     "direccion": "Rondizzoni / Pizarro",
-     "territorio": "46",
+     "direccion": "Echaurren 301 Departamento 43-D (Hermana Ingrid Olivares)",
+     "territorio": "",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Echaurren 301 Departamento 43-D, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo general",
+     "direccion": "Las Fucsias 2119",
+     "territorio": "55",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      46
+      55
      ],
-     "mapsq": "Rondizzoni / Pizarro, Santiago, Chile",
-     "coord": [
-      -33.47059,
-      -70.67034
-     ]
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
     }
    ]
   },
   {
-   "dia": 23,
+   "dia": 21,
    "nombre": "MIERCOLES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Luis Flores",
      "grupo": "Grupo general",
-     "direccion": "Ramón Subercaseaux / Conferencia",
-     "territorio": "42",
+     "direccion": "Avenida España / Grajales",
+     "territorio": "12",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      42
+      12
      ],
-     "mapsq": "Ramón Subercaseaux / Conferencia, Santiago, Chile",
+     "mapsq": "Avenida España / Grajales, Santiago, Chile",
      "coord": [
-      -33.47063,
-      -70.67426
+      -33.45267,
+      -70.66955
      ]
     },
     {
@@ -1026,111 +942,96 @@
    ]
   },
   {
-   "dia": 24,
+   "dia": 22,
    "nombre": "JUEVES",
    "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Francisco Carrasco",
+     "capitan": "Jorge Morales",
      "grupo": "Grupo general",
-     "direccion": "",
-     "territorio": "52",
+     "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
+     "territorio": "11",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      52
+      11
      ],
-     "mapsq": "",
+     "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
      "coord": null
     },
     {
-     "hora": "17:00-19:00",
-     "capitan": "Sin capitán",
+     "hora": "19:00",
+     "capitan": "Raúl Varas",
      "grupo": "Grupo general",
-     "direccion": "Avenida España / Grajales",
-     "territorio": "9",
+     "direccion": "Avenida España / Toesca",
+     "territorio": "17",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      9
+      17
      ],
-     "mapsq": "Avenida España / Grajales, Santiago, Chile",
+     "mapsq": "Avenida España / Toesca, Santiago, Chile",
      "coord": [
-      -33.45267,
-      -70.66955
+      -33.45489,
+      -70.66904
      ]
-    },
-    {
-     "hora": "19:00-21:00",
-     "capitan": "Sin capitán",
-     "grupo": "Cartas y telefónicas",
-     "direccion": "Domeiko 2477 Depto 851 (Familia Vilches)",
-     "territorio": "",
-     "tipo": "cartas",
-     "calles": false,
-     "terr": [],
-     "mapsq": "Domeiko 2477 Depto 851, Santiago, Chile",
-     "coord": null
     }
    ]
   },
   {
-   "dia": 25,
+   "dia": 23,
    "nombre": "VIERNES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "capitan": "José Tuarez",
      "grupo": "Grupo general",
-     "direccion": "Salvador Sanfuentes / Meiggs",
-     "territorio": "2",
+     "direccion": "Antofagasta / San Alfonso",
+     "territorio": "36",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      2
+      36
      ],
-     "mapsq": "Salvador Sanfuentes / Meiggs, Santiago, Chile",
+     "mapsq": "Antofagasta / San Alfonso, Santiago, Chile",
      "coord": [
-      -33.45216,
-      -70.67691
+      -33.46646,
+      -70.67304
      ]
     },
     {
-     "hora": "18:00-20:00",
+     "hora": "19:00",
      "capitan": "Keudis Andrade",
      "grupo": "Grupo general",
-     "direccion": "Grajales / Latorre",
-     "territorio": "13",
+     "direccion": "Gaspar de la Barrera 3089 (Familia Andrade)",
+     "territorio": "41",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      13
+      41
      ],
-     "mapsq": "Grajales / Latorre, Santiago, Chile",
-     "coord": [
-      -33.45158,
-      -70.6647
-     ]
+     "mapsq": "Gaspar de la Barrera 3089, Santiago, Chile",
+     "coord": null
     }
    ]
   },
   {
-   "dia": 26,
+   "dia": 24,
    "nombre": "SABADO",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "Raúl Palacios",
      "grupo": "Grupo 1",
      "direccion": "",
-     "territorio": "18",
+     "territorio": "4",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      18
+      4
      ],
      "mapsq": "",
      "coord": null
@@ -1140,11 +1041,11 @@
      "capitan": "Jorge Morales",
      "grupo": "Grupo 2",
      "direccion": "",
-     "territorio": "17",
+     "territorio": "51",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      17
+      51
      ],
      "mapsq": "",
      "coord": null
@@ -1154,11 +1055,11 @@
      "capitan": "Guillermo Naveas",
      "grupo": "Grupo 3",
      "direccion": "",
-     "territorio": "16",
+     "territorio": "5",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      16
+      5
      ],
      "mapsq": "",
      "coord": null
@@ -1168,11 +1069,11 @@
      "capitan": "Raúl Varas",
      "grupo": "Grupo 4",
      "direccion": "",
-     "territorio": "28",
+     "territorio": "25",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      28
+      25
      ],
      "mapsq": "",
      "coord": null
@@ -1194,9 +1095,9 @@
    ]
   },
   {
-   "dia": 27,
+   "dia": 25,
    "nombre": "DOMINGO",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
@@ -1213,7 +1114,7 @@
     },
     {
      "hora": "12:00",
-     "capitan": "Sin capitán",
+     "capitan": "Luis Paredes",
      "grupo": "Grupo general",
      "direccion": "Salón Salvador San Fuentes 2493",
      "territorio": "CALLES",
@@ -1229,25 +1130,26 @@
    ]
   },
   {
-   "dia": 28,
+   "dia": 26,
    "nombre": "LUNES",
    "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "capitan": "Eduardo Muñoz",
      "grupo": "Grupo general",
-     "direccion": "Toesca / Unión Latinoamericana",
-     "territorio": "15",
+     "direccion": "Pizarro / Rondizzoni",
+     "territorio": "46,47",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      15
+      46,
+      47
      ],
-     "mapsq": "Toesca / Unión Latinoamericana, Santiago, Chile",
+     "mapsq": "Pizarro / Rondizzoni, Santiago, Chile",
      "coord": [
-      -33.45566,
-      -70.67287
+      -33.47059,
+      -70.67034
      ]
     },
     {
@@ -1277,66 +1179,72 @@
    ]
   },
   {
-   "dia": 29,
+   "dia": 27,
    "nombre": "MARTES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
-     "capitan": "Jorge Morales",
+     "capitan": "Francisco Carrasco",
      "grupo": "Grupo general",
-     "direccion": "Toesca / Unión Latinoamericana",
-     "territorio": "19",
+     "direccion": "José Miguel Carrera 359 Dpto. 112 (Familia Carrasco)",
+     "territorio": "18",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      19
+      18
      ],
-     "mapsq": "Toesca / Unión Latinoamericana, Santiago, Chile",
-     "coord": [
-      -33.45566,
-      -70.67287
-     ]
+     "mapsq": "José Miguel Carrera 359 Dpto. 112, Santiago, Chile",
+     "coord": null
     },
     {
-     "hora": "17:00-19:00",
-     "capitan": "Juan Eduardo Espinoza",
+     "hora": "17:00",
+     "capitan": "Sin capitán",
      "grupo": "Grupo general",
-     "direccion": "Latorre / Domeyko",
-     "territorio": "25",
+     "direccion": "Echaurren 301 Departamento 43-D (Hermana Ingrid Olivares)",
+     "territorio": "",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Echaurren 301 Departamento 43-D, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
+     "territorio": "53",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      25
+      53
      ],
-     "mapsq": "Latorre / Domeyko, Santiago, Chile",
-     "coord": [
-      -33.45625,
-      -70.66411
-     ]
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
     }
    ]
   },
   {
-   "dia": 30,
+   "dia": 28,
    "nombre": "MIERCOLES",
-   "nota": "Campaña especial",
+   "nota": "",
    "actividades": [
     {
      "hora": "10:00",
      "capitan": "José Tuarez",
      "grupo": "Grupo general",
-     "direccion": "José Miguel Carrera / Domeyko",
-     "territorio": "26",
+     "direccion": "Grajales / Latorre",
+     "territorio": "13",
      "tipo": "predicacion",
      "calles": false,
      "terr": [
-      26
+      13
      ],
-     "mapsq": "José Miguel Carrera / Domeyko, Santiago, Chile",
+     "mapsq": "Grajales / Latorre, Santiago, Chile",
      "coord": [
-      -33.45596,
-      -70.66264
+      -33.45158,
+      -70.6647
      ]
     },
     {
@@ -1349,6 +1257,159 @@
      "nombre": "Reunión de vida y ministerio",
      "calles": false,
      "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 29,
+   "nombre": "JUEVES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
+     "territorio": "7",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      7
+     ],
+     "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo general",
+     "direccion": "Avenida España / Toesca",
+     "territorio": "16",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      16
+     ],
+     "mapsq": "Avenida España / Toesca, Santiago, Chile",
+     "coord": [
+      -33.45489,
+      -70.66904
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 30,
+   "nombre": "VIERNES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "Antofagasta / Bascuñán Guerrero",
+     "territorio": "37",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      37
+     ],
+     "mapsq": "Antofagasta / Bascuñán Guerrero, Santiago, Chile",
+     "coord": [
+      -33.46643,
+      -70.67174
+     ]
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo general",
+     "direccion": "Gaspar de la Barrera 3089 (Familia Andrade)",
+     "territorio": "54",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      54
+     ],
+     "mapsq": "Gaspar de la Barrera 3089, Santiago, Chile",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 31,
+   "nombre": "SABADO",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
+     "direccion": "",
+     "territorio": "33",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      33
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
+     "direccion": "",
+     "territorio": "51",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      51
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
+     "direccion": "",
+     "territorio": "23",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      23
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
+     "direccion": "",
+     "territorio": "50",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      50
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
+     "direccion": "",
+     "territorio": "52",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      52
+     ],
      "mapsq": "",
      "coord": null
     }
