@@ -1,0 +1,1358 @@
+{
+ "mes": 9,
+ "anio": 2026,
+ "titulo": "Programa Predicación Alameda",
+ "lema": "“Felices los que reconocen sus necesidades espirituales” (Mt 5:3)",
+ "dias": [
+  {
+   "dia": 1,
+   "nombre": "MARTES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "Pizarro / Rondizzoni",
+     "territorio": "47",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      47
+     ],
+     "mapsq": "Pizarro / Rondizzoni, Santiago, Chile",
+     "coord": [
+      -33.47059,
+      -70.67034
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Vergara / Sazié",
+     "territorio": "10",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      10
+     ],
+     "mapsq": "Vergara / Sazié, Santiago, Chile",
+     "coord": [
+      -33.44975,
+      -70.66207
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 2,
+   "nombre": "MIERCOLES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "Ramón Subercaseaux / Longaví",
+     "territorio": "45",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      45
+     ],
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
+     "coord": [
+      -33.47062,
+      -70.67251
+     ]
+    },
+    {
+     "hora": "19:30",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de vida y ministerio",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 3,
+   "nombre": "JUEVES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
+     "direccion": "Ramón Subercaseaux / Longaví",
+     "territorio": "43",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      43
+     ],
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
+     "coord": [
+      -33.47062,
+      -70.67251
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "",
+     "territorio": "14",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      14
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Kevin Carrero",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 4,
+   "nombre": "VIERNES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Gaspar de la Barrera / Sta Margarita",
+     "territorio": "39",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      39
+     ],
+     "mapsq": "Gaspar de la Barrera / Sta Margarita, Santiago, Chile",
+     "coord": [
+      -33.46719,
+      -70.67686
+     ]
+    },
+    {
+     "hora": "18:00-20:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Avenida España / Gay",
+     "territorio": "20",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      20
+     ],
+     "mapsq": "Avenida España / Gay, Santiago, Chile",
+     "coord": [
+      -33.456,
+      -70.66878
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 5,
+   "nombre": "SABADO",
+   "nota": "Día del precursor",
+   "actividades": [
+    {
+     "hora": "08:00",
+     "capitan": "Cristian Rozas",
+     "grupo": "Grupo general",
+     "direccion": "Luis Cousiño Av. Rondizzoni",
+     "territorio": "CALLES",
+     "tipo": "predicacion",
+     "calles": true,
+     "terr": [],
+     "mapsq": "Luis Cousiño Av. Rondizzoni, Santiago, Chile",
+     "coord": [
+      -33.47024,
+      -70.65967
+     ]
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Mervin Martínez",
+     "grupo": "Grupo general",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
+     "territorio": "57,56,55",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      57,
+      56,
+      55
+     ],
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "14:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Pizarro / Rondizzoni",
+     "territorio": "54",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      54
+     ],
+     "mapsq": "Pizarro / Rondizzoni, Santiago, Chile",
+     "coord": [
+      -33.47059,
+      -70.67034
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 6,
+   "nombre": "DOMINGO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de fin de semana",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "12:00",
+     "capitan": "Mervin Martínez",
+     "grupo": "Grupo general",
+     "direccion": "Salón Salvador San Fuentes 2493",
+     "territorio": "4",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      4
+     ],
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
+     "coord": [
+      -33.45174,
+      -70.67521
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 7,
+   "nombre": "LUNES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Antofagasta / San Alfonso",
+     "territorio": "36",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      36
+     ],
+     "mapsq": "Antofagasta / San Alfonso, Santiago, Chile",
+     "coord": [
+      -33.46646,
+      -70.67304
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Cristian Rozas",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 8,
+   "nombre": "MARTES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
+     "direccion": "Unión Latinoamericana / Sazié",
+     "territorio": "7",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      7
+     ],
+     "mapsq": "Unión Latinoamericana / Sazié, Santiago, Chile",
+     "coord": [
+      -33.45247,
+      -70.67362
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Plaza Manuel Rodríguez",
+     "territorio": "5",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      5
+     ],
+     "mapsq": "Plaza Manuel Rodríguez, Santiago, Chile",
+     "coord": [
+      -33.45139,
+      -70.66518
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 9,
+   "nombre": "MIERCOLES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Luis Flores",
+     "grupo": "Grupo general",
+     "direccion": "San Vicente / Antofagasta",
+     "territorio": "34",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      34
+     ],
+     "mapsq": "San Vicente / Antofagasta, Santiago, Chile",
+     "coord": [
+      -33.46654,
+      -70.67561
+     ]
+    },
+    {
+     "hora": "19:30",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de vida y ministerio",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 10,
+   "nombre": "JUEVES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Blanco / Unión Latinoamericana",
+     "territorio": "32",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      32
+     ],
+     "mapsq": "Blanco / Unión Latinoamericana, Santiago, Chile",
+     "coord": [
+      -33.45847,
+      -70.67219
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "",
+     "territorio": "6",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      6
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Blanco Encalada 2527 Depto 408A (Familia Morales)",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Blanco Encalada 2527 Depto 408A, Santiago, Chile",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 11,
+   "nombre": "VIERNES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Blanco / Conferencia",
+     "territorio": "30",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      30
+     ],
+     "mapsq": "Blanco / Conferencia, Santiago, Chile",
+     "coord": [
+      -33.45862,
+      -70.67615
+     ]
+    },
+    {
+     "hora": "18:00-20:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "",
+     "territorio": "ZOOM",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 12,
+   "nombre": "SABADO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
+     "direccion": "",
+     "territorio": "3",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      3
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
+     "direccion": "",
+     "territorio": "11",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      11
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
+     "direccion": "",
+     "territorio": "8",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      8
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
+     "direccion": "",
+     "territorio": "49",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      49
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
+     "direccion": "",
+     "territorio": "50",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      50
+     ],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 13,
+   "nombre": "DOMINGO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de fin de semana",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "12:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Salón Salvador San Fuentes 2493",
+     "territorio": "CALLES",
+     "tipo": "predicacion",
+     "calles": true,
+     "terr": [],
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
+     "coord": [
+      -33.45174,
+      -70.67521
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 14,
+   "nombre": "LUNES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Latorre / Domeyko",
+     "territorio": "27",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      27
+     ],
+     "mapsq": "Latorre / Domeyko, Santiago, Chile",
+     "coord": [
+      -33.45625,
+      -70.66411
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 15,
+   "nombre": "MARTES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
+     "direccion": "Almirante Latorre / Gay",
+     "territorio": "21",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      21
+     ],
+     "mapsq": "Almirante Latorre / Gay, Santiago, Chile",
+     "coord": [
+      -33.4551,
+      -70.66423
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Almirante Latorre / Gay",
+     "territorio": "22",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      22
+     ],
+     "mapsq": "Almirante Latorre / Gay, Santiago, Chile",
+     "coord": [
+      -33.4551,
+      -70.66423
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 16,
+   "nombre": "MIERCOLES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "Rondizzoni / Club Hípico",
+     "territorio": "53",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      53
+     ],
+     "mapsq": "Rondizzoni / Club Hípico, Santiago, Chile",
+     "coord": [
+      -33.47051,
+      -70.66492
+     ]
+    },
+    {
+     "hora": "19:30",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de vida y ministerio",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 17,
+   "nombre": "JUEVES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Antofagasta / Bascuñán Guerrero",
+     "territorio": "37",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      37
+     ],
+     "mapsq": "Antofagasta / Bascuñán Guerrero, Santiago, Chile",
+     "coord": [
+      -33.46643,
+      -70.67174
+     ]
+    },
+    {
+     "hora": "18:00",
+     "capitan": "Por confirmar",
+     "grupo": "Grupo general",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "18:00",
+     "capitan": "Cristian Rozas",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Av. España 613 Dpto. 724 (Familia Rozas)",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Av. España 613 Dpto. 724, Santiago, Chile",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 18,
+   "nombre": "VIERNES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "11:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Avenida España / Grajales",
+     "territorio": "12",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      12
+     ],
+     "mapsq": "Avenida España / Grajales, Santiago, Chile",
+     "coord": [
+      -33.45267,
+      -70.66955
+     ]
+    },
+    {
+     "hora": "18:00-20:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "",
+     "territorio": "ZOOM",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 19,
+   "nombre": "SABADO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "11:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
+     "direccion": "",
+     "territorio": "35",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      35
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "11:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
+     "direccion": "",
+     "territorio": "33",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      33
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "11:00",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
+     "direccion": "",
+     "territorio": "40",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      40
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "11:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
+     "direccion": "",
+     "territorio": "41",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      41
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "11:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
+     "direccion": "",
+     "territorio": "38",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      38
+     ],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 20,
+   "nombre": "DOMINGO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de fin de semana",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "12:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Salón Salvador San Fuentes 2493",
+     "territorio": "CALLES",
+     "tipo": "predicacion",
+     "calles": true,
+     "terr": [],
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
+     "coord": [
+      -33.45174,
+      -70.67521
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 21,
+   "nombre": "LUNES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Rondizzoni / Pizarro",
+     "territorio": "58",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      58
+     ],
+     "mapsq": "Rondizzoni / Pizarro, Santiago, Chile",
+     "coord": [
+      -33.47059,
+      -70.67034
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Cristian Rozas",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 22,
+   "nombre": "MARTES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
+     "direccion": "Ramón Subercaseaux / Longaví",
+     "territorio": "44",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      44
+     ],
+     "mapsq": "Ramón Subercaseaux / Longaví, Santiago, Chile",
+     "coord": [
+      -33.47062,
+      -70.67251
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Rondizzoni / Pizarro",
+     "territorio": "46",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      46
+     ],
+     "mapsq": "Rondizzoni / Pizarro, Santiago, Chile",
+     "coord": [
+      -33.47059,
+      -70.67034
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 23,
+   "nombre": "MIERCOLES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Luis Flores",
+     "grupo": "Grupo general",
+     "direccion": "Ramón Subercaseaux / Conferencia",
+     "territorio": "42",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      42
+     ],
+     "mapsq": "Ramón Subercaseaux / Conferencia, Santiago, Chile",
+     "coord": [
+      -33.47063,
+      -70.67426
+     ]
+    },
+    {
+     "hora": "19:30",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de vida y ministerio",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 24,
+   "nombre": "JUEVES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Francisco Carrasco",
+     "grupo": "Grupo general",
+     "direccion": "",
+     "territorio": "52",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      52
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Avenida España / Grajales",
+     "territorio": "9",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      9
+     ],
+     "mapsq": "Avenida España / Grajales, Santiago, Chile",
+     "coord": [
+      -33.45267,
+      -70.66955
+     ]
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas y telefónicas",
+     "direccion": "Domeiko 2477 Depto 851 (Familia Vilches)",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Domeiko 2477 Depto 851, Santiago, Chile",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 25,
+   "nombre": "VIERNES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Salvador Sanfuentes / Meiggs",
+     "territorio": "2",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      2
+     ],
+     "mapsq": "Salvador Sanfuentes / Meiggs, Santiago, Chile",
+     "coord": [
+      -33.45216,
+      -70.67691
+     ]
+    },
+    {
+     "hora": "18:00-20:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo general",
+     "direccion": "Grajales / Latorre",
+     "territorio": "13",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      13
+     ],
+     "mapsq": "Grajales / Latorre, Santiago, Chile",
+     "coord": [
+      -33.45158,
+      -70.6647
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 26,
+   "nombre": "SABADO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Raúl Palacios",
+     "grupo": "Grupo 1",
+     "direccion": "",
+     "territorio": "18",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      18
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo 2",
+     "direccion": "",
+     "territorio": "17",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      17
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo 3",
+     "direccion": "",
+     "territorio": "16",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      16
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Raúl Varas",
+     "grupo": "Grupo 4",
+     "direccion": "",
+     "territorio": "28",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      28
+     ],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "10:00",
+     "capitan": "Keudis Andrade",
+     "grupo": "Grupo 5",
+     "direccion": "",
+     "territorio": "29",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      29
+     ],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 27,
+   "nombre": "DOMINGO",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de fin de semana",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "12:00",
+     "capitan": "Sin capitán",
+     "grupo": "Grupo general",
+     "direccion": "Salón Salvador San Fuentes 2493",
+     "territorio": "CALLES",
+     "tipo": "predicacion",
+     "calles": true,
+     "terr": [],
+     "mapsq": "Salón Salvador San Fuentes 2493, Santiago, Chile",
+     "coord": [
+      -33.45174,
+      -70.67521
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 28,
+   "nombre": "LUNES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Toesca / Unión Latinoamericana",
+     "territorio": "15",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      15
+     ],
+     "mapsq": "Toesca / Unión Latinoamericana, Santiago, Chile",
+     "coord": [
+      -33.45566,
+      -70.67287
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    },
+    {
+     "hora": "19:00-21:00",
+     "capitan": "Cristian Rozas",
+     "grupo": "Cartas por Zoom",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 29,
+   "nombre": "MARTES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Toesca / Unión Latinoamericana",
+     "territorio": "19",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      19
+     ],
+     "mapsq": "Toesca / Unión Latinoamericana, Santiago, Chile",
+     "coord": [
+      -33.45566,
+      -70.67287
+     ]
+    },
+    {
+     "hora": "17:00-19:00",
+     "capitan": "Juan Eduardo Espinoza",
+     "grupo": "Grupo general",
+     "direccion": "Latorre / Domeyko",
+     "territorio": "25",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      25
+     ],
+     "mapsq": "Latorre / Domeyko, Santiago, Chile",
+     "coord": [
+      -33.45625,
+      -70.66411
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 30,
+   "nombre": "MIERCOLES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "José Miguel Carrera / Domeyko",
+     "territorio": "26",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      26
+     ],
+     "mapsq": "José Miguel Carrera / Domeyko, Santiago, Chile",
+     "coord": [
+      -33.45596,
+      -70.66264
+     ]
+    },
+    {
+     "hora": "19:30",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Reunión de vida y ministerio",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  }
+ ]
+}

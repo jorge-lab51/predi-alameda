@@ -1,0 +1,181 @@
+{
+ "mes": 12,
+ "anio": 2026,
+ "titulo": "Programa Predicación Alameda",
+ "lema": "“Felices los que reconocen sus necesidades espirituales” (Mt 5:3)",
+ "dias": [
+  {
+   "dia": 1,
+   "nombre": "MARTES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "José Tuarez",
+     "grupo": "Grupo general",
+     "direccion": "Blanco Cuartín 1619 (Familia Pacheco)",
+     "territorio": "44",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      44
+     ],
+     "mapsq": "Blanco Cuartín 1619, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "17:00",
+     "capitan": "Sin capitán",
+     "grupo": "Cartas",
+     "direccion": "Las Fucsias 2119 (Familia Carrero)",
+     "territorio": "",
+     "tipo": "cartas",
+     "calles": false,
+     "terr": [],
+     "mapsq": "Las Fucsias 2119, Santiago, Chile",
+     "coord": null
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Junior Pacheco",
+     "grupo": "Grupo general",
+     "direccion": "Blanco Cuartín 1619 (Familia Pacheco)",
+     "territorio": "45",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      45
+     ],
+     "mapsq": "Blanco Cuartín 1619, Santiago, Chile",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 2,
+   "nombre": "MIERCOLES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Luis Flores",
+     "grupo": "Grupo general",
+     "direccion": "Puerta de Vera / Fray Luis de la Peña",
+     "territorio": "29",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      29
+     ],
+     "mapsq": "Puerta de Vera / Fray Luis de la Peña, Santiago, Chile",
+     "coord": [
+      -33.46324,
+      -70.67634
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 3,
+   "nombre": "JUEVES",
+   "nota": "Campaña especial",
+   "actividades": [
+    {
+     "hora": "10:00",
+     "capitan": "Jorge Morales",
+     "grupo": "Grupo general",
+     "direccion": "Rondizzoni / Pizarro",
+     "territorio": "46 Y 47",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      46,
+      47
+     ],
+     "mapsq": "Rondizzoni / Pizarro, Santiago, Chile",
+     "coord": [
+      -33.47059,
+      -70.67034
+     ]
+    },
+    {
+     "hora": "19:00",
+     "capitan": "Guillermo Naveas",
+     "grupo": "Grupo general",
+     "direccion": "Bascuñán Guerrero / Siria",
+     "territorio": "57",
+     "tipo": "predicacion",
+     "calles": false,
+     "terr": [
+      57
+     ],
+     "mapsq": "Bascuñán Guerrero / Siria, Santiago, Chile",
+     "coord": [
+      -33.47315,
+      -70.67165
+     ]
+    }
+   ]
+  },
+  {
+   "dia": 4,
+   "nombre": "VIERNES",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Asamblea regional",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 5,
+   "nombre": "SABADO",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Asamblea regional",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  },
+  {
+   "dia": 6,
+   "nombre": "DOMINGO",
+   "nota": "",
+   "actividades": [
+    {
+     "hora": "",
+     "capitan": "",
+     "grupo": "",
+     "direccion": "",
+     "territorio": "",
+     "tipo": "reunion",
+     "nombre": "Asamblea regional",
+     "calles": false,
+     "terr": [],
+     "mapsq": "",
+     "coord": null
+    }
+   ]
+  }
+ ]
+}

@@ -206,17 +206,50 @@ prueba('tira de días', async p => {
   const { ev } = p;
   const entero = () => ev(`(()=>{const c=$('#week'),s=c.querySelector('.wd.sel');
     return !!s && s.offsetLeft>=c.scrollLeft-1 && s.offsetLeft+s.offsetWidth<=c.scrollLeft+c.clientWidth+1;})()`);
-  const dias = await ev('PROG.dias.map(d=>d.dia)');
+  const dias = await ev('PROG.dias.map(d=>d.clave)');
   for (const d of [dias[0], dias[Math.floor(dias.length / 2)], dias[dias.length - 1]]) {
-    await ev(`diaSel=${d}; render('semana')`); await dormir(900);
+    await ev(`diaSel='${d}'; render('semana')`); await dormir(900);
     ok(await entero(), `el día ${d} queda entero a la vista`);
   }
+  await ev(`diaSel='${dias[1]}'; render(); 1`); await dormir(700);
   const antes = await ev('diaSel');
   await ev("$('#prev').click()"); await dormir(800);
   await ev("$('#next').click()"); await dormir(800);
   ok(await ev('diaSel') === antes, 'las flechas van y vuelven');
   await ev("$('#btnHoy').click()"); await dormir(900);
   ok(await ev("!!document.querySelector('#week .wd.sel')"), 'Hoy deja un día marcado');
+});
+
+prueba('meses', async p => {
+  const { ev } = p;
+  // ningún mes se borra: la app junta todos los de programas/ en una sola línea de días
+  const idx = JSON.parse(fs.readFileSync(path.join(RAIZ, 'programas/indice.json'), 'utf8'));
+  ok(await ev('PROG.meses.length') === idx.length, `junta los ${idx.length} meses guardados (${idx.join(', ')})`);
+  ok(await ev('PROG.dias.every((d, i, a) => !i || a[i - 1].clave < d.clave)'), 'en una sola línea de días, por fecha y sin repetir');
+  ok(await ev("document.querySelectorAll('#week .wmes').length") === idx.length - 1, 'la tira lleva una marca con el nombre de cada mes que empieza');
+  const borde = await ev(`(() => { const d = PROG.dias; for (let i = d.length - 1; i > 0; i--) if (d[i].mes !== d[i - 1].mes) return [d[i - 1].clave, d[i].clave]; return null; })()`);
+  if (borde) {
+    await ev(`diaSel='${borde[0]}'; render(); 1`); await dormir(700);
+    await ev("$('#next').click(); 1"); await dormir(700);
+    ok(await ev('diaSel') === borde[1], `la flecha pasa del ${borde[0]} al ${borde[1]}, de un mes al otro`);
+    const mes = await ev("$('#mestitulo').textContent"), esperado = await ev(`MESES[${Number(borde[1].slice(5, 7)) - 1}]`);
+    ok(mes.startsWith(esperado), `el header dice el mes del día que se mira («${mes}»)`);
+    const f = await ev(`(() => { const mes = diaSel.slice(0, 7);
+      const n = TERR.features.map(x => x.properties.n).find(n => { const ds = diasDeTerritorio(n); return ds.some(c => c.startsWith(mes)) && ds.some(c => !c.startsWith(mes)); });
+      if (!n) return null;
+      return { n, esperado: diasDeTerritorio(n).filter(c => c.startsWith(mes)).map(c => Number(c.slice(8))).join(', '), texto: textoDias(n).replace(/<\\/?b>/g, '') }; })()`);
+    if (f) ok(f.texto.endsWith(f.esperado), `«Este mes» en la ficha cuenta solo el mes del día que se mira (T${f.n}: ${f.texto})`);
+  }
+  // un día de asamblea: una reunión sin hora, que dura todo el día
+  const asamblea = await ev("(PROG.dias.find(d => d.actividades.some(a => a.tipo === 'reunion' && !a.hora)) || {}).clave || null");
+  if (asamblea) {
+    await ev(`diaSel='${asamblea}'; render(); 1`); await dormir(700);
+    ok(/Asamblea/.test(await ev("$('#lista').textContent")), `el ${asamblea}, un día de asamblea sin hora, se pinta con su nombre`);
+  }
+  await ev("$('#btnHoy').click(); 1"); await dormir(900);
+  const hoy = await ev('claveHoy()');
+  ok(await ev('diaSel') === (await ev('(PROG.dias.find(d => d.clave >= claveHoy()) || PROG.dias[PROG.dias.length - 1]).clave')),
+    `Hoy va al ${hoy} o al día más cercano que viene del programa`);
 });
 
 prueba('barra de iconos y vistas', async p => {

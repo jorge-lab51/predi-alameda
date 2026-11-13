@@ -11,7 +11,22 @@ inicio, y funciona sin conexión.
 
 ## Lo único que cambia cada mes
 
-`programa.json`. Los territorios solo se rehacen si la congregación corrige algo.
+`programa.json` y la carpeta `programas/`. Los territorios solo se rehacen si la
+congregación corrige algo.
+
+**Desde noviembre de 2026 el programa se genera en el hub** (`~/garage/servicio`,
+`apps/territorios`, con la skill `programa-del-mes`) y se copia aquí tal cual:
+`programa.json` (el último mes publicado) y `programas/` completa (`indice.json` con la
+lista de meses y un `AAAA-MM.json` por mes). Lo de abajo sobre `parse_programa.py` y
+`enriquecer_programa.py` queda como estaba, pero las listas al día (`CALLES_OSM`,
+`TILDES`…) están allá. Esta app ya no es la única: la sigue usando una persona.
+
+**Ningún mes se borra** (como en el hub desde la 1.18.0): `app.js` junta todos los meses
+de `programas/` en una sola línea de días (`armarPrograma`). Cada día se nombra por su
+fecha completa, `diaSel = 'AAAA-MM-DD'`, porque con varios meses el número se repite. La
+tira lleva el nombre del mes antes de cada 1, las flechas y «Hoy» pasan de un mes al
+otro, el header dice el mes del día que se mira y «Este mes» en la ficha es ese mismo
+mes. Una asamblea viene como reunión sin hora (dura todo el día).
 
 ---
 
@@ -370,8 +385,8 @@ Dos detalles que ya están resueltos y conviene no deshacer:
   **caché HTTP del navegador** devuelve la copia vieja aunque el caché del service
   worker se haya renovado — el síntoma es una app que dice estar actualizada pero
   muestra el mes anterior.
-- `programa.json` va con estrategia **red primero** (con el caché de respaldo), para
-  que el programa del mes se actualice sin depender de la versión del caché.
+- `programa.json` y todo `programas/` van con estrategia **red primero** (con el caché
+  de respaldo), para que el programa se actualice sin depender de la versión del caché.
 - `app.js` escucha `controllerchange` y recarga una vez cuando se activa una versión
   nueva, para que el cambio se vea en la primera apertura y no en la segunda.
 

@@ -35,8 +35,14 @@ direcciones particulares.
 
 ## Actualizar el programa cada mes
 
-El único archivo que cambia es `programa.json`. Se genera a partir del PDF del mes en
-dos pasos (hace falta Python con `pymupdf`: `pip install pymupdf`):
+Desde noviembre de 2026 el programa se genera en la app del hub (repositorio
+`servicio`, carpeta `apps/territorios`) y se copia aquí: `programa.json` y la carpeta
+`programas/` completa, con un archivo por mes (`programas/AAAA-MM.json`) y la lista de
+meses (`programas/indice.json`). **Ningún mes se borra**: la app junta todos los meses en
+una sola tira de días, así que un programa que cruza de un mes al otro se ve entero.
+
+Lo que sigue es cómo se generaba aquí antes, a partir del PDF del mes y en dos pasos
+(hace falta Python con `pymupdf`: `pip install pymupdf`):
 
 ```bash
 python parse_programa.py programa_del_mes.pdf base.json   # PDF -> datos
@@ -60,9 +66,8 @@ Ese paso también repone las tildes que el PDF no trae (Unión, Sazié, Ramón, 
 Si aparece una palabra nueva sin tilde, se agrega al diccionario `TILDES` del mismo
 archivo.
 
-Para publicar: reemplaza `programa.json` en el repositorio → ícono del lápiz → pega el
-contenido nuevo → **Commit changes**. La app se actualiza sola en unos minutos, incluso
-en los celulares que ya la tienen instalada.
+Para publicar se suben `programa.json` y `programas/`. La app se actualiza sola en
+unos minutos, incluso en los celulares que ya la tienen instalada.
 
 ## Si cambian los territorios
 
@@ -109,8 +114,9 @@ cuadra** y el fondo de **CARTO**; si el celular está en modo oscuro, usa la ver
 oscura de ese mismo mapa. Eso es siempre así al abrir, salvo el fondo, que respeta el
 último que se haya elegido a mano.
 
-- Arriba solo va el nombre de la app y el mes. Los días están **al pie del listado**,
-  donde cae el pulgar: la tira con **el mes completo**, que se desliza, entre las
+- Arriba solo va el nombre de la app y el mes del día que se mira. Los días están **al
+  pie del listado**, donde cae el pulgar: la tira con **todos los meses del programa
+  seguidos** (antes del 1 de cada mes va su nombre), que se desliza, entre las
   **flechas ‹ ›** y el botón **Hoy**. El día elegido es el que se ve marcado en la
   tira con un disco negro, y hoy lleva un aro; **Hoy** vuelve al día actual y deja a la
   vista la semana en la que cae.

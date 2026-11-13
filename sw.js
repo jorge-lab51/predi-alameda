@@ -1,7 +1,7 @@
-const CACHE = 'alameda-v26';
+const CACHE = 'alameda-v27';
 const ASSETS = [
   './', 'index.html', 'app.js', 'leaflet.js', 'leaflet.css',
-  'programa.json', 'territorios.geojson', 'envolventes.geojson', 'calles.geojson',
+  'programa.json', 'programas/indice.json', 'territorios.geojson', 'envolventes.geojson', 'calles.geojson',
   'plano.webp', 'plano_bounds.json',
   'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
   'fonts/SpaceGrotesk.woff2'
@@ -34,8 +34,8 @@ self.addEventListener('fetch', e => {
     );
     return;
   }
-  // el programa del mes: red primero, para que se actualice solo
-  if (url.origin === location.origin && url.pathname.endsWith('programa.json')) {
+  // el programa y los meses guardados (programas/): red primero, para que se actualicen solos
+  if (url.origin === location.origin && (url.pathname.endsWith('programa.json') || url.pathname.includes('/programas/'))) {
     e.respondWith(
       fetch(new Request(e.request.url, { cache: 'reload' })).then(r => {
         const copy = r.clone();

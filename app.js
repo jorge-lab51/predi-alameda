@@ -8,7 +8,7 @@ let PROG = null, TERR = null, ENV = null, CALLES = null, BOUNDS = null;
 let map, capaPlano, capaMapa, capaRotulos, capaTerr, capaDibujo, marcadorGps, marcadorPunto, circuloGps;
 let dibujo = false;   // la vista que imita el plano, sin fondo
 let dibujoOscuro = false;   // y si ese dibujo va sobre papel o sobre negro
-let diaSel = 1, actSel = null, terrSel = null;
+let diaSel = null, actSel = null, terrSel = null;   // diaSel: la clave AAAA-MM-DD del día que se mira
 let estadoLista = 'abierto';   // 'abierto' | 'oculto'
 // cómo se marca el territorio: 'borde' lo envuelve entero, 'manzanas' pinta
 // cada cuadra por separado
@@ -70,7 +70,7 @@ let mapaBase = 'osm';
 function trabajados() {
   try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
 }
-function claveMes() { return PROG ? PROG.anio + '-' + PROG.mes : 'x'; }
+function claveMes() { const d = PROG && diaDe(diaSel); return d ? d.anio + '-' + d.mes : 'x'; }
 function estaTrabajado(t) { const d = trabajados()[claveMes()] || []; return d.includes(t); }
 function alternarTrabajado(t) {
   const all = trabajados(); const k = claveMes();
@@ -83,23 +83,59 @@ function alternarTrabajado(t) {
 
 /* ---------- carga ---------- */
 async function cargar() {
-  const [p, t, e, c, b] = await Promise.all([
+  const [p, t, e, c, b, guardados] = await Promise.all([
     fetch('programa.json').then(r => r.json()),
     fetch('territorios.geojson').then(r => r.json()),
     fetch('envolventes.geojson').then(r => r.json()).catch(() => null),
     fetch('calles.geojson').then(r => r.json()).catch(() => null),
-    fetch('plano_bounds.json').then(r => r.json())
+    fetch('plano_bounds.json').then(r => r.json()),
+    cargarMeses()
   ]);
-  PROG = p; TERR = t; ENV = e; CALLES = c; BOUNDS = b;
+  // programa.json es el último mes publicado: va al final para mandar sobre su copia
+  PROG = armarPrograma([...guardados, p]);
+  TERR = t; ENV = e; CALLES = c; BOUNDS = b;
   // la app abre siempre en Manzanas: lo que se elija a mano vale mientras dure
   // la sesión, pero no se guarda
   modoTerr = 'manzanas';
-  $('#mestitulo').textContent = MESES[PROG.mes - 1] + ' ' + PROG.anio;   // en el header
   iniciarMapa();
-  const hoy = new Date();
-  diaSel = (hoy.getFullYear() === PROG.anio && hoy.getMonth() + 1 === PROG.mes)
-    ? hoy.getDate() : 1;
+  diaSel = diaInicial();
   render('semana');
+}
+
+/* ---------- los meses del programa ----------
+   programas/indice.json lista los meses guardados (AAAA-MM) y programas/AAAA-MM.json es
+   cada programa tal cual se publicó. Ningún mes se borra: la app los junta en una sola
+   línea de días, y la tira, las flechas y «Hoy» pasan de un mes al otro sin cortes. Así
+   un programa que cruza de un mes al otro (la campaña del 13 de noviembre al 3 de
+   diciembre de 2026) se ve entero. Sin red, lo que el service worker guardó; si no hay
+   nada, queda programa.json. */
+async function cargarMeses() {
+  try {
+    const idx = await (await fetch('programas/indice.json', { cache: 'no-cache' })).json();
+    return (await Promise.all(idx.map(k => fetch(`programas/${k}.json`, { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : null).catch(() => null)))).filter(Boolean);
+  } catch (e) { return []; }
+}
+const dos = n => String(n).padStart(2, '0');
+const claveDe = (anio, mes, dia) => `${anio}-${dos(mes)}-${dos(dia)}`;
+const claveHoy = () => { const h = new Date(); return claveDe(h.getFullYear(), h.getMonth() + 1, h.getDate()); };
+/* Cada día lleva su fecha completa en `clave` (AAAA-MM-DD), que es como se lo nombra en
+   toda la app: con varios meses, el número del día solo ya no alcanza. Si un mes viene
+   dos veces, manda el último que llega. */
+function armarPrograma(meses) {
+  const porMes = new Map();
+  for (const m of meses) if (m && Array.isArray(m.dias)) porMes.set(m.anio * 100 + m.mes, m);
+  const orden = [...porMes.keys()].sort((a, b) => a - b).map(k => porMes.get(k));
+  const dias = [];
+  for (const m of orden) for (const d of m.dias) dias.push(Object.assign({}, d, { anio: m.anio, mes: m.mes, clave: claveDe(m.anio, m.mes, d.dia) }));
+  dias.sort((a, b) => (a.clave < b.clave ? -1 : a.clave > b.clave ? 1 : 0));
+  return { meses: orden, dias };
+}
+/* hoy si el programa lo trae; si no, el primer día que viene, y si ya pasó todo, el último */
+function diaInicial() {
+  const hoy = claveHoy(), dias = PROG.dias;
+  if (!dias.length) return hoy;
+  return (dias.find(d => d.clave >= hoy) || dias[dias.length - 1]).clave;
 }
 
 /* ---------- tema de la interfaz ----------
@@ -605,14 +641,15 @@ function aviso(txt, ms) {
 }
 
 /* ---------- programa ---------- */
-const diaDe = n => PROG.dias.find(d => d.dia === n);
+/* los días se nombran por su clave AAAA-MM-DD (ver armarPrograma) */
+const diaDe = c => PROG.dias.find(d => d.clave === c);
 function territoriosDelDia() {
   const d = diaDe(diaSel); if (!d) return [];
   return [...new Set(d.actividades.flatMap(a => a.terr || []))];
 }
 function diasDeTerritorio(n) {
   return PROG.dias.filter(d => d.actividades.some(a => (a.terr || []).includes(n)))
-    .map(d => d.dia);
+    .map(d => d.clave);
 }
 /* "4 manzana(s) · A B C D · Plaza Manuel Rodríguez" */
 function textoManzanas(p) {
@@ -622,21 +659,23 @@ function textoManzanas(p) {
   return t;
 }
 
-/* en qué días del mes se predica este territorio, para la ficha del mapa */
+/* en qué días del mes se predica este territorio, para la ficha del mapa. «Este mes» es
+   el del día que se está mirando */
 function textoDias(n) {
-  const dias = diasDeTerritorio(n);
+  const mes = String(diaSel).slice(0, 7);
+  const dias = diasDeTerritorio(n).filter(c => c.startsWith(mes));
   if (!dias.length) return 'Sin asignación este mes';
-  const lista = dias.map(d => d === diaSel ? `<b>${d}</b>` : d).join(', ');
+  const lista = dias.map(c => c === diaSel ? `<b>${Number(c.slice(8))}</b>` : Number(c.slice(8))).join(', ');
   return (dias.length === 1 ? 'Este mes: día ' : 'Este mes: días ') + lista;
 }
 
-function fechaDe(n) { return new Date(PROG.anio, PROG.mes - 1, n); }
-function esHoy(n) {
-  const h = new Date();
-  return h.getDate() === n && h.getMonth() + 1 === PROG.mes && h.getFullYear() === PROG.anio;
-}
+function fechaDe(c) { const [y, m, d] = String(c).split('-').map(Number); return new Date(y, m - 1, d); }
+const esHoy = c => c === claveHoy();
 
 function render(enfoque) {
+  // en el header, el mes del día que se mira
+  const f = fechaDe(diaSel);
+  $('#mestitulo').textContent = MESES[f.getMonth()] + ' ' + f.getFullYear();
   pintarSemana(enfoque);
   pintarLista();
   pintarTerritorios();
@@ -656,17 +695,22 @@ function encuadrarDia() {
   }
 }
 
-/* la tira muestra siempre el mes completo; `enfoque` decide dónde queda
-   posicionada: 'semana' deja a la vista la semana del día elegido, y
-   cualquier otra cosa simplemente centra el día */
+/* La tira muestra todos los meses del programa seguidos; antes del 1 de cada mes va una
+   marca con su nombre, para no perderse al deslizar. `enfoque` decide dónde queda
+   posicionada: 'semana' deja a la vista la semana del día elegido, y cualquier otra
+   cosa simplemente centra el día */
 function pintarSemana(enfoque) {
   const cont = $('#week'); cont.innerHTML = '';
-  PROG.dias.map(d => d.dia).forEach(n => {
-    const dd = fechaDe(n);
-    const b = el('button', 'wd' + (n === diaSel ? ' sel' : '') + (esHoy(n) ? ' hoy' : ''),
-      `<i>${DIAS_C[dd.getDay()]}</i><b>${n}</b>`);
-    b.dataset.dia = n;
-    b.onclick = () => { diaSel = n; render(); };
+  let mesAnterior = null;
+  PROG.dias.forEach(d => {
+    if (mesAnterior !== null && d.mes !== mesAnterior)
+      cont.appendChild(el('span', 'wmes', `<i>${MESES[d.mes - 1].slice(0, 3)}</i><b></b>`));
+    mesAnterior = d.mes;
+    const dd = fechaDe(d.clave);
+    const b = el('button', 'wd' + (d.clave === diaSel ? ' sel' : '') + (esHoy(d.clave) ? ' hoy' : ''),
+      `<i>${DIAS_C[dd.getDay()]}</i><b>${d.dia}</b>`);
+    b.dataset.dia = d.clave;
+    b.onclick = () => { diaSel = d.clave; render(); };
     cont.appendChild(b);
   });
   posicionarTira(enfoque);
@@ -680,18 +724,22 @@ function posicionarTira(enfoque) {
   if (enfoque === 'semana') {
     // el lunes de la semana del día elegido, pegado al borde izquierdo
     const f = fechaDe(diaSel);
-    const lunes = diaSel - ((f.getDay() + 6) % 7);
+    f.setDate(f.getDate() - (f.getDay() + 6) % 7);
+    const lunes = claveDe(f.getFullYear(), f.getMonth() + 1, f.getDate());
     const btns = [...cont.querySelectorAll('.wd')];
-    const primero = btns.find(b => +b.dataset.dia >= lunes) || sel;
+    const primero = btns.find(b => b.dataset.dia >= lunes) || sel;
     left = primero.offsetLeft - 2;
   } else {
     left = sel.offsetLeft - (cont.clientWidth - sel.offsetWidth) / 2;
   }
   // en pantallas angostas la semana entera no cabe: se corre lo justo para que
   // el día elegido se vea completo, que es lo que no puede faltar
-  left = Math.min(Math.max(left, sel.offsetLeft + sel.offsetWidth - cont.clientWidth),
-                  sel.offsetLeft);
-  cont.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+  left = Math.max(0, Math.min(Math.max(left, sel.offsetLeft + sel.offsetWidth - cont.clientWidth),
+                  sel.offsetLeft));
+  // con varios meses la tira es larga: un salto de más de dos pantallas va directo, que
+  // deslizar semanas enteras ante los ojos no ayuda a ubicarse
+  const lejos = Math.abs(cont.scrollLeft - left) > cont.clientWidth * 2;
+  cont.scrollTo({ left, behavior: lejos ? 'auto' : 'smooth' });
 }
 
 function urlComoLlegar(a) {
@@ -850,19 +898,21 @@ function limpiarSeleccion(soloPanel) {
 }
 
 /* ---------- navegación ---------- */
+/* de un día del programa al anterior o al siguiente, también de un mes al otro. Si el día
+   elegido no está en el programa (hoy, cuando falta su mes), se va al más cercano */
 function cambiarDia(delta) {
-  const dias = PROG.dias.map(d => d.dia);
-  const i = dias.indexOf(diaSel);
-  const j = Math.min(Math.max(i + delta, 0), dias.length - 1);
-  diaSel = dias[j]; actSel = null; render();
+  const claves = PROG.dias.map(d => d.clave);
+  if (!claves.length) return;
+  const i = claves.indexOf(diaSel);
+  let c;
+  if (i >= 0) c = claves[Math.min(Math.max(i + delta, 0), claves.length - 1)];
+  else c = delta > 0 ? (claves.find(x => x > diaSel) || claves[claves.length - 1])
+    : ([...claves].reverse().find(x => x < diaSel) || claves[0]);
+  diaSel = c; actSel = null; render();
 }
 $('#prev').onclick = () => cambiarDia(-1);
 $('#next').onclick = () => cambiarDia(1);
-$('#btnHoy').onclick = () => {
-  const h = new Date();
-  diaSel = (h.getMonth() + 1 === PROG.mes && h.getFullYear() === PROG.anio) ? h.getDate() : 1;
-  actSel = null; render('semana');
-};
+$('#btnHoy').onclick = () => { diaSel = diaInicial(); actSel = null; render('semana'); };
 
 /* deslizar para cambiar de día */
 let tx = null, ty = null;

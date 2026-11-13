@@ -161,6 +161,10 @@ header{position:relative;background:var(--surface);border-bottom:1px solid var(-
 .wd.sel b{background:var(--ink);border-color:var(--ink);color:var(--ink-text)}
 .wd.sel i{color:var(--text)}
 .wd.hoy b{border-color:var(--text)}
+/* antes del 1 de cada mes, una marca con su nombre: la tira junta varios meses */
+.wmes{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:1px;padding:0 2px;pointer-events:none}
+.wmes i{font-style:normal;font-weight:500;font-size:11px;line-height:1.2;color:var(--text)}
+.wmes b{display:block;width:1px;height:34px;background:var(--border)}
 
 /* el mapa se mete bajo la hoja para que sus esquinas redondeadas dejen ver el
    mapa por detrás, no un recorte del fondo de página */
